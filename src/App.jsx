@@ -1,16 +1,22 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import { Button } from '@chakra-ui/react'
+import LeftSide from './components/leftSide'
+import MiddleSide from './components/middleSide'
+import RightSide from './components/rightSide'
 
 function App() {
-
   return (
     <>
-    <Button>
-    Hello world
-    </Button>
+      <div className="App">
+        <div className="leftSideHome">
+          <LeftSide />
+        </div>
+        <div className="midSideHome">
+          <MiddleSide />
+        </div>
+        <div className="rightSide">
+         <RightSide/>
+        </div>
+      </div>
     </>
   )
 }

@@ -1,0 +1,152 @@
+.middleHomeSide {
+    width: 100%;
+    border-left: 1px solid #999999;
+    padding: 0px 50px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.storyBlock {
+   width: 725px;
+    height: 120px;
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+    
+}
+.storyBlock::-webkit-scrollbar{
+    display: none;
+}
+
+.storyParticular {
+    width: 66px;
+    height: 66px;
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-items: center;
+
+
+}
+
+.imageDIV {
+    width: 56px;
+    height: 56px;
+   
+    border-radius: 100%;
+    padding: 2px;
+
+    border: 2px solid purple;
+
+}
+
+.statusImg {
+    width: 56px;
+    height: 56px;
+    border-radius: 100%;
+  
+  
+  
+}
+.profileName {
+    font-size: 12px;
+}
+
+/* /////////////////// */
+.postSection{
+   
+    width: 60%;
+}
+.post{
+    width: 100%;
+    margin-bottom: 40px;
+    border-bottom: 1px solid;
+    padding-bottom: 20px;
+}
+.postInfo{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.postInfoImg{
+    width: 42px;
+    height: 40px;
+    border-radius: 100%;
+  
+}
+.postInfousername{
+    font-size: 12px;
+    font-weight: 600;
+}
+.timiInfo{
+    color: #999999;
+    font-size: 14px;
+}
+.postImg{
+    margin-top: 10px;
+}
+.postImage{
+    width: 100%;
+}
+.inconBlock{
+    width: 100%;
+    padding: 5px 0;
+    display: flex;
+    align-self: center;
+    justify-content: space-between;
+}
+.lefticon{
+    display: flex;
+    gap: 15px;
+}
+.likeImg{
+    width: 25px;
+    height: 20px;
+    border-radius: 100%;
+    position: absolute;
+}
+.imgesLike{
+    position: relative;
+}
+.likeSection{
+    width: 100%;
+}
+.likeImg2{
+    width: 25px;
+    height: 20px;
+    border-radius: 100%;
+    position: absolute;
+    left: 3%;
+}
+.notLike{
+    font-size: 15px;
+    font-weight: 700;
+    position: absolute;
+    margin-left: 45px;
+}
+.postAbout{
+    width: 100%;
+    margin-top: 30px;
+    display: flex;
+}
+.aboutName{
+    font-size: 15px;
+    font-weight: 600;
+}
+.infoCommnet{
+    font-size:15px;
+    color: #999999;
+    margin-left: 10px;
+}
+.noOFComment,.addComment{
+    color: #999999;
+    margin-top: 5px;
+    font-size: 15px;
+}
