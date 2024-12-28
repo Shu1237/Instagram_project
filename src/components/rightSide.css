@@ -1,0 +1,124 @@
+.rightSideHome {
+    display: flex;
+    flex-direction: column;
+    /* border: 1px solid; */
+    padding-top: 25px;
+    width: 100%;
+}
+
+.topProfileRight {
+    margin-top: 10px;
+    display: flex;
+    width: 85%;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+
+}
+
+.imageDivRight {
+    width: 45px;
+    height: 45px;
+    border-radius: 100%;
+}
+
+.imgeRightSideProfile {
+    width: 100%;
+    border-radius: 100%;
+}
+
+.userNameBlock {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.userNameRightSide {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.userFullName {
+    color: #999999;
+}
+
+.switchBtn {
+    color: #34ABF8;
+    font-weight: 500;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.leftRightProfile {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.bottonRigtSide {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 85%;
+}
+
+.suggestedBlock {
+
+    color: #999999;
+    font-size: 20px;
+}
+
+.seeAll {
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.inforFrineds {
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 85%;
+
+}
+
+.avatar {
+    width: 52px;
+    height: 60px;
+    border-radius: 100%;
+}
+
+.avatar-frined {
+    width: 100%;
+    border-radius: 100%;
+}
+
+.infoFriend {
+    display: flex;
+    gap: 15px;
+}
+
+.nickname {
+    font-weight: bold;
+}
+
+.Follow {
+    color: #999999;
+}
+
+.follow {
+    color: #34ABF8;
+    font-weight: bold;
+    cursor: pointer;
+}
+.support{
+    margin-top: 80px;
+    width: 80%;
+}
+.behind,.before{
+color: #999999;
+font-size: 20px;
+}
+.behind{
+    margin-top: 30px;
+}
