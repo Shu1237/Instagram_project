@@ -1,12 +1,28 @@
 import express from "express";
 import connect from "./config/database.config.js";
-const app = express();
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
 connect();
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+
+const typeDefs = `#graphql 
+  type Query {
+    hello: String
+  }
+`;
+const resolvers = {
+  Query: {
+    hello: () => "Hello World",
+  },
+};
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const { url } = await startStandaloneServer(server, {
+  listen: {
+    port: 4000,
+  },
 });
+console.log(`Server ready at ${url}`);
