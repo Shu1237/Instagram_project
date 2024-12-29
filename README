@@ -1,0 +1,3 @@
+docker build -t my-backend-app .
+
+docker run -p 4000:3000 --env-file .env my-backend-app
