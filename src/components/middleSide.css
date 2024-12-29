@@ -150,3 +150,7 @@
     margin-top: 5px;
     font-size: 15px;
 }
+.no-underline{
+    text-decoration: none;
+    color: #34ABF8;
+}

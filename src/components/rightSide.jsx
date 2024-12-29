@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import './rightSide.css';
 import ProfileRight from '../assets/profilepic.png'
 import imgFriend from '../assets/img1.png'
@@ -6,6 +6,26 @@ import avatars from "../avatar.json"
 
 function RightSide() {
     const hsr = 'instagram from Meta'
+    const [followStates, setFollowStates] = useState(avatars.map(() => "Follow"));
+    const handleChangeFollow = (index) => {
+
+
+        // setCount(c=>c+1)
+        // Similarly
+        setFollowStates(prevStates => {
+            //c1
+            const newState = [...prevStates];
+            if (newState[index] === "Follow") {
+                newState[index] = "Followed"; 
+            } else {
+                newState[index] = "Follow";
+            }
+            return newState; 
+
+           //   c2 newState[index]=newState[index]==="Follow"? "Followed" :"Follow"
+        })
+    }
+
 
     return (
         <div className="rightSideHome">
@@ -20,7 +40,10 @@ function RightSide() {
                     </div>
                 </div>
                 <div className="switchBtn">
-                    Switch
+                <a href="Login.html" className="no-underline">Switch</a>
+
+
+
                 </div>
             </div>
             <div className="bottonRigtSide">
@@ -46,7 +69,7 @@ function RightSide() {
                                 </div>
 
                             </div>
-                            <div className="follow">Follow</div>
+                            <div className="follow" onClick={() => handleChangeFollow(index)}>{followStates[index]}</div>
                         </div>
                     )
                 })

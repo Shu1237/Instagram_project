@@ -10,7 +10,9 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import profileImg from '../assets/profilepic.png'
 import GestureIcon from '@mui/icons-material/Gesture';
-import MenuIcon from '@mui/icons-material/Menu';
+import Menu from '../components/dropdown/menu'
+
+
 function LeftSide() {
     return (
         <div className="leftSidePart">
@@ -55,11 +57,12 @@ function LeftSide() {
                         <GestureIcon sx={{ fontSize: "30px", margin: "0 20px 0 0" }} />
                         <div className="navName ">Threads</div>
                     </div>
-                    <div className='navLink'>
-                        <MenuIcon sx={{ fontSize: "30px", margin: "0 20px 0 0" }} />
-                        <div className="navName ">More</div>
-                    </div>
+
+
+                    
+                    <Menu/>
                 </div>
+              
             </div>
         </div>
     )
