@@ -1,6 +1,6 @@
-import './leftSide.css';
+import '../css/leftSide.css';
 import React from 'react';
-import logoInstagram from '../assets/logo.png';
+import logoInstagram from '../../../assets/logo.png';
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import ExploreIcon from '@mui/icons-material/Explore';
@@ -8,9 +8,10 @@ import SlowMotionVideoIcon from '@mui/icons-material/SlowMotionVideo';
 import MapsUgcOutlinedIcon from '@mui/icons-material/MapsUgcOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
-import profileImg from '../assets/profilepic.png'
+import profileImg from '../../../assets/profilepic.png'
 import GestureIcon from '@mui/icons-material/Gesture';
-import Menu from '../components/dropdown/menu'
+import Menu from '../jsx/menu'
+
 
 
 function LeftSide() {
@@ -26,8 +27,16 @@ function LeftSide() {
                 </div>
                 <div className='navLink'>
                     <SearchIcon sx={{ fontSize: "30px", margin: "0 20px 0 0" }} />
-                    <div className="navName">Search</div>
+                    <div className="navName">Home</div>
                 </div>
+
+
+
+               
+
+
+
+
                 <div className='navLink'>
                     <ExploreIcon sx={{ fontSize: "30px", margin: "0 20px 0 0" }} />
                     <div className="navName">Explore</div>
@@ -59,10 +68,10 @@ function LeftSide() {
                     </div>
 
 
-                    
-                    <Menu/>
+
+                    <Menu />
                 </div>
-              
+
             </div>
         </div>
     )

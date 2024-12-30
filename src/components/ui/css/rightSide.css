@@ -48,6 +48,11 @@
     font-size: 20px;
     cursor: pointer;
 }
+.linkSwitch{
+    text-decoration: none;
+    color: #34ABF8;
+    font-weight: 500;
+}
 
 .leftRightProfile {
     display: flex;
@@ -109,7 +114,7 @@
 
 .follow {
     color: #34ABF8;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
 }
 .support{
