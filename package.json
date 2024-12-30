@@ -11,7 +11,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@apollo/gateway": "^2.9.3",
     "@apollo/server": "^4.11.2",
+    "@apollo/subgraph": "^2.9.3",
     "@chakra-ui/react": "^3.2.3",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -27,6 +29,7 @@
     "express-session": "^1.18.1",
     "framer-motion": "^11.15.0",
     "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.2",
     "multer": "^1.4.5-lts.1",

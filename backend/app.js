@@ -1,28 +1,27 @@
 import express from "express";
-import connect from "./config/database.config.js";
+import { connect } from "./config/database.config.js";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-connect();
+import { ApolloGateway } from "@apollo/gateway";
+import startUserServer from "./services/user_service/index.user.js";
 
-const typeDefs = `#graphql 
-  type Query {
-    hello: String
-  }
-`;
-const resolvers = {
-  Query: {
-    hello: () => "Hello World",
-  },
-};
+connect();
+startUserServer();
+
+const gateway = new ApolloGateway({
+  serviceList: [{ name: "user", url: "http://localhost:4001" }],
+});
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  gateway,
+  subscriptions: false,
 });
 
-const { url } = await startStandaloneServer(server, {
-  listen: {
-    port: 4000,
-  },
-});
-console.log(`Server ready at ${url}`);
+const startServer = async () => {
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: 4000 },
+  });
+  console.log(`🚀 Gateway running at ${url}`);
+};
+
+startServer();
