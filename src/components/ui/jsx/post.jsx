@@ -49,7 +49,7 @@ function Post() {
             }
         };
 
-        window.addEventListener("click", handleOutsideClick);
+            window.addEventListener("click", handleOutsideClick);
         return () => {
             window.removeEventListener("click", handleOutsideClick);
         };
