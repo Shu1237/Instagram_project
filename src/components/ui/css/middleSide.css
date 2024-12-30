@@ -154,3 +154,37 @@
     text-decoration: none;
     color: #34ABF8;
 }
+.addComment{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.addComment input {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    width: 100%;
+    padding: 8px 0;
+  }
+  
+  .addComment input:focus {
+
+    outline: none;
+  }
+  
+  .addComment input::placeholder {
+    color: #bbb;
+  }
+  .post-button {
+    background-color: #0095f6;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .post-button:hover {
+    background-color: #0073e6;
+  }

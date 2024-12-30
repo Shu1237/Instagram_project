@@ -11,10 +11,25 @@ import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import profileImg from '../../../assets/profilepic.png'
 import GestureIcon from '@mui/icons-material/Gesture';
 import Menu from '../jsx/menu'
+import { useNavigate } from 'react-router-dom';
 
 
 
 function LeftSide() {
+    // const navigate =- useNavigate
+    // const logoutHandler = async()=>{
+        
+    //     try{
+    //          const  res = await axios
+    //         if(res.data.success){
+    //             navigate('/login')
+    //             toast.success(res.data.message)
+    //         }
+    //     }catch(error){
+    //         toast.error(error.respone.dat.message)
+    //     }
+    // }
+
     return (
         <div className="leftSidePart">
             <div className="logoPart">
@@ -29,14 +44,6 @@ function LeftSide() {
                     <SearchIcon sx={{ fontSize: "30px", margin: "0 20px 0 0" }} />
                     <div className="navName">Home</div>
                 </div>
-
-
-
-               
-
-
-
-
                 <div className='navLink'>
                     <ExploreIcon sx={{ fontSize: "30px", margin: "0 20px 0 0" }} />
                     <div className="navName">Explore</div>
