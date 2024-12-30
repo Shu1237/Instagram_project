@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import imageBeach from "../../../assets/img4.png";
 import imagePost from "../../../assets/img2.png";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
+
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
-
+import ModalPost from '../jsx/modal'
 function Post() {
     const [comment, setComment] = useState("");
     const clickOutsideRef = useRef(null);
@@ -14,7 +14,8 @@ function Post() {
     const [isOpen, setIsOpen] = useState(false);
     const [nofLike, setNofLike] = useState(123156);
     const [clickHeart, setClickHeart] = useState(<FavoriteBorderOutlinedIcon />);
-
+    const [show,setShow]= useState(false)
+  
 
     //up + 1
     const newNofLike = () => {
@@ -63,7 +64,8 @@ function Post() {
             setClickHeart(<FavoriteBorderOutlinedIcon />);
             setNofLike(nofLike > 0 ? nofLike - 1 : 0);
         }
-    };
+    };  
+  
 
     return (
         <div className="post">
@@ -82,7 +84,8 @@ function Post() {
                     <div onClick={handleHeartClick}>
                         {clickHeart}
                     </div>
-                    <ModeCommentOutlinedIcon sx={{ fontSize: "30px" }} />
+                   
+                <ModalPost/>
                     <ShareOutlinedIcon sx={{ fontSize: "30px" }} />
                 </div>
                 <div className="righticon">

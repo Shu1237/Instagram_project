@@ -1,7 +1,9 @@
 import React from "react";
 import '../css//middleSide.css';
 import story from '../../../story.json'
+
 import Post from '../jsx/post'
+
 function MiddleSide() {
     const storys = story.story;
     return (
