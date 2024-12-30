@@ -1,8 +1,8 @@
 import React, { useState } from "react"
-import './rightSide.css';
-import ProfileRight from '../assets/profilepic.png'
-import imgFriend from '../assets/img1.png'
-import avatars from "../avatar.json"
+import '../css/rightSide.css';
+import ProfileRight from '../../../assets/profilepic.png'
+import { Link } from 'react-router-dom';
+import avatars from "../../../avatar.json"
 
 function RightSide() {
     const hsr = 'instagram from Meta'
@@ -40,7 +40,7 @@ function RightSide() {
                     </div>
                 </div>
                 <div className="switchBtn">
-                <a href="Login.html" className="no-underline">Switch</a>
+              <Link className="linkSwitch" to="/"> Switch</Link>
 
 
 

@@ -1,0 +1,115 @@
+/* login.css */
+
+/* Giao diện chung */
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Form chính */
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 400px;
+    align-items: center;
+    text-align: center;
+    animation: fadeIn 0.8s ease;
+}
+
+
+/* logo */
+.logo-container img {
+    max-width: 100px;
+    margin-bottom: 20px;
+}
+
+.logo-container h2 {
+    font-size: 26px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+/* input */
+.input-group {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #444;
+    text-align: left;
+}
+
+.input-group input {
+    width: 93%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #555;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #6a82fb;
+    outline: none;
+    box-shadow: 0 0 8px rgba(106, 130, 251, 0.4);
+    background-color: #fff;
+}
+
+/* register */
+.linkSignIn,.linkSignUp{
+    text-decoration: none;
+   
+}
+.submit-btn {
+    width: 100%;
+    padding: 12px 0;
+    background: linear-gradient(135deg, #6a82fb, #fc5c7d);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, #fc5c7d, #6a82fb);
+    box-shadow: 0 6px 15px rgba(106, 130, 251, 0.3);
+}
+
+
+.register-link {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.register-link a {
+    color: #6a82fb;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+/* .register-link a:hover {
+    color: #fc5c7d;
+    text-decoration: underline;
+} */
