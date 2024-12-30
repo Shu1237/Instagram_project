@@ -1,14 +1,14 @@
-var DataTypes = require("sequelize").DataTypes;
-var _chat_box = require("./chat_box");
-var _chat_box_participants = require("./chat_box_participants");
-var _follow = require("./follow");
-var _hashtag = require("./hashtag");
-var _like = require("./like");
-var _post_hashtag = require("./post_hashtag");
-var _story = require("./story");
-var _user = require("./user");
+import { DataTypes } from "sequelize";
+import _chat_box from "./chat_box";
+import _chat_box_participants from "./chat_box_participants";
+import _follow from "./follow";
+import _hashtag from "./hashtag";
+import _like from "./like";
+import _post_hashtag from "./post_hashtag";
+import _story from "./story";
+import _user from "./user";
 
-function initModels(sequelize) {
+export default function initModels(sequelize) {
   var chat_box = _chat_box(sequelize, DataTypes);
   var chat_box_participants = _chat_box_participants(sequelize, DataTypes);
   var follow = _follow(sequelize, DataTypes);
@@ -44,6 +44,4 @@ function initModels(sequelize) {
     user,
   };
 }
-module.exports = initModels;
-module.exports.initModels = initModels;
-module.exports.default = initModels;
+export { initModels };
