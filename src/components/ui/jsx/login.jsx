@@ -2,17 +2,19 @@ import logoInstagram from '../../../assets/logo.png';
 import React, { useState } from 'react';
 import '../css/login.css';
 import Home from '../jsx/home';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
     const [input, setInput] = useState({
         username: "",
-        email: "",
+       
         password: ""
     });
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
+        console.log(input)
     };
 
     const signupHandler = async (e) => {
