@@ -7,7 +7,7 @@ import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import ModalPost from '../jsx/modal'
-import HeartComponent from '../jsx/countTym'
+
 function Post() {
     const [comment, setComment] = useState("");
     const clickOutsideRef = useRef(null);
@@ -22,6 +22,16 @@ function Post() {
     const newNofLike = () => {
         setNofLike(n => n + 1);
     };
+    const handleHeartClick = () => {
+        if (clickHeart.type === FavoriteBorderOutlinedIcon) {
+            setClickHeart(<FavoriteOutlinedIcon />);
+            newNofLike();  // +1
+        } else {
+            setClickHeart(<FavoriteBorderOutlinedIcon />);
+            setNofLike(nofLike > 0 ? nofLike - 1 : 0);
+        }
+    };
+
 
     // Change input
     const handleCommentChange = (event) => {
@@ -57,16 +67,7 @@ function Post() {
         };
     }, []);
 
-    const handleHeartClick = () => {
-        if (clickHeart.type === FavoriteBorderOutlinedIcon) {
-            setClickHeart(<FavoriteOutlinedIcon />);
-            newNofLike();  // +1
-        } else {
-            setClickHeart(<FavoriteBorderOutlinedIcon />);
-            setNofLike(nofLike > 0 ? nofLike - 1 : 0);
-        }
-    };
-
+  
 
     return (
         <div className="post">
