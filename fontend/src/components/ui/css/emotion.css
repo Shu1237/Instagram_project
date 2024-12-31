@@ -1,0 +1,29 @@
+.container {
+    position: relative;
+  }
+  
+  .emoji-picker {
+    position: absolute;
+    bottom:40px;
+    left: 60px;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .emoji-button {
+    cursor: pointer;
+    padding: 10px;
+    font-size: 15px;
+
+    background-color: transparent;
+    border-radius: 5px;
+  }
+  
+  .selected-emoji {
+    margin-top: 10px;
+    font-size: 18px;
+  }
+  

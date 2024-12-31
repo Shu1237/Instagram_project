@@ -7,7 +7,7 @@ import Signup from '../ui/jsx/register'
 
 
 
-function App() {
+export default function App() {
  
   return (
     <Routes>
@@ -20,4 +20,5 @@ function App() {
 
 }
 
-export default App
+
+
