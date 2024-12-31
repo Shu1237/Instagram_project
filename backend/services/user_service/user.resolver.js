@@ -1,4 +1,4 @@
-import User from "../../../models/mysql/user.js";
+import User from "../../models/mysql/user.js";
 
 export const userResolver = {
   Query: {
@@ -10,9 +10,6 @@ export const userResolver = {
         console.error(error);
         throw new Error("Error fetching users");
       }
-    },
-    hello: () => {
-      return "Hello World";
     },
   },
 };
