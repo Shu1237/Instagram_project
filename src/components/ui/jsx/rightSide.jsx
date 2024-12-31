@@ -61,7 +61,7 @@ function RightSide() {
                                 <div className="avatar">
                                     <img className="avatar-frined" src={avatar.img} alt="imgFriend" />
                                 </div>
-                                <div className="text">
+                                <div className="text-info">
                                     <div className="nickname">
                                         {avatar.nickname}
                                     </div>

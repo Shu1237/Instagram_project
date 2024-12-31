@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import imageBeach from "../../../assets/img4.png";
 import imagePost from "../../../assets/img2.png";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
+
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
+import ModalPost from '../jsx/modal'
 
 function Post() {
     const [comment, setComment] = useState("");
@@ -16,10 +17,21 @@ function Post() {
     const [clickHeart, setClickHeart] = useState(<FavoriteBorderOutlinedIcon />);
 
 
+
     //up + 1
     const newNofLike = () => {
         setNofLike(n => n + 1);
     };
+    const handleHeartClick = () => {
+        if (clickHeart.type === FavoriteBorderOutlinedIcon) {
+            setClickHeart(<FavoriteOutlinedIcon />);
+            newNofLike();  // +1
+        } else {
+            setClickHeart(<FavoriteBorderOutlinedIcon />);
+            setNofLike(nofLike > 0 ? nofLike - 1 : 0);
+        }
+    };
+
 
     // Change input
     const handleCommentChange = (event) => {
@@ -49,21 +61,13 @@ function Post() {
             }
         };
 
-            window.addEventListener("click", handleOutsideClick);
+        window.addEventListener("click", handleOutsideClick);
         return () => {
             window.removeEventListener("click", handleOutsideClick);
         };
     }, []);
 
-    const handleHeartClick = () => {
-        if (clickHeart.type === FavoriteBorderOutlinedIcon) {
-            setClickHeart(<FavoriteOutlinedIcon />);
-            newNofLike();  // +1
-        } else {
-            setClickHeart(<FavoriteBorderOutlinedIcon />);
-            setNofLike(nofLike > 0 ? nofLike - 1 : 0);
-        }
-    };
+  
 
     return (
         <div className="post">
@@ -82,7 +86,8 @@ function Post() {
                     <div onClick={handleHeartClick}>
                         {clickHeart}
                     </div>
-                    <ModeCommentOutlinedIcon sx={{ fontSize: "30px" }} />
+
+                    <ModalPost />
                     <ShareOutlinedIcon sx={{ fontSize: "30px" }} />
                 </div>
                 <div className="righticon">
