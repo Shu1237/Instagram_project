@@ -5,7 +5,11 @@ import Home from "../jsx/home";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "../../../graphql/mutations/auth.mutation";
-
+import {
+  setCookies,
+  getCookie,
+  removeCookies,
+} from "../../../utils/cookie.util";
 function Login() {
   const [input, setInput] = useState({
     username: "",
@@ -22,8 +26,8 @@ function Login() {
     onCompleted: () => {
       setShowSuccess(true);
       setTimeout(() => {
-        setShowSuccess(false);
         navigate("/home");
+        setShowSuccess(false);
       }, 3000); // Hide success after 3 seconds and navigate to /home
     },
   });
@@ -35,7 +39,11 @@ function Login() {
   const loginHandler = async (e) => {
     e.preventDefault();
     try {
-      await login({ variables: { input } });
+      const response = await login({ variables: { input } });
+      console.log(response);
+      if (response.data.login.token) {
+        setCookies(response.data.login.token);
+      }
     } catch (err) {
       console.error("Login Error:", err);
     }
