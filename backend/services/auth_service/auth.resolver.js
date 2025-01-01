@@ -7,16 +7,16 @@ import {
   loginMiddleware,
 } from "../../middlewares/auth.middleware.js";
 export const authResolver = {
-  Query: {
-    login: async (_, args) => {
-      return await loginMiddleware(args, async (user, token) => {
-        return {
-          token,
-          user,
-        };
-      });
-    },
-  },
+  // Query: {
+  //   login: async (_, args) => {
+  //     return await loginMiddleware(args, async (user, token) => {
+  //       return {
+  //         token,
+  //         user,
+  //       };
+  //     });
+  //   },
+  // },
   Mutation: {
     signup: async (_, args, context) => {
       return await signupMiddleware(args, async () => {
@@ -34,6 +34,14 @@ export const authResolver = {
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 24 * 30,
         });
+        return {
+          token,
+          user,
+        };
+      });
+    },
+    login: async (_, args) => {
+      return await loginMiddleware(args, async (user, token) => {
         return {
           token,
           user,

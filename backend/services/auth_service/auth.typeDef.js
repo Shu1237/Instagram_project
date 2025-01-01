@@ -15,10 +15,11 @@ export const authTypeDef = gql`
     token: String!
     user: User!
   }
-  type Query {
-    login(input: loginInput!): AuthPayLoad!
-  }
+  # type Query {
+  #   login(input: loginInput!): AuthPayLoad!
+  # }
   type Mutation {
     signup(input: signupInput!): AuthPayLoad!
+    login(input: loginInput!): AuthPayLoad!
   }
 `;
