@@ -7,16 +7,12 @@ import {
   loginMiddleware,
 } from "../../middlewares/auth.middleware.js";
 export const authResolver = {
-  // Query: {
-  //   login: async (_, args) => {
-  //     return await loginMiddleware(args, async (user, token) => {
-  //       return {
-  //         token,
-  //         user,
-  //       };
-  //     });
-  //   },
-  // },
+  Query: {
+    me(_, __, context) {
+      if (!context.user) throw new Error("Not authenticated !" + context);
+      return context.user.user;
+    },
+  },
   Mutation: {
     signup: async (_, args, context) => {
       return await signupMiddleware(args, async () => {

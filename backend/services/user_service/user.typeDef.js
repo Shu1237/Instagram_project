@@ -21,6 +21,5 @@ export const userTypeDef = gql`
   type Query {
     user(user_id: ID!): User!
     users: [User!]!
-    me: User!
   }
 `;

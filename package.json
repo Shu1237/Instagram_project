@@ -13,7 +13,7 @@
   "dependencies": {
     "@apollo/client": "^3.12.4",
     "@apollo/gateway": "^2.9.3",
-    "@apollo/server": "^4.11.2",
+    "@apollo/server": "^4.11.0",
     "@apollo/subgraph": "^2.9.3",
     "@chakra-ui/react": "^3.2.3",
     "@emotion/react": "^11.14.0",

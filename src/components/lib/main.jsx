@@ -3,15 +3,8 @@ import { createRoot } from "react-dom/client";
 import "../lib/index.css";
 import App from "../lib/App";
 import { BrowserRouter as Router } from "react-router-dom";
-import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
-
-//apollo client instance
-const client = new ApolloClient({
-  uri: "http://localhost:3000/graphql",
-  cache: new InMemoryCache(),
-  credentials: "include", // include cookies in req
-});
-
+import { ApolloProvider } from "@apollo/client";
+import { client } from "../../graphql/graphql.config";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ApolloProvider client={client}>
