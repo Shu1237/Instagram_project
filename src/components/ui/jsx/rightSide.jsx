@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import "../css/rightSide.css";
 import ProfileRight from "../../../assets/profilepic.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import avatars from "../../../avatar.json";
 import { useQuery } from "@apollo/client";
 import { ME_QUERY } from "../../../graphql/query/user.query";
+import { removeCookies } from "../../../utils/cookie.util";
 function RightSide() {
   const { loading, error, data } = useQuery(ME_QUERY);
-  // console.log(data);
+
+  const navigate = useNavigate();
+  const handleSwitch = () => {
+    removeCookies();
+    window.location.href = "/";
+  };
+
   const hsr = "instagram from Meta";
   const [followStates, setFollowStates] = useState(avatars.map(() => "Follow"));
   const handleChangeFollow = (index) => {
@@ -39,12 +46,16 @@ function RightSide() {
             />
           </div>
           <div className="userNameBlock">
-            <div className="userNameRightSide">{data.me.username}</div>
-            <div className="userFullName">{data.me.full_name}</div>
+            <div className="userNameRightSide">
+              {data ? data.me.username : "Guest"}
+            </div>
+            <div className="userFullName">
+              {data ? data.me.full_name : "Guest"}
+            </div>
           </div>
         </div>
         <div className="switchBtn">
-          <Link className="linkSwitch" to="/">
+          <Link className="linkSwitch" onClick={handleSwitch}>
             {" "}
             Switch
           </Link>
