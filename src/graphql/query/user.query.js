@@ -5,6 +5,7 @@ export const ME_QUERY = gql`
     me {
       user_id
       username
+      full_name
     }
   }
 `;

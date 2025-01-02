@@ -40,7 +40,7 @@ function Login() {
     e.preventDefault();
     try {
       const response = await login({ variables: { input } });
-      console.log(response);
+      // console.log(response);
       if (response.data.login.token) {
         setCookies(response.data.login.token);
       }
