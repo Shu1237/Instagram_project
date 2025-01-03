@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../../config/database.config.js";
-
+import FriendRequest from "./friend_request.js";
 const User = sequelize.define(
   "user",
   {
@@ -62,5 +62,16 @@ const User = sequelize.define(
     timestamps: false,
   }
 );
+//relationships
+
+User.hasMany(FriendRequest, {
+  as: "sender",
+  foreignKey: "sender_id",
+});
+
+User.hasMany(FriendRequest, {
+  as: "receiver",
+  foreignKey: "receiver_id",
+});
 
 export default User;

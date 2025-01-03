@@ -16,9 +16,10 @@ export const authTypeDef = gql`
     user: User!
   }
   type Query {
-    login(input: loginInput!): AuthPayLoad!
+    me: User!
   }
   type Mutation {
     signup(input: signupInput!): AuthPayLoad!
+    login(input: loginInput!): AuthPayLoad!
   }
 `;
