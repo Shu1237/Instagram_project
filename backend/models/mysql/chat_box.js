@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 
-export default function (sequelize) {
+export default function ChatBox(sequelize) {
   return sequelize.define(
     "chat_box",
     {

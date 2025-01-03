@@ -8,13 +8,9 @@ import {
 } from "../../middlewares/auth.middleware.js";
 export const authResolver = {
   Query: {
-    login: async (_, args) => {
-      return await loginMiddleware(args, async (user, token) => {
-        return {
-          token,
-          user,
-        };
-      });
+    me(_, __, context) {
+      if (!context.user) throw new Error("Not authenticated !" + context);
+      return context.user.user;
     },
   },
   Mutation: {
@@ -30,10 +26,14 @@ export const authResolver = {
           is_active: true,
         });
         const token = generateToken(user);
-        context.res.cookie("token", token, {
-          httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * 30,
-        });
+        return {
+          token,
+          user,
+        };
+      });
+    },
+    login: async (_, args) => {
+      return await loginMiddleware(args, async (user, token) => {
         return {
           token,
           user,

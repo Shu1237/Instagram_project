@@ -1,14 +1,13 @@
 // Home.js
-import React from 'react';
-// import '../css/home.css'
-import LeftSide from '../jsx/leftSide';
-import MiddleSide from '../jsx/middleSide';
-import RightSide from '../jsx/rightSide';
-
+import React from "react";
+// import "../css/home.css";
+import LeftSide from "../jsx/leftSide";
+import MiddleSide from "../jsx/middleSide";
+import RightSide from "../jsx/rightSide";
 
 function Home() {
   return (
-    <div className="font-montserrat p-0 m-0 box-border flex" >
+    <div className="font-montserrat p-0 m-0 box-border flex">
       <div className="p-[25px_10px] flex-[0.139]">
         <LeftSide />
       </div>

@@ -140,7 +140,7 @@ const ModalPost = () => {
                 <ListOutlinedIcon sx={{ fontSize: "30px" }} />
               </div>
             </div>
-            <div className=" flex  flex-col overflow-y-auto h-[300px]  ">
+            <div className=" flex  flex-col overflow-y-auto h-[400px] overflow-scroll whitespace-nowrap scroll-smooth scrollbar-hide  ">
 
 
               {arryTyms.map((item, index) => (
