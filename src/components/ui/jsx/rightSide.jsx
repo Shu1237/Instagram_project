@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import '../css/rightSide.css';
+// import '../css/rightSide.css';
 import ProfileRight from '../../../assets/profilepic.png'
 import { Link } from 'react-router-dom';
 import avatars from "../../../avatar.json"
@@ -28,27 +28,24 @@ function RightSide() {
 
 
     return (
-        <div className="rightSideHome">
-            <div className="topProfileRight">
-                <div className="leftRightProfile">
-                    <div className="imageDivRight">
-                        <img className="imgeRightSideProfile" src={ProfileRight} alt="profileRight" />
+        <div className="flex flex-col pt-[12px] w-full">
+            <div className="mt-10px] flex w-[90%] mt-[30px] items-center justify-between">
+                <div className="flex items-center gap-[20px]">
+                    <div className="w-[45px] h-[45px] rounded-[50%]">
+                        <img className="w-full rounded-full" src={ProfileRight} alt="profileRight" />
                     </div>
-                    <div className="userNameBlock">
-                        <div className="userNameRightSide">Shu123</div>
-                        <div className="userFullName">Tran Tri</div>
+                    <div className="flex flex-col items center">
+                        <div className="text-base font-500">Shu123</div>
+                        <div className="text-slate-500">Tran Tri</div>
                     </div>
                 </div>
-                <div className="switchBtn">
-              <Link className="linkSwitch" to="/"> Switch</Link>
-
-
-
+                <div className=" cursor-pointer text-xl ">
+              <Link className="no-underline text-[#34ABF8] font-semibold" to="/"> Switch</Link>
                 </div>
             </div>
-            <div className="bottonRigtSide">
-                <div className="suggestedBlock">  Suggested for you</div>
-                <div className="seeAll">see All</div>
+            <div className="flex flex-row justify-between w-[90%] mt-5">
+                <div className="text-slate-500 text-xl">  Suggested for you</div>
+                <div className="font-medium text-xl">see All</div>
             </div>
 
 
@@ -56,20 +53,20 @@ function RightSide() {
             {
                 avatars.map((avatar, index) => {
                     return (
-                        <div key={index} className="inforFrineds">
-                            <div className="infoFriend">
-                                <div className="avatar">
-                                    <img className="avatar-frined" src={avatar.img} alt="imgFriend" />
+                        <div key={index} className="mt-[25px] flex items-center justify-between w-[90%]">
+                            <div className="flex gap-[15px] items-center">
+                                <div className="w-[60px] h-[60px] rounded-[50%]">
+                                    <img className="w-full h-[60px] rounded-[50%]" src={avatar.img} alt="imgFriend" />
                                 </div>
                                 <div className="text-info">
-                                    <div className="nickname">
+                                    <div className="font-bold">
                                         {avatar.nickname}
                                     </div>
-                                    <div className="Follow">{avatar.followby}</div>
+                                    <div className="text-slate-500 ">{avatar.followby}</div>
                                 </div>
 
                             </div>
-                            <div className="follow" onClick={() => handleChangeFollow(index)}>{followStates[index]}</div>
+                            <div className="text-[#34ABF8] font-semibold cursor-pointer" onClick={() => handleChangeFollow(index)}>{followStates[index]}</div>
                         </div>
                     )
                 })
@@ -77,8 +74,8 @@ function RightSide() {
 
 
 
-            <div className="support">
-                <div className="before">
+            <div className="mt-[80px] w-4/5">
+                <div className="text-slate-500 text-sm">
                     About
                     Help
                     Press
@@ -90,7 +87,7 @@ function RightSide() {
                     Language
                     Meta Verified
                 </div>
-                <div className="behind">
+                <div className="text-slate-500 text-sm mt-[10px]">
 
                     &copy;{new Date().getFullYear()} {hsr.toUpperCase()}
                 </div>

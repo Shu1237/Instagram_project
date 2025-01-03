@@ -1,0 +1,16 @@
+.profile {
+    font-family: 'Montserrat', sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+
+}
+.leftSide-profile{
+   
+    flex: 0.15;
+}
+.rightSide-profile{
+    flex: 0.85;
+    border-left: 1px solid;
+}

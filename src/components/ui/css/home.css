@@ -9,7 +9,7 @@
 
 .leftSideHome {
     padding: 25px 10px;
-    flex: 0.1;
+    flex: 0.15;
   
 }
 
@@ -20,5 +20,5 @@
 }
 
 .rightSide {
-    flex: 0.3;
+    flex: 0.25;
 }

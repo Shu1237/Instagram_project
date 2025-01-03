@@ -1,4 +1,4 @@
-.dropdown {
+/* .dropdown {
   background-color: transparent;
     position: relative;
     display: inline-block;
@@ -9,38 +9,38 @@
    
    
     
-  }
+  } */
   
-  .dropdown-button {
+  /* .dropdown-button {
     background-color: transparent;
     border: none;
     cursor: pointer;
     padding: 10px 15px;
     font-size: 16px;
    
-  }
+  } */
   
-  .dropdown-menu {
+  /* .dropdown-menu {
     position: absolute;
     left: 0;
-    bottom: 40px; /* Đổi top thành bottom */
+    bottom: 40px; 
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     width: 250px;
     z-index: 1000;
     
-  }
+  } */
   
-  
+/*   
   .dropdown-menu ul {
     list-style-type: none;
     padding: 10px;
     margin: 0;
   
-  }
+  } */
   
-  .dropdown-menu li {
+  /* .dropdown-menu li {
     padding: 10px 20px;
     cursor: pointer;
     display: flex;
@@ -51,15 +51,15 @@
     &:hover{
       background-color: #ededed;
     }
-  }
-  .dropdown-menu span{
+  } */
+  /* .dropdown-menu span{
     margin-right: 15px;
-  }
+  } */
 
   
-  .dropdown-menu hr {
+  /* .dropdown-menu hr {
     margin: 10px 0;
     border: none;
     border-top: 1px solid #e0e0e0;
-  }
+  } */
   

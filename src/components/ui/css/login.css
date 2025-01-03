@@ -73,7 +73,7 @@
 }
 
 /* register */
-.linkSignIn,.linkSignUp{
+/* .linkSignIn,.linkSignUp{
     text-decoration: none;
    
 }
@@ -93,7 +93,7 @@
 .submit-btn:hover {
     background: linear-gradient(135deg, #fc5c7d, #6a82fb);
     box-shadow: 0 6px 15px rgba(106, 130, 251, 0.3);
-}
+} */
 
 
 .register-link {
