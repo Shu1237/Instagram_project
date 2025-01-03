@@ -1,10 +1,9 @@
 // Home.js
-import React from 'react';
-import '../css/home.css'
-import LeftSide from '../jsx/leftSide';
-import MiddleSide from '../jsx/middleSide';
-import RightSide from '../jsx/rightSide';
-
+import React from "react";
+import "../css/home.css";
+import LeftSide from "../jsx/leftSide";
+import MiddleSide from "../jsx/middleSide";
+import RightSide from "../jsx/rightSide";
 
 function Home() {
   return (
