@@ -20,7 +20,9 @@ export default function LeftSide() {
       </div>
 
       <div className="flex flex-col mt-[20px] w-full">
-        <Link to="/home" className="w-full">
+
+        <Link to="/" className="w-full">
+
           <MenuItem
             icon={<HomeIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />}
             label="Home"

@@ -20,9 +20,9 @@
     overflow-x: auto;
     
 } */
-/* .storyBlock::-webkit-scrollbar{
+.storyBlock::-webkit-scrollbar{
     display: none;
-} */
+}
 
 /* .storyParticular {
     width: 66px;

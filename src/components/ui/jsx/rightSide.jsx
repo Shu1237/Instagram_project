@@ -55,7 +55,9 @@ function RightSide() {
           </div>
         </div>
         <div className=" cursor-pointer text-xl ">
-          <Link className="no-underline text-[#34ABF8] font-semibold" to="/">
+
+          <Link className="no-underline text-[#34ABF8] font-semibold" to="/login">
+
             {" "}
             Switch
           </Link>
