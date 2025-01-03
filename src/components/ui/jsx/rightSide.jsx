@@ -35,66 +35,72 @@ function RightSide() {
   };
   if (loading) return <div>Loading...</div>;
   return (
-    <div className="rightSideHome">
-      <div className="topProfileRight">
-        <div className="leftRightProfile">
-          <div className="imageDivRight">
+    <div className="flex flex-col pt-[12px] w-full">
+      <div className="mt-10px] flex w-[90%] mt-[30px] items-center justify-between">
+        <div className="flex items-center gap-[20px]">
+          <div className="w-[45px] h-[45px] rounded-[50%]">
             <img
-              className="imgeRightSideProfile"
+              className="w-full rounded-full"
               src={ProfileRight}
               alt="profileRight"
             />
           </div>
-          <div className="userNameBlock">
-            <div className="userNameRightSide">
+          <div className="flex flex-col items center">
+            <div className="text-base font-500">
               {data ? data.me.username : "Guest"}
             </div>
-            <div className="userFullName">
+            <div className="text-slate-500">
               {data ? data.me.full_name : "Guest"}
             </div>
           </div>
         </div>
-        <div className="switchBtn">
-          <Link className="linkSwitch" onClick={handleSwitch}>
+        <div className=" cursor-pointer text-xl ">
+          <Link className="no-underline text-[#34ABF8] font-semibold" to="/">
             {" "}
             Switch
           </Link>
         </div>
       </div>
-      <div className="bottonRigtSide">
-        <div className="suggestedBlock"> Suggested for you</div>
-        <div className="seeAll">see All</div>
+      <div className="flex flex-row justify-between w-[90%] mt-5">
+        <div className="text-slate-500 text-xl"> Suggested for you</div>
+        <div className="font-medium text-xl">see All</div>
       </div>
 
       {avatars.map((avatar, index) => {
         return (
-          <div key={index} className="inforFrineds">
-            <div className="infoFriend">
-              <div className="avatar">
+          <div
+            key={index}
+            className="mt-[25px] flex items-center justify-between w-[90%]"
+          >
+            <div className="flex gap-[15px] items-center">
+              <div className="w-[60px] h-[60px] rounded-[50%]">
                 <img
-                  className="avatar-frined"
+                  className="w-full h-[60px] rounded-[50%]"
                   src={avatar.img}
                   alt="imgFriend"
                 />
               </div>
               <div className="text-info">
-                <div className="nickname">{avatar.nickname}</div>
-                <div className="Follow">{avatar.followby}</div>
+                <div className="font-bold">{avatar.nickname}</div>
+                <div className="text-slate-500 ">{avatar.followby}</div>
               </div>
             </div>
-            <div className="follow" onClick={() => handleChangeFollow(index)}>
+            <div
+              className="text-[#34ABF8] font-semibold cursor-pointer"
+              onClick={() => handleChangeFollow(index)}
+            >
               {followStates[index]}
             </div>
           </div>
         );
       })}
 
-      <div className="support">
-        <div className="before">
+      <div className="mt-[80px] w-4/5">
+        <div className="text-slate-500 text-sm">
           About Help Press API Jobs Privacy Terms Locations Language Meta
           Verified
         </div>
-        <div className="behind">
+        <div className="text-slate-500 text-sm mt-[10px]">
           &copy;{new Date().getFullYear()} {hsr.toUpperCase()}
         </div>
       </div>
