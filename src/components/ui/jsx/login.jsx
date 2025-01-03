@@ -28,7 +28,7 @@ function Login() {
       setTimeout(() => {
         navigate("/home");
         setShowSuccess(false);
-      }, 3000); // Hide success after 3 seconds and navigate to /home
+      }, 500); // Hide success after 3 seconds and navigate to /home
     },
   });
 

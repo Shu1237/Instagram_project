@@ -60,13 +60,15 @@ const ModalPost = () => {
       username: "Alo",
       small: "aloalaolao",
       icon: <FavoriteBorderOutlinedIcon />,
-    }
+    },
   ];
 
   const [isLiked, setIsLiked] = useState(arryTyms.map(() => false));
   const [open, setOpen] = useState(false);
   const [nofLike, setNofLike] = useState(123156);
-  const [clickHeart, setClickHeart] = useState(<FavoriteBorderOutlinedIcon sx={{ fontSize: "30px" }} />);
+  const [clickHeart, setClickHeart] = useState(
+    <FavoriteBorderOutlinedIcon sx={{ fontSize: "30px" }} />
+  );
   const [value, setValue] = useState("");
   const [isPlaceholderVisible, setPlaceholderVisible] = useState(true);
 
@@ -82,7 +84,9 @@ const ModalPost = () => {
 
   const handleHeartClickBottom = () => {
     if (clickHeart.type === FavoriteBorderOutlinedIcon) {
-      setClickHeart(<FavoriteOutlinedIcon sx={{ fontSize: "30px", color: "red" }} />);
+      setClickHeart(
+        <FavoriteOutlinedIcon sx={{ fontSize: "30px", color: "red" }} />
+      );
       newNofLike();
     } else {
       setClickHeart(<FavoriteBorderOutlinedIcon />);
@@ -123,10 +127,13 @@ const ModalPost = () => {
       >
         <div className="flex p-4">
           <div className="flex-1 pr-5">
-            <img className="w-full  h-full rounded-lg object-cover" src={Image} alt="" />
+            <img
+              className="w-full  h-full rounded-lg object-cover"
+              src={Image}
+              alt=""
+            />
           </div>
           <div className="container-body-modal ">
-
             <div className="flex justify-between items-center p-4">
               <div className="flex items-center">
                 <div className="mr-3">
@@ -140,14 +147,16 @@ const ModalPost = () => {
                 <ListOutlinedIcon sx={{ fontSize: "30px" }} />
               </div>
             </div>
-            <div className=" flex  flex-col overflow-y-auto h-[400px] overflow-scroll whitespace-nowrap scroll-smooth scrollbar-hide  ">
-
-
+            <div className=" flex  flex-col overflow-y-auto h-[300px]  ">
               {arryTyms.map((item, index) => (
                 <div className="comment-container pt-[4px]" key={index}>
                   <div className="flex items-center mb-8">
                     <div className="mr-3">
-                      <img src={item.img} className="w-8 h-8 rounded-full" alt="" />
+                      <img
+                        src={item.img}
+                        className="w-8 h-8 rounded-full"
+                        alt=""
+                      />
                     </div>
                     <div className="flex flex-col">
                       <span className="font-bold">{item.username}</span>
@@ -157,9 +166,14 @@ const ModalPost = () => {
                         <div>See translation</div>
                       </div>
                     </div>
-                    <div className="ml-auto cursor-pointer mr-[15px]" onClick={() => handleHeartClick(index)}>
+                    <div
+                      className="ml-auto cursor-pointer mr-[15px]"
+                      onClick={() => handleHeartClick(index)}
+                    >
                       {isLiked[index] ? (
-                        <FavoriteOutlinedIcon sx={{ fontSize: "20px", color: "red" }} />
+                        <FavoriteOutlinedIcon
+                          sx={{ fontSize: "20px", color: "red" }}
+                        />
                       ) : (
                         <FavoriteBorderOutlinedIcon sx={{ fontSize: "20px" }} />
                       )}
@@ -167,15 +181,15 @@ const ModalPost = () => {
                   </div>
                 </div>
               ))}
-
-
-
             </div>
             <div className=" body-post-comment">
               <div className="mt-4">
                 <div className="flex justify-between mb-2">
                   <div className="flex gap-2.5">
-                    <div className="cursor-pointer mt-[2px]" onClick={handleHeartClickBottom}>
+                    <div
+                      className="cursor-pointer mt-[2px]"
+                      onClick={handleHeartClickBottom}
+                    >
                       {clickHeart}
                     </div>
                     <div className="cursor-pointer">
@@ -193,7 +207,9 @@ const ModalPost = () => {
 
                 <div className="font-bold mb-2">{nofLike} Likes</div>
                 <div className="text-gray-500 text-base">
-                  <div>{`${new Date().toLocaleString("en-US", { month: "long" })} ${new Date().getDate()}`}</div>
+                  <div>{`${new Date().toLocaleString("en-US", {
+                    month: "long",
+                  })} ${new Date().getDate()}`}</div>
                 </div>
               </div>
 
@@ -214,7 +230,7 @@ const ModalPost = () => {
                   </div>
                 </div>
 
-                <div  className="ml-[15px]">
+                <div className="ml-[15px]">
                   {value ? (
                     <button
                       style={{
@@ -241,7 +257,6 @@ const ModalPost = () => {
               </div>
             </div>
           </div>
-
         </div>
       </Modal>
     </>
