@@ -11,35 +11,39 @@ const postSchema = new mongoose.Schema(
       default: "",
     },
     media_urls: {
-      type: [String],
+      type: Array,
       default: [],
     },
     likes: {
-      type: [String],
+      type: Array,
       default: [],
     },
     tags: {
       type: Array,
       default: [],
     },
-    createAt: {
-      type: Date,
-      default: Date.now,
+    status: {
+      type: String,
+      default: "public",
     },
-    createBy: {
+    created_at: {
+      type: Date,
+    },
+    created_by: {
       type: String,
       required: true,
     },
-    updateBy: {
+    updated_at: {
+      type: Date,
+    },
+    updated_by: {
       type: String,
+      default: null,
     },
     deleted: {
       type: Boolean,
       default: false,
     },
-  },
-  {
-    timestamps: true,
   }
 );
 
