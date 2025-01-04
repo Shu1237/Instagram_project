@@ -1,5 +1,6 @@
 import FriendRequest from "../../models/mysql/friend_request.js";
 import User from "../../models/mysql/user.js";
+import RoomChat from "../../models/mongodb/rooms-chat.model.js";
 import { Op } from "sequelize";
 export const friendResolver = {
   Query: {
@@ -66,6 +67,14 @@ export const friendResolver = {
         if (context.user.user.user_id !== friendRequest.receiver_id)
           throw new Error("Cannot accept friend request. You are not receiver");
         friendRequest.status = "accepted";
+        const sender = await User.findByPk(friendRequest.sender_id);
+        const receiver = await User.findByPk(friendRequest.receiver_id);
+        const newRoomChat = new RoomChat({
+          roomName: `${sender.username} - ${receiver.username}`,
+          typeRoom: "single",
+          users: [friendRequest.sender_id, friendRequest.receiver_id],
+        });
+        await newRoomChat.save();
         await friendRequest.save();
         return friendRequest;
       } catch (error) {

@@ -8,10 +8,10 @@ export const chatTypeDef = gql`
     content: String
     images: [String]
     is_seen: Boolean
-    createdAt: String!
-    updatedAt: String!
+    createdAt: String
+    updatedAt: String
     deleted: Boolean
-    deletedAt: Date
+    deletedAt: String
   }
   input ChatInput {
     userId: Int!
