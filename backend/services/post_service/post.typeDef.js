@@ -6,8 +6,6 @@ export const postTypeDef = gql`
         user_id: ID!,
         caption: String!,
         media_urls: [String],
-        likes: [String],
-        tags: [String],
         status: String!,
         created_at: String,
         updated_at: String,

@@ -1,4 +1,3 @@
-import { get } from "mongoose";
 import Post from "../../models/mongodb/post.model.js";
 import { GraphQLError } from "graphql";
 
