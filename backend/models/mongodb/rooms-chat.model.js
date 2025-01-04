@@ -9,8 +9,14 @@ const roomChatSchema = new mongoose.Schema(
       default: "single",
     },
     users: Array,
-    avatar: String,
-    background: String,
+    avatar: {
+      type: String,
+      default: "",
+    },
+    background: {
+      type: String,
+      default: "",
+    },
     deleted: {
       type: Boolean,
       default: false,
