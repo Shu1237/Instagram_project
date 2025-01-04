@@ -14,6 +14,14 @@ const postSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    likes: {
+      type: Array,
+      default: [],
+    },
+    tags: {
+      type: Array,
+      default: [],
+    },
     status: {
       type: String,
       default: "public",
