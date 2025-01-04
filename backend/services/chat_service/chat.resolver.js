@@ -1,7 +1,7 @@
-import Chat from "../../models/mongodb/chat.model";
-import RoomChat from "../../models/mongodb/room_chat.model";
-import User from "../../models/mysql/user.model";
-export const chatResolvers = {
+import Chat from "../../models/mongodb/chat.model.js";
+import RoomChat from "../../models/mongodb/rooms-chat.model.js";
+import User from "../../models/mysql/user.js";
+export const chatResolver = {
   Query: {
     chats: async (_, { roomChatId }) => {
       const chats = await Chat.find({
