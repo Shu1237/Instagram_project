@@ -20,6 +20,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.3.0",
     "@mui/material": "^6.3.0",
+    "@nextui-org/modal": "^2.2.6",
     "antd": "^5.22.7",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
