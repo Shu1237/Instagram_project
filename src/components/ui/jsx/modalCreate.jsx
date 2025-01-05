@@ -113,7 +113,7 @@ const ModalCreate = () => {
         <div className="font-normal text-[16px] text-lg">Create</div>
       </div>
 
-      <div></div>
+ 
       <Modal
         centered
         open={open}
