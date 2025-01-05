@@ -8,6 +8,7 @@ import ENV_VARS from "./config/envVars.config.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
+import { redisService } from "./config/redis.config.js";
 connect();
 const app = express();
 app.use(
@@ -26,17 +27,18 @@ const context = async ({ req, res }) => {
     const token = authHeader.split(" ")[1];
     try {
       const user = jwt.verify(token, ENV_VARS.JWT_SECRET_KEY);
-      return { req, user: user };
+      return { req, user: user, cache: redisService };
     } catch (error) {
       console.error("Token verification failed: ", error);
     }
   }
-  return { req };
+  return { req, cache: redisService };
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
 const startServer = async () => {
+  await redisService.connect();
   await server.start();
   app.use("/graphql", expressMiddleware(server, { context }));
   app.listen(ENV_VARS.PORT, () => {
