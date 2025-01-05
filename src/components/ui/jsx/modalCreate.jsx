@@ -19,12 +19,12 @@ const ModalCreate = () => {
 
   const handleEmojiSelect = (selectedEmoji) => {
     setEmoji(selectedEmoji); // save emoji
-    setValue(v => [...v, selectedEmoji]); 
+    setValue(v => [...v, selectedEmoji]);
   };
 
 
-  
-  
+
+
 
 
 
@@ -145,6 +145,17 @@ const ModalCreate = () => {
                     Back
                   </button>
                 )}
+                {
+                  next === 2 && (
+                    <button
+                      className="absolute right-0 text-blue-500 font-semibold"
+                      // onClick={}
+                    >
+                      Up
+                    </button>
+
+                  )
+                }
               </>
             )}
 
@@ -279,7 +290,7 @@ const ModalCreate = () => {
                 <div className="flex flex-col gap-4">
                   <div className="flex justify-between items-center">
                     <div>
-                      <IconPicker  onEmojiChange={handleEmojiSelect} />
+                      <IconPicker onEmojiChange={handleEmojiSelect} />
                     </div>
 
                     <div className="text-gray-400 text-sm text-right mt-1">0/2,200</div>
