@@ -10,7 +10,8 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import profileImg from "../../../assets/profilepic.png";
 import GestureIcon from "@mui/icons-material/Gesture";
 import Menu from "../jsx/menu";
-import { Link } from "react-router-dom"; // Import Link tại đây
+import { Link } from "react-router-dom"; 
+import ModalCreate from "./modalCreate";
 
 export default function LeftSide() {
   return (
@@ -60,14 +61,10 @@ export default function LeftSide() {
           }
           label="Notifications"
         />
-        <MenuItem
-          icon={
-            <AddBoxOutlinedIcon
-              sx={{ fontSize: "35px", margin: "0 20px 0 0" }}
-            />
-          }
-          label="Create"
-        />
+    
+
+
+        <ModalCreate />
 
         <div className="flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full">
           <img
