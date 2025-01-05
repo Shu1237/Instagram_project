@@ -113,7 +113,7 @@ const ModalCreate = () => {
         <div className="font-normal text-[16px] text-lg">Create</div>
       </div>
 
-
+      <div></div>
       <Modal
         centered
         open={open}
@@ -146,6 +146,7 @@ const ModalCreate = () => {
                   </button>
                 )}
                 {
+                  
                   next === 2 && (
                     <button
                       className="absolute right-0 text-blue-500 font-semibold"
