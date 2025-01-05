@@ -14,7 +14,7 @@ function Post() {
     const [isPlaceholderVisible, setPlaceholderVisible] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
     const [nofLike, setNofLike] = useState(123156);
-    const [clickHeart, setClickHeart] = useState(<FavoriteBorderOutlinedIcon />);
+    const [clickHeart, setClickHeart] = useState(<FavoriteBorderOutlinedIcon sx={{ fontSize: "30px"}}  />);
 
 
 
@@ -24,10 +24,10 @@ function Post() {
     };
     const handleHeartClick = () => {
         if (clickHeart.type === FavoriteBorderOutlinedIcon) {
-            setClickHeart(<FavoriteOutlinedIcon />);
+            setClickHeart(<FavoriteOutlinedIcon sx={{ fontSize: "30px",color: "red"  }} />);
             newNofLike();  // +1
         } else {
-            setClickHeart(<FavoriteBorderOutlinedIcon />);
+            setClickHeart(<FavoriteBorderOutlinedIcon sx={{ fontSize: "30px" }} />);
             setNofLike(nofLike > 0 ? nofLike - 1 : 0);
         }
     };
@@ -70,58 +70,61 @@ function Post() {
   
 
     return (
-        <div className="post">
-            <div className="postInfo">
-                <img className="postInfoImg" src={imageBeach} alt="" />
-                <div className="postInfousername">Shu</div>
-                <div className="timiInfo">.36 min</div>
-            </div>
-
-            <div className="postImg">
-                <img className="postImage" src={imagePost} alt="" />
-            </div>
-
-            <div className="inconBlock">
-                <div className="lefticon" style={{ fontSize: "30px" }}>
-                    <div onClick={handleHeartClick}>
-                        {clickHeart}
-                    </div>
-
-                    <ModalPost />
-                    <ShareOutlinedIcon sx={{ fontSize: "30px" }} />
-                </div>
-                <div className="righticon">
-                    <BookmarkBorderOutlinedIcon sx={{ fontSize: "30px" }} />
-                </div>
-            </div>
-
-            <div className="likeSection">
-                <div className="imgesLike">
-                    <img className="likeImg" src={imagePost} alt="" />
-                    <img className="likeImg2" src={imagePost} alt="" />
-                </div>
-                <div className="notLike">{nofLike} likes</div>
-            </div>
-
-            <div className="postAbout">
-                <div className="aboutName">Black pink</div>
-                <div className="infoCommnet">I will rewrite the world</div>
-            </div>
-
-            <div className="noOFComment">View all 878 comments</div>
-
-            <div className="addComment" ref={clickOutsideRef}>
-                <input
-                    value={comment}
-                    onChange={handleCommentChange}
-                    onClick={handleInputClick}
-                    placeholder={isPlaceholderVisible ? "Add a comment..." : ""}
-                />
-                {isOpen && comment.trim() !== "" && (
-                    <button className="post-button">Post</button>
-                )}
-            </div>
+        <div className="w-full mb-[40px] border-b pb-[20px]">
+        <div className="w-full flex items-center gap-[10px]">
+          <img className="w-[42px] h-[40px] rounded-full" src={imageBeach} alt="" />
+          <div className="text-[12px] font-semibold">Shu</div>
+          <div className="text-[#999999] text-[14px]">.36 min</div>
         </div>
+      
+        <div className="mt-[10px]">
+          <img className="w-full" src={imagePost} alt="" />
+        </div>
+      
+        <div className="w-full py-[5px] flex justify-between items-center">
+          <div className="flex gap-[15px] items-center">
+            <div onClick={handleHeartClick} className="text-[30px] mb-[8px] cursor-pointer ease-in duration-300 transform hover:scale-110">
+              {clickHeart}
+            </div>
+            <ModalPost />
+            <ShareOutlinedIcon sx={{ fontSize: "30px" }} />
+          </div>
+          <div className="text-[30px]">
+            <BookmarkBorderOutlinedIcon />
+          </div>
+        </div>
+      
+        <div className="w-full">
+          <div className="relative">
+            <img className="w-[25px] h-[20px] rounded-full absolute" src={imagePost} alt="" />
+            <img className="w-[25px] h-[20px] rounded-full absolute left-[3%]" src={imagePost} alt="" />
+          </div>
+          <div className="text-[15px] font-semibold absolute ml-[45px]">{nofLike} likes</div>
+        </div>
+      
+        <div className="w-full mt-[30px] flex">
+          <div className="text-[15px] font-semibold">Black pink</div>
+          <div className="text-[15px] text-[#999999] ml-[10px]">I will rewrite the world</div>
+        </div>
+      
+        <div className="text-[#999999] mt-[5px] text-[15px]">View all 878 comments</div>
+      
+        <div className="flex justify-between mt-[5px] text-[#999999] text-[15px]" ref={clickOutsideRef}>
+          <input
+            value={comment}
+            onChange={handleCommentChange}
+            onClick={handleInputClick}
+            placeholder={isPlaceholderVisible ? "Add a comment..." : ""}
+            className="border-none outline-none w-full py-[8px_0] text-[14px]"
+          />
+          {isOpen && comment.trim() !== "" && (
+            <button className="bg-[#0095f6] text-white p-[8px_12px] rounded-[4px] cursor-pointer text-[14px] hover:bg-[#0073e6]">
+              Post
+            </button>
+          )}
+        </div>
+      </div>
+      
     );
 }
 

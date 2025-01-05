@@ -1,4 +1,4 @@
-.middleHomeSide {
+/* .middleHomeSide {
     width: 100%;
     border-left: 1px solid #999999;
     padding: 0px 50px;
@@ -19,12 +19,12 @@
     align-items: center;
     overflow-x: auto;
     
-}
+} */
 .storyBlock::-webkit-scrollbar{
     display: none;
 }
 
-.storyParticular {
+/* .storyParticular {
     width: 66px;
     height: 66px;
     display: flex;
@@ -33,7 +33,7 @@
     align-items: center;
 
 
-}
+} */
 
 .imageDIV {
     width: 56px;

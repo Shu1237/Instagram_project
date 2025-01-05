@@ -3,30 +3,51 @@ import '../css//middleSide.css';
 import story from '../../../story.json'
 
 import Post from '../jsx/post'
+import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
-function MiddleSide() {
+export default function MiddleSide() {
+
     const storys = story.story;
+
+    const sliderLeft = () => {
+        let slider = document.getElementById('slider');
+        slider.scrollLeft = slider.scrollLeft - 500
+
+    }
+    const slideRight = () => {
+        let slider = document.getElementById('slider');
+        slider.scrollLeft = slider.scrollLeft + 500
+
+    }
+
     return (
-        <div className="middleHomeSide">
-            <div className="storyBlock">
-                {storys.map((story, index) => {
-                    return (
-                        <div key={index} className="storyParticular">
-                            <div className="imageDIV">
-                                <img className="statusImg" src={story.img} alt="story" />
+        <div className="  w-full border-l border-gray-400 px-12 box-border flex flex-col items-center justify-center" >
+            <div className="relative flex items-center">
+                <MdChevronLeft onClick={sliderLeft} size={40} className='mb-[45px] opacity-50 cursor-pointer hover:opacity-100'/>
+                <div id="slider" className="  w-[800px] h-[120px] flex gap-8 justify-center items-center overflow-x-auto mt-[13px] mb-[40px]   overflow-scroll whitespace-nowrap scroll-smooth scrollbar-hide">
+
+                    {storys.map((story, index) => {
+                        return (
+                            <div key={index} className="w-[66px] h-[66px] flex flex-col items-center justify-center p-[5px] ">
+                                <div className="w-[66px] h-[66px] rounded-full border-1 border-purple-500 ">
+                                    <img className="w-[66px] h-[66px]  rounded-full object-cover " src={story.img} alt="story" />
+                                </div>
+                                <div className="text-base">
+                                    {story.name}
+                                </div>
                             </div>
-                            <div className="profileName">
-                                {story.name}
-                            </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
+
+                </div>
+                <MdChevronRight onClick={slideRight} size={40} className=' mb-[45px] opacity-50 cursor-pointer hover:opacity-100' />
             </div>
-            <div className="postSection">
-               <Post/>
-               <Post/>
-               <Post/>
-               <Post/>
+
+            <div className="w-3/5">
+                <Post />
+                <Post />
+                <Post />
+                <Post />
             </div>
         </div >
 
@@ -35,4 +56,3 @@ function MiddleSide() {
 
     )
 }
-export default MiddleSide

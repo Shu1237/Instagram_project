@@ -1,7 +1,5 @@
-.leftSidePart{
-    position: fixed;
-}
-.logoPart {
+
+/* .logoPart {
     width: 150px;
     height: 40px;
 }
@@ -9,16 +7,16 @@
 .logoImg {
     width: 100%;
 
-}
+} */
 
-.navLinkPart {
+/* .navLinkPart {
     display: flex;
     flex-direction: column;
     margin-top: 45px;
 
-}
+} */
 
-.navLink {
+/* .navLink {
     display: flex;
     height: 35px;
     align-items: center;
@@ -38,14 +36,10 @@
     font-weight: 500;
     font-size: 15px;
 
-}
+} */
 
-.profileImg {
-    width: 30px;
-    border-radius: 50%;
-    margin-right: 20px;
-}
+/* 
 
 .belowPart {
     margin-top: 30px;
-}
+} */
