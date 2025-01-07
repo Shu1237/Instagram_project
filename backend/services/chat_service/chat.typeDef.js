@@ -20,11 +20,14 @@ export const chatTypeDef = gql`
     images: [String]
   }
   type Query {
-    chats(roomChatId: ID): [Chat]
+    chats(roomChatId: ID!): [Chat]
     chat(id: ID!): Chat
   }
 
   type Mutation {
-    sendChat(input: ChatInput): Chat!
+    sendChat(input: ChatInput!): Chat!
+  }
+  type Subscription {
+    messageAdded(roomChatId: ID!): Chat!
   }
 `;
