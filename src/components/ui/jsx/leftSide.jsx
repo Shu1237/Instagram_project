@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import logoInstagram from "../../../assets/logo.png";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
@@ -10,92 +10,113 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import profileImg from "../../../assets/profilepic.png";
 import GestureIcon from "@mui/icons-material/Gesture";
 import Menu from "../jsx/menu";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import ModalCreate from "./modalCreate";
-
+import { useQuery } from "@apollo/client";
+import { ME_QUERY, GET_USERS_QUERY } from "../../../graphql/query/user.query";
 export default function LeftSide() {
-  return (
-    <div className="fixed ">
-      <div className="w-full h-auto flex items-center justify-center">
-        <img className="w-[150px] h-auto" src={logoInstagram} alt="logo" />
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { loading, error, data } = useQuery(ME_QUERY);
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-full">
+        <div className="animate-spin">Loading...</div>
       </div>
-
-      <div className="flex flex-col mt-[20px] w-full">
-
-        <Link to="/" className="w-full">
-
-          <MenuItem
-            icon={<HomeIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />}
-            label="Home"
-          />
-        </Link>
-        <MenuItem
-          icon={<SearchIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />}
-          label="Search"
-        />
-        <MenuItem
-          icon={<ExploreIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />}
-          label="Explore"
-        />
-        <MenuItem
-          icon={
-            <SlowMotionVideoIcon
-              sx={{ fontSize: "35px", margin: "0 20px 0 0" }}
-            />
-          }
-          label="Reels"
-        />
-        <MenuItem
-          icon={
-            <MapsUgcOutlinedIcon
-              sx={{ fontSize: "35px", margin: "0 20px 0 0" }}
-            />
-          }
-          label="Messages"
-        />
-        <MenuItem
-          icon={
-            <FavoriteBorderOutlinedIcon
-              sx={{ fontSize: "35px", margin: "0 20px 0 0" }}
-            />
-          }
-          label="Notifications"
-        />
-    
-
-
-        <ModalCreate />
-
-        <div className="flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full">
-          <img
-            src={profileImg}
-            alt="Profile"
-            className="w-[35px] h-[35px] rounded-full mr-[20px]"
-          />
-          <Link
-            to="/profile"
-            className="font-normal text-[16px] text-lg hover:text-blue-500"
-          >
-            Profile
+    );
+  const linkProfile = `/profile/${data.me.user_id}`;
+  return (
+    <div className="fixed left-0 h-screen border-r border-gray-300 bg-white z-50">
+      <div className="flex flex-col h-full px-3 py-8 justify-between w-[244px]">
+        {/* Logo Section */}
+        <div className="pt-2.5 pb-4">
+          <Link to="/">
+            <img src={logoInstagram} alt="Instagram" className="w-28" />
           </Link>
         </div>
 
-        <div className="mt-[20px] w-full">
-          <MenuItem
-            icon={
-              <GestureIcon sx={{ fontSize: "30px", margin: "0 20px 0 0" }} />
-            }
-            label="Threads"
-          />
-          <Menu />
+        {/* Navigation Menu */}
+        <div className="flex-1">
+          <nav className="space-y-1">
+            <Link
+              to="/"
+              className="flex items-center py-3 px-3 space-x-4 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <HomeIcon className="text-2xl" />
+              <span className="text-base font-medium">Home</span>
+            </Link>
+
+            <button className="w-full flex items-center py-3 px-3 space-x-4 rounded-lg hover:bg-gray-100 transition-colors">
+              <SearchIcon className="text-2xl" />
+              <span className="text-base font-medium">Search</span>
+            </button>
+
+            <Link
+              to="/explore"
+              className="flex items-center py-3 px-3 space-x-4 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <ExploreIcon className="text-2xl" />
+              <span className="text-base font-medium">Explore</span>
+            </Link>
+
+            <Link
+              to="/reels"
+              className="flex items-center py-3 px-3 space-x-4 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <SlowMotionVideoIcon className="text-2xl" />
+              <span className="text-base font-medium">Reels</span>
+            </Link>
+
+            <Link
+              to="/messages"
+              className="flex items-center py-3 px-3 space-x-4 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <MapsUgcOutlinedIcon className="text-2xl" />
+              <span className="text-base font-medium">Messages</span>
+            </Link>
+
+            <button className="w-full flex items-center py-3 px-3 space-x-4 rounded-lg hover:bg-gray-100 transition-colors">
+              <FavoriteBorderOutlinedIcon className="text-2xl" />
+              <span className="text-base font-medium">Notifications</span>
+            </button>
+
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="w-full flex items-center py-3 px-3 space-x-4 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <AddBoxOutlinedIcon className="text-2xl" />
+              <span className="text-base font-medium">Create</span>
+            </button>
+
+            <Link
+              to={linkProfile}
+              className="flex items-center py-3 px-3 space-x-4 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <img
+                src={profileImg}
+                alt="profile"
+                className="w-6 h-6 rounded-full"
+              />
+              <span className="text-base font-medium">Profile</span>
+            </Link>
+          </nav>
+        </div>
+
+        {/* Menu Button */}
+        <div className="mt-auto">
+          <button className="w-full flex items-center py-3 px-3 space-x-4 rounded-lg hover:bg-gray-100 transition-colors">
+            <GestureIcon className="text-2xl" />
+            <span className="text-base font-medium">More</span>
+          </button>
         </div>
       </div>
+
+      {/* Create Modal */}
+      {isModalOpen && (
+        <ModalCreate
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
-const MenuItem = ({ icon, label }) => (
-  <div className="flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full">
-    {icon}
-    <div className="font-normal text-[16px] text-lg">{label}</div>
-  </div>
-);

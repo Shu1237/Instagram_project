@@ -1,51 +1,67 @@
 import User from "../../models/mysql/user.js";
-import { performance } from "perf_hooks";
 
 const CACHE_KEYS = {
-  ALL_USERS: "users:all",
-  USER_BY_ID: (id) => `user:${id}`,
+  USER: (id) => `USER_${id}`,
+  USERS_PAGE: (page, limit) => `USERS_PAGE_${page}_LIMIT_${limit}`,
+  USER_PROFILE: (id) => `USER_PROFILE_${id}`,
 };
 
 export const userResolver = {
   Query: {
-    async users(_, __, { cache }) {
-      const start = performance.now();
+    async users(_, { pageQuery, limitQuery }, { cache }) {
       try {
-        // Try get from cache
-        const cacheStart = performance.now();
-        const cachedUsers = await cache.get(CACHE_KEYS.ALL_USERS);
-        console.log(
-          `Cache lookup duration: ${performance.now() - cacheStart}ms`
-        );
+        let page = pageQuery || 1,
+          limit = limitQuery || 4;
+        const offset = (page - 1) * limit;
 
-        if (cachedUsers) {
-          console.log(
-            `Cache HIT - Total duration: ${performance.now() - start}ms`
-          );
-          return cachedUsers;
-        }
+        const cacheKey = CACHE_KEYS.USERS_PAGE(page, limit);
+        const cachedUsers = await cache.get(cacheKey);
 
-        // If not in cache, get from DB
-        const dbStart = performance.now();
-        const allUsers = await User.findAll();
-        console.log(
-          `Database query duration: ${performance.now() - dbStart}ms`
-        );
+        if (cachedUsers) return cachedUsers;
 
-        // Store in cache
-        const cacheSetStart = performance.now();
-        await cache.set(CACHE_KEYS.ALL_USERS, allUsers);
-        console.log(
-          `Cache set duration: ${performance.now() - cacheSetStart}ms`
-        );
-
-        console.log(
-          `Cache MISS - Total duration: ${performance.now() - start}ms`
-        );
-        return allUsers;
+        const users = await User.findAll({ offset, limit });
+        await cache.set(cacheKey, users, 300); // 5 minutes TTL
+        return users;
       } catch (error) {
-        console.error(`Error duration: ${performance.now() - start}ms`, error);
         throw new Error("Error fetching users");
+      }
+    },
+
+    async user(_, { user_id }, { cache }) {
+      try {
+        const cacheKey = CACHE_KEYS.USER(user_id);
+        const cachedUser = await cache.get(cacheKey);
+
+        if (cachedUser) return cachedUser;
+
+        const user = await User.findByPk(user_id);
+        if (!user) throw new Error("User not found");
+
+        await cache.set(cacheKey, user, 300); // 5 minutes TTL
+        return user;
+      } catch (error) {
+        throw new Error("Error fetching user");
+      }
+    },
+  },
+
+  Mutation: {
+    async updateProfile(_, { input }, { cache, user }) {
+      try {
+        const updatedUser = await User.update(input, {
+          where: { user_id: user.user_id },
+          returning: true,
+        });
+
+        // Invalidate related caches
+        await Promise.all([
+          cache.del(CACHE_KEYS.USER(user.user_id)),
+          cache.del(CACHE_KEYS.USER_PROFILE(user.user_id)),
+        ]);
+        await cache.set(CACHE_KEYS.USER(user.user_id), updatedUser, 300); // 5 minutes TTL
+        return updatedUser;
+      } catch (error) {
+        throw new Error(error.message);
       }
     },
   },

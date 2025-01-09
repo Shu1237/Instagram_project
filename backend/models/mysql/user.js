@@ -26,6 +26,8 @@ const User = sequelize.define(
     avatar: {
       type: DataTypes.STRING(255),
       allowNull: true,
+      defaultValue:
+        "https://tse1.mm.bing.net/th?id=OIP.RO4YLJyap-FUvMNX1oMXqgHaHa&w=768&h=768&rs=1&pid=ImgDetMain",
     },
     email: {
       type: DataTypes.STRING(100),
