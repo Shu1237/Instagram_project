@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../../config/database.config.js";
 import FriendRequest from "./friend_request.js";
+import Notification from "./notifications.js";
 const User = sequelize.define(
   "user",
   {
@@ -73,6 +74,14 @@ User.hasMany(FriendRequest, {
 
 User.hasMany(FriendRequest, {
   as: "receiver",
+  foreignKey: "receiver_id",
+});
+User.hasMany(Notification, {
+  as: "sender_notification",
+  foreignKey: "sender_id",
+});
+User.hasMany(Notification, {
+  as: "receiver_notification",
   foreignKey: "receiver_id",
 });
 

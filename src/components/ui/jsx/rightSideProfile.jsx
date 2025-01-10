@@ -42,8 +42,13 @@ export default function RightSideProfile() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-full">
-        <div className="animate-spin">Loading...</div>
+      <div className="flex justify-center items-center h-full bg-gray-50">
+        <div className="relative w-16 h-16">
+          {/* Gradient Spinner */}
+          <div className="absolute inset-0 animate-spin rounded-full border-4 border-t-transparent border-gradient-to-r from-pink-500 via-red-500 to-yellow-500"></div>
+          {/* Inner Circle */}
+          <div className="absolute inset-[6px] bg-white rounded-full"></div>
+        </div>
       </div>
     );
 

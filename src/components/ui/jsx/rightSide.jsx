@@ -33,37 +33,60 @@ function RightSide() {
 
   return (
     <div className="flex flex-col w-full max-w-[320px] px-4">
-      {/* Current User Section */}
+      {/* Auth Section */}
       <div className="flex items-center justify-between py-4 mb-6">
-        <div className="flex items-center space-x-4">
-          <div className="relative w-12 h-12">
-            <Link to={`/profile/${data.me.user_id}`}>
-              <img
-                className="w-full h-full rounded-full object-cover"
-                src={data?.me?.avatar || ProfileRight}
-                alt="profileRight"
-              />
-            </Link>
+        {data?.me ? (
+          // Logged in user view
+          <div className="flex items-center space-x-4">
+            <div className="relative w-12 h-12">
+              <Link to={`/profile/${data.me.user_id}`}>
+                <img
+                  className="w-full h-full rounded-full object-cover hover:opacity-90 transition"
+                  src={data.me.avatar || ProfileRight}
+                  alt={data.me.username}
+                />
+              </Link>
+              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+            </div>
 
-            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+            <div className="flex flex-col">
+              <Link
+                to={`/profile/${data.me.user_id}`}
+                className="font-semibold text-sm hover:text-gray-500 transition"
+              >
+                {data.me.username}
+              </Link>
+              <span className="text-gray-500 text-sm">{data.me.full_name}</span>
+            </div>
+            <button
+              onClick={handleSwitch}
+              className="text-blue-500 text-sm font-semibold hover:text-blue-600"
+            >
+              Switch
+            </button>
           </div>
-
-          <div className="flex flex-col">
-            <span className="font-semibold text-sm">
-              {data ? data.me.username : "Guest"}
-            </span>
+        ) : (
+          // Non-authenticated view
+          <div className="flex flex-col w-full space-y-3">
             <span className="text-gray-500 text-sm">
-              {data ? data.me.full_name : "Guest"}
+              Log in to see your feed
             </span>
+            <div className="flex space-x-2">
+              <Link
+                to="/login"
+                className="flex-1 py-1.5 px-4 bg-blue-500 text-white text-sm font-semibold rounded hover:bg-blue-600 transition text-center"
+              >
+                Log In
+              </Link>
+              <Link
+                to="/signup"
+                className="flex-1 py-1.5 px-4 border border-gray-200 text-sm font-semibold rounded hover:bg-gray-50 transition text-center"
+              >
+                Sign Up
+              </Link>
+            </div>
           </div>
-        </div>
-
-        <button
-          onClick={handleSwitch}
-          className="text-blue-500 text-sm font-semibold hover:text-blue-600"
-        >
-          Switch
-        </button>
+        )}
       </div>
 
       {/* Suggested Users Section */}
