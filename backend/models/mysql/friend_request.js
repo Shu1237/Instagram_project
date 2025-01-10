@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../../config/database.config.js";
 import User from "./user.js";
-
+import Notification from "./notifications.js";
 const FriendRequest = sequelize.define(
   "friend_request",
   {
@@ -41,6 +41,12 @@ const FriendRequest = sequelize.define(
     timestamps: false,
   }
 );
+
+FriendRequest.hasOne(Notification,{
+  foreignKey: "friend_request_id",
+  as: "notification",
+  onDelete: "CASCADE",
+});
 
 // Define relationships
 // FriendRequest.belongsTo(User, {
