@@ -18,8 +18,10 @@ const ModalCreate = () => {
 
   const handleEmojiSelect = (selectedEmoji) => {
     setEmoji(selectedEmoji); // save emoji
+
     setValue((v) => [...v, selectedEmoji]);
   };
+
 
   // bo chiu phan nay
   // const [currentIndex, setCurrentIndex] = useState(0);
@@ -147,6 +149,18 @@ const ModalCreate = () => {
                     Back
                   </button>
                 )}
+                {
+                  
+                  next === 2 && (
+                    <button
+                      className="absolute right-0 text-blue-500 font-semibold"
+                      // onClick={}
+                    >
+                      Up
+                    </button>
+
+                  )
+                }
               </>
             )}
 
