@@ -5,7 +5,7 @@ import CollectionsOutlinedIcon from "@mui/icons-material/CollectionsOutlined";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { RxDotFilled } from "react-icons/rx";
 import Avatar from "../../../assets/img1.png";
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import IconPicker from "../jsx/iconPick";
 const ModalCreate = () => {
   const [open, setOpen] = useState(false);
@@ -16,16 +16,11 @@ const ModalCreate = () => {
   const MAX_CAPTION_LENGTH = 2200;
   const [emoji, setEmoji] = useState(null);
 
-
   const handleEmojiSelect = (selectedEmoji) => {
     setEmoji(selectedEmoji); // save emoji
-    setValue(v => [...v, selectedEmoji]);
+
+    setValue((v) => [...v, selectedEmoji]);
   };
-
-
-
-
-
 
 
   // bo chiu phan nay
@@ -103,17 +98,23 @@ const ModalCreate = () => {
 
   return (
     <>
-
-      <div
+      {/* <div
         className="flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full"
         onClick={() => setOpen(true)}
         aria-label="Open create modal"
       >
         <AddBoxOutlinedIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />
         <div className="font-normal text-[16px] text-lg">Create</div>
+      </div> */}
+      <div
+        className="w-full flex items-center py-3 px-3 space-x-4 rounded-lg hover:bg-gray-100 transition-colors"
+        onClick={() => setOpen(true)}
+        aria-label="Open create modal"
+      >
+        <AddBoxOutlinedIcon className="text-2xl" />
+        <span className="text-base font-medium">Create</span>
       </div>
 
- 
       <Modal
         centered
         open={open}
@@ -122,9 +123,12 @@ const ModalCreate = () => {
         width={800}
       >
         <div className="flex flex-col w-full max-w-[500px] mx-auto bg-white rounded-md p-6 shadow-sm text-center">
-
           <div className="text-lg font-semibold text-black mb-8 border-b pb-2 relative">
-            {next === 0 ? "Create New Post" : next === 1 ? "Edit Caption" : "Share"}
+            {next === 0
+              ? "Create New Post"
+              : next === 1
+              ? "Edit Caption"
+              : "Share"}
             {picture.length > 0 && (
               <>
                 {next < 2 && (
@@ -160,19 +164,15 @@ const ModalCreate = () => {
               </>
             )}
 
-            {
-              picture.length === 0 && next === 1 && (
-                <button
-                  className="absolute left-0 text-blue-500 font-semibold"
-                  onClick={() => setNext(next - 1)}
-                >
-                  Back
-                </button>
-
-              )
-            }
+            {picture.length === 0 && next === 1 && (
+              <button
+                className="absolute left-0 text-blue-500 font-semibold"
+                onClick={() => setNext(next - 1)}
+              >
+                Back
+              </button>
+            )}
           </div>
-
 
           {next === 0 && (
             <div
@@ -204,9 +204,8 @@ const ModalCreate = () => {
             </div>
           )}
 
-
-          {next === 1 && (
-            picture.length > 0 ? (
+          {next === 1 &&
+            (picture.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {picture.map((p, index) => (
                   <div key={index} className="relative w-24 h-24">
@@ -225,23 +224,11 @@ const ModalCreate = () => {
                 ))}
               </div>
             ) : (
-
-              <div>
-                Your list picture is empty
-              </div>
-
-            )
-
-
-          )}
-
-
+              <div>Your list picture is empty</div>
+            ))}
 
           {next === 2 && (
             <div className="flex flex-row gap-6">
-
-
-
               {/* BỐ MÀY DELL LÀM ĐƯỢC PHẦN NÀyNÀy */}
 
               {/* 
@@ -263,9 +250,7 @@ const ModalCreate = () => {
 
               </div> */}
 
-
               <div className="p-4 border rounded-lg shadow-md bg-white w-full max-w-md">
-
                 <div className="flex items-center mb-4">
                   <img
                     src={Avatar}
@@ -283,10 +268,7 @@ const ModalCreate = () => {
                     value={value}
                     onChange={handleValue}
                   />
-
                 </div>
-
-
 
                 <div className="flex flex-col gap-4">
                   <div className="flex justify-between items-center">
@@ -294,25 +276,24 @@ const ModalCreate = () => {
                       <IconPicker onEmojiChange={handleEmojiSelect} />
                     </div>
 
-                    <div className="text-gray-400 text-sm text-right mt-1">0/2,200</div>
+                    <div className="text-gray-400 text-sm text-right mt-1">
+                      0/2,200
+                    </div>
                   </div>
                   <div className="flex justify-between items-center hover:bg-[#ededed] p-3 rounded-lg">
                     <span className="text-gray-700">Add location</span>
                     <div className="text-gray-500">📍</div>
                   </div>
 
-
                   <div className="flex justify-between items-center hover:bg-[#ededed] p-2">
                     <span className="text-gray-700">Add collaborators</span>
                     <div className="text-gray-500">🤝</div>
                   </div>
 
-
                   <div className="flex justify-between items-center hover:bg-[#ededed] p-2">
                     <span className="text-gray-700">Accessibility</span>
                     <div className="text-gray-500">⬇️</div>
                   </div>
-
 
                   <div className="flex justify-between items-center hover:bg-[#ededed] p-2">
                     <span className="text-gray-700">Advanced settings</span>
@@ -321,9 +302,7 @@ const ModalCreate = () => {
                 </div>
               </div>
             </div>
-
           )}
-
         </div>
       </Modal>
     </>
