@@ -30,7 +30,7 @@ function RightSide() {
         <div className="animate-spin">Loading...</div>
       </div>
     );
-
+  // console.log(data);
   return (
     <div className="flex flex-col w-full max-w-[320px] px-4">
       {/* Auth Section */}
