@@ -13,10 +13,12 @@ import Menu from "../jsx/menu";
 import { Link } from "react-router-dom";
 import ModalCreate from "./modalCreate";
 import NotificationsDropdown from "./notification";
-
+import { useQuery } from "@apollo/client";
+import { ME_QUERY, GET_USERS_QUERY } from "../../../graphql/query/user.query";
 export default function LeftSide() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const { loading, error, data } = useQuery(ME_QUERY);
   const modalRef = useRef();
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export default function LeftSide() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
+  const linkProfile = `/profile/${data?.me?.user_id}`;
   return (
     <div>
       <div className="fixed left-0 h-screen border-r border-gray-300 bg-white z-40">
@@ -92,12 +94,12 @@ export default function LeftSide() {
               <ModalCreate />
 
               <Link
-                to="/profile"
+                to={linkProfile}
                 className="flex items-center py-3 px-3 space-x-4 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <img
-                  src={profileImg}
-                  alt="Profile"
+                  src={data?.me?.avatar || profileImg}
+                  alt="profile"
                   className="w-6 h-6 rounded-full"
                 />
                 <span className="text-base font-medium">Profile</span>
