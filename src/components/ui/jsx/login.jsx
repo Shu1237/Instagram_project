@@ -26,7 +26,7 @@ function Login() {
     onCompleted: () => {
       setShowSuccess(true);
       setTimeout(() => {
-        navigate("/home");
+        navigate("/");
         setShowSuccess(false);
       }, 500); // Hide success after 3 seconds and navigate to /home
     },

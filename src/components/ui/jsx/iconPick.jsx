@@ -1,24 +1,29 @@
-import React, { useState,useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import EmojiPicker from 'emoji-picker-react';
 import '../css/emotion.css'
-
+import { useNavigate } from 'react-router-dom';
 import InsertEmoticonOutlinedIcon from '@mui/icons-material/InsertEmoticonOutlined';
 
-const EmojiPickerComponent = () => {
-  const [chosenEmoji, setChosenEmoji] = useState(null);
+const EmojiPickerComponent = ({onEmojiChange} ) => {
+  // const [chosenEmoji, setChosenEmoji] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const pickerRef = useRef(null);
 
-  const onEmojiClick = () => {
-   
-    setIsOpen(!isOpen); 
-  };
 
+  const onEmojiClick = () => {
+
+    setIsOpen(!isOpen);
+  };
+  const handleEmojiClick = (event, emojiObject) => {
+    onEmojiChange(emojiObject.emoji); 
+    setIsOpen(false);
+  };
   useEffect(() => {
-    
+
     const handleClickOutside = (event) => {
       if (pickerRef.current && !pickerRef.current.contains(event.target)) {
-        setIsOpen(false); 
+
+        setIsOpen(false);
       }
     };
 
@@ -30,15 +35,13 @@ const EmojiPickerComponent = () => {
   return (
     <div className='container'>
       <div className="emoji-button"  >
-        <InsertEmoticonOutlinedIcon sx={{ fontSize: "40px" }} onClick={onEmojiClick}/>
+        <InsertEmoticonOutlinedIcon sx={{ fontSize: "25px" }} onClick={onEmojiClick} />
         {isOpen && (
-        <div className="emoji-picker">
-          <EmojiPicker onEmojiClick={onEmojiClick} />
-        </div>
-      )}
+          <div className="emoji-picker">
+            <EmojiPicker onEmojiClick={handleEmojiClick} />
+          </div>
+        )}
       </div>
-
-      
     </div>
   );
 };

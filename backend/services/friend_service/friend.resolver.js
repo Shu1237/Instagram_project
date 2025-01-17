@@ -1,4 +1,5 @@
 import FriendRequest from "../../models/mysql/friend_request.js";
+import Notification from "../../models/mysql/notifications.js";
 import User from "../../models/mysql/user.js";
 import RoomChat from "../../models/mongodb/rooms-chat.model.js";
 import { Op } from "sequelize";
@@ -52,6 +53,18 @@ export const friendResolver = {
           sender_id,
           receiver_id,
         });
+        const newNotification = await Notification.create({
+          type: "follow",
+          sender_id: sender_id,
+          receiver_id: receiver_id,
+          friend_request_id: friendRequest.id,
+        });
+        await context.pubsub.publish(
+          `NOTIFICATION_ADDED.${sender_id}.${receiver_id}`,
+          {
+            notificationAdded: newNotification,
+          }
+        );
         return friendRequest;
       } catch (error) {
         console.error(error);
@@ -74,6 +87,17 @@ export const friendResolver = {
           typeRoom: "single",
           users: [friendRequest.sender_id, friendRequest.receiver_id],
         });
+        const newNotification = await Notification.create({
+          type: "follow",
+          sender_id: friendRequest.receiver_id,
+          receiver_id: friendRequest.sender_id,
+        });
+        await context.pubsub.publish(
+          `NOTIFICATION_ADDED.${friendRequest.receiver_id}.${friendRequest.sender_id}`,
+          {
+            notificationAdded: newNotification,
+          }
+        );
         await newRoomChat.save();
         await friendRequest.save();
         return friendRequest;

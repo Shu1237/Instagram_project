@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../../config/database.config.js";
 import FriendRequest from "./friend_request.js";
+import Notification from "./notifications.js";
 const User = sequelize.define(
   "user",
   {
@@ -26,6 +27,8 @@ const User = sequelize.define(
     avatar: {
       type: DataTypes.STRING(255),
       allowNull: true,
+      defaultValue:
+        "https://tse1.mm.bing.net/th?id=OIP.RO4YLJyap-FUvMNX1oMXqgHaHa&w=768&h=768&rs=1&pid=ImgDetMain",
     },
     email: {
       type: DataTypes.STRING(100),
@@ -71,6 +74,14 @@ User.hasMany(FriendRequest, {
 
 User.hasMany(FriendRequest, {
   as: "receiver",
+  foreignKey: "receiver_id",
+});
+User.hasMany(Notification, {
+  as: "sender_notification",
+  foreignKey: "sender_id",
+});
+User.hasMany(Notification, {
+  as: "receiver_notification",
   foreignKey: "receiver_id",
 });
 
