@@ -4,11 +4,13 @@ import { friendTypeDef } from "../services/friend_service/friend.typeDef.js";
 import { postTypeDef } from "../services/post_service/post.typeDef.js";
 import { roomChatTypeDef } from "../services/room_chat_service/room_chat.typeDef.js";
 import { chatTypeDef } from "../services/chat_service/chat.typeDef.js";
+import { likeTypeDef } from "../services/like_service/like.typeDef.js";
 export const typeDefs = [
   authTypeDef,
   userTypeDef,
   friendTypeDef,
   chatTypeDef,
   roomChatTypeDef,
-  postTypeDef
+  postTypeDef,
+  likeTypeDef
 ];

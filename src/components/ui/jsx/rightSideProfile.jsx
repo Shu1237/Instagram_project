@@ -82,8 +82,8 @@ export default function RightSideProfile() {
                     state == 1 && <div className="p-5 bg-gray-100 rounded-lg shadow-md mt-5 h-72 flex flex-col justify-center">
                         <div className="post-input-profile-body">
                             <form action="">
-                                <input type="file" 
-                                className='p-2.5 border border-gray-300 rounded-md'/>
+                                <input type="file"
+                                    className='p-2.5 border border-gray-300 rounded-md' />
                             </form>
                         </div>
                         <div className="text-boy-profile">
