@@ -1,4 +1,3 @@
-import { get } from "mongoose";
 import Post from "../../models/mongodb/post.model.js";
 import { GraphQLError } from "graphql";
 
@@ -110,6 +109,4 @@ export const postResolver = {
         });
       }
     },
-  },
 };
-// đã làm xong creat post, cần làm thêm delete và update post
