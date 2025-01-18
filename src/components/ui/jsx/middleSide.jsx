@@ -24,7 +24,7 @@ export default function MiddleSide() {
         <div className="  w-full border-l border-gray-400 px-12 box-border flex flex-col items-center justify-center" >
             <div className="relative flex items-center">
                 <MdChevronLeft onClick={sliderLeft} size={40} className='mb-[45px] opacity-50 cursor-pointer hover:opacity-100'/>
-                <div id="slider" className="  w-[800px] h-[120px] flex gap-8 justify-center items-center overflow-x-auto mt-[13px] mb-[40px]   overflow-scroll whitespace-nowrap scroll-smooth scrollbar-hide">
+                <div id="slider" className="w-[800px] h-[120px] flex gap-[35px] justify-center items-center overflow-x-auto mt-[13px] mb-[40px] scrollbar-hide scroll-smooth ">
 
                     {storys.map((story, index) => {
                         return (
