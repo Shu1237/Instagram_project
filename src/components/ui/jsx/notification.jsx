@@ -1,48 +1,54 @@
 import React from "react";
-
-export default function NotificationsDropdown({ isOpen, onClose }) {
+import { useSubscription } from "@apollo/client";
+import { NEW_NOTIFICATIONS } from "../../../graphql/subscriptions/notification.subcription";
+import CloseIcon from "@material-ui/icons/Close";
+export default function NotificationsDropdown({
+  isOpen,
+  onClose,
+  senderId,
+  receiverId,
+}) {
+  const { data, loading } = useSubscription(NEW_NOTIFICATIONS, {
+    variables: { senderId: senderId, receiverId: receiverId },
+  });
   if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex justify-end">
       <div
-        className="absolute left-[70px] top-[360px] w-[400px] bg-white rounded-xl shadow-2xl border border-gray-200"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="p-4 max-h-[362px] overflow-y-auto">
-          <h3 className="font-semibold text-base mb-4">Notifications</h3>
+        className="absolute inset-0 bg-black bg-opacity-40"
+        onClick={onClose}
+      />
+      <div className="relative w-[400px] h-full bg-white shadow-lg border-l border-gray-200">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <h1 className="text-base font-semibold">Notifications</h1>
+          <button
+            onClick={onClose}
+            className="p-1 hover:bg-gray-100 rounded-full"
+          >
+            <CloseIcon className="text-lg" />
+          </button>
+        </div>
 
-          <div className="space-y-4">
-            {/* This week */}
-            <div>
-              <p className="text-sm font-semibold text-gray-500 mb-2">
-                This Week
-              </p>
-              <div className="space-y-3">
-                <NotificationItem
-                  avatar="/path-to-avatar.jpg"
-                  username="user123"
-                  action="started following you."
-                  time="2d"
-                  isFollowBack
-                />
-              </div>
-            </div>
-
-            {/* This month */}
-            <div>
-              <p className="text-sm font-semibold text-gray-500 mb-2">
-                This Month
-              </p>
-              <div className="space-y-3">
-                <NotificationItem
-                  avatar="/path-to-avatar.jpg"
-                  username="another_user"
-                  action="liked your photo."
-                  time="1w"
-                  postImage="/path-to-post.jpg"
-                />
-              </div>
+        {/* Notifications List */}
+        <div className="h-[calc(100vh-60px)] overflow-y-auto">
+          <div className="p-4">
+            <h2 className="text-sm font-semibold text-gray-500 mb-3">
+              This Week
+            </h2>
+            <div className="space-y-4">
+              {loading ? (
+                <p>Loading...</p>
+              ) : (
+                data?.newNotification && (
+                  <NotificationItem
+                    avatar={data.newNotification.sender.avatar}
+                    username={data.newNotification.sender.username}
+                    action="sent you a friend request."
+                    time={data.newNotification.created_at}
+                  />
+                )
+              )}
             </div>
           </div>
         </div>
@@ -51,14 +57,7 @@ export default function NotificationsDropdown({ isOpen, onClose }) {
   );
 }
 
-function NotificationItem({
-  avatar,
-  username,
-  action,
-  time,
-  isFollowBack,
-  postImage,
-}) {
+function NotificationItem({ avatar, username, action, time }) {
   return (
     <div className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg">
       <div className="flex items-center space-x-3">
@@ -70,14 +69,6 @@ function NotificationItem({
           </p>
         </div>
       </div>
-      {isFollowBack && (
-        <button className="px-4 py-1.5 bg-blue-500 text-white text-sm font-semibold rounded">
-          Follow
-        </button>
-      )}
-      {postImage && (
-        <img src={postImage} alt="" className="w-11 h-11 object-cover" />
-      )}
     </div>
   );
 }

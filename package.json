@@ -19,6 +19,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@graphql-tools/schema": "^10.0.16",
+    "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^6.3.0",
     "@mui/material": "^6.3.0",
     "@nextui-org/modal": "^2.2.6",
