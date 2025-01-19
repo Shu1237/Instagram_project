@@ -59,12 +59,9 @@ export const friendResolver = {
           receiver_id: receiver_id,
           friend_request_id: friendRequest.id,
         });
-        await context.pubsub.publish(
-          `NOTIFICATION_ADDED.${sender_id}.${receiver_id}`,
-          {
-            notificationAdded: newNotification,
-          }
-        );
+        await context.pubsub.publish(`NOTIFICATION_ADDED.${receiver_id}`, {
+          notificationAdded: newNotification,
+        });
         return friendRequest;
       } catch (error) {
         console.error(error);
@@ -93,7 +90,7 @@ export const friendResolver = {
           receiver_id: friendRequest.sender_id,
         });
         await context.pubsub.publish(
-          `NOTIFICATION_ADDED.${friendRequest.receiver_id}.${friendRequest.sender_id}`,
+          `NOTIFICATION_ADDED.${friendRequest.sender_id}`,
           {
             notificationAdded: newNotification,
           }

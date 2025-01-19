@@ -10,6 +10,6 @@ export const notificationTypeDef = gql`
     create_at: String!
   }
   type Subscription {
-    notificationAdded(sender_id: Int!, receiver_id: Int!): Notification!
+    notificationAdded(receiver_id: Int!): Notification!
   }
 `;
