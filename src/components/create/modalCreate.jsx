@@ -4,9 +4,9 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import CollectionsOutlinedIcon from "@mui/icons-material/CollectionsOutlined";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { RxDotFilled } from "react-icons/rx";
-import Avatar from "../../../assets/img1.png";
+import Avatar from "../../assets/img1.png";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import IconPicker from "../jsx/iconPick";
+import IconPicker from "../comment/iconPick";
 const ModalCreate = () => {
   const [open, setOpen] = useState(false);
   const [next, setNext] = useState(0);

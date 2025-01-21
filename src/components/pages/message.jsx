@@ -1,4 +1,4 @@
-import LeftSide  from '../jsx/leftSide';
+import LeftSide  from '../home/leftSide';
 export default function Message() {
 
     return (

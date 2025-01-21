@@ -7,9 +7,9 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import MapsUgcOutlinedIcon from "@mui/icons-material/MapsUgcOutlined";
 import ShareRoundedIcon from "@mui/icons-material/ShareRounded";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
-import Avatar from "../../../assets/img1.png";
-import Image from "../../../assets/img2.png";
-import IconPicker from "../jsx/iconPick";
+import Avatar from "../../assets/img1.png";
+import Image from "../../assets/img2.png";
+import IconPicker from "./iconPick";
 
 const ModalPost = () => {
   const arryTyms = [

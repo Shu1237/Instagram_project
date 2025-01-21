@@ -6,10 +6,10 @@ import {
   Routes,
   createBrowserRouter,
 } from "react-router-dom";
-import Home from "../ui/jsx/home";
-import Login from "../ui/jsx/login";
-import Signup from "../ui/jsx/register";
-import Profile from "../ui/jsx/profile";
+import Home from "../pages/home";
+import Login from "../auth/login";
+import Signup from "../auth/register";
+import Profile from "../pages/profile";
 
 export default function App() {
   return (

@@ -1,8 +1,8 @@
 import React from "react";
-import '../css//middleSide.css';
-import story from '../../../story.json'
+import '../ui/css/middleSide.css';
+import story from '../../story.json'
 
-import Post from '../jsx/post'
+import Post from '../post/post'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
 export default function MiddleSide() {
