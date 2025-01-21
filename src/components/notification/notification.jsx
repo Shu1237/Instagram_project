@@ -1,6 +1,6 @@
 import React from "react";
 import { useSubscription } from "@apollo/client";
-import { NEW_NOTIFICATIONS } from "../../../graphql/subscriptions/notification.subcription";
+import { NEW_NOTIFICATIONS } from "../../graphql/subscriptions/notification.subcription";
 import CloseIcon from "@material-ui/icons/Close";
 export default function NotificationsDropdown({
   isOpen,
