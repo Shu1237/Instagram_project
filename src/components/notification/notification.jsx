@@ -8,7 +8,6 @@ export default function NotificationsDropdown({
   senderId,
   receiverId,
 }) {
-  
   const { data, loading } = useSubscription(NEW_NOTIFICATIONS, {
     variables: { senderId: senderId, receiverId: receiverId },
   });
