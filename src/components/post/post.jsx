@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import imageBeach from "../../../assets/img4.png";
-import imagePost from "../../../assets/img2.png";
+import imageBeach from "../../assets/img4.png";
+import imagePost from "../../assets/img2.png";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
-import ModalPost from '../jsx/modal'
+import ModalPost from '../comment/modal'
 
 function Post() {
     const [comment, setComment] = useState("");

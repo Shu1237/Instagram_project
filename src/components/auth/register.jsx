@@ -1,10 +1,10 @@
-import logoInstagram from "../../../assets/logo.png";
+import logoInstagram from "../../assets/logo.png";
 import React, { useState } from "react";
-import "../css/login.css";
+import "../ui/css/login.css";
 import { Link } from "react-router-dom";
-import { SIGNUP_MUTATION } from "../../../graphql/mutations/auth.mutation";
+import { SIGNUP_MUTATION } from "../../graphql/mutations/auth.mutation";
 import { useMutation } from "@apollo/client";
-import { setCookies } from "../../../utils/cookie.util";
+import { setCookies } from "../../utils/cookie.util";
 function SignUp() {
   const [input, setInput] = useState({
     username: "",

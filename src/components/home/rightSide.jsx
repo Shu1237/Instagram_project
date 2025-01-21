@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import "../css/rightSide.css";
-import ProfileRight from "../../../assets/profilepic.png";
+import "../ui/css/rightSide.css";
+import ProfileRight from "../../assets/profilepic.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import avatars from "../../../avatar.json";
+import avatars from "../../avatar.json";
 import { useQuery } from "@apollo/client";
-import { ME_QUERY, GET_USERS_QUERY } from "../../../graphql/query/user.query";
-import { removeCookies } from "../../../utils/cookie.util";
+import { ME_QUERY, GET_USERS_QUERY } from "../../graphql/query/user.query";
+import { removeCookies } from "../../utils/cookie.util";
 function RightSide() {
   const { loading, error, data } = useQuery(ME_QUERY);
   const { id } = useParams();

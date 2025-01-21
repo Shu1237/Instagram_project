@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import Image from "../../../assets/img1.png";
+import Image from "../../assets/img1.png";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import SwitchAccountOutlinedIcon from "@mui/icons-material/SwitchAccountOutlined";
-import { GET_PROFILE, ME_QUERY } from "../../../graphql/query/user.query.js";
+import { GET_PROFILE, ME_QUERY } from "../../graphql/query/user.query";
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 
