@@ -18,7 +18,7 @@ export default function NotificationsDropdown({
         className="absolute inset-0 bg-black bg-opacity-40"
         onClick={onClose}
       />
-      <div className="relative w-[400px] h-full bg-white shadow-lg border-l border-gray-200">
+      <div className="relative w-[400px] h-full bg-white shadow-lg border-l border-gray-200 ">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <h1 className="text-base font-semibold">Notifications</h1>
