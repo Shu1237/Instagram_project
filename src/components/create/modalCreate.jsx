@@ -106,13 +106,9 @@ const ModalCreate = () => {
         <AddBoxOutlinedIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />
         <div className="font-normal text-[16px] text-lg">Create</div>
       </div> */}
-      <div
-        className="w-full flex items-center py-3 px-3 space-x-4 rounded-lg hover:bg-gray-100 transition-colors"
-        onClick={() => setOpen(true)}
-        aria-label="Open create modal"
-      >
-        <AddBoxOutlinedIcon className="text-2xl" />
-        <span className="text-base font-medium">Create</span>
+      <div onClick={() => setOpen(true)} className="flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full">
+        <AddBoxOutlinedIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />
+        <div className="font-normal text-[16px] text-lg">Create</div>
       </div>
 
       <Modal
@@ -127,8 +123,8 @@ const ModalCreate = () => {
             {next === 0
               ? "Create New Post"
               : next === 1
-              ? "Edit Caption"
-              : "Share"}
+                ? "Edit Caption"
+                : "Share"}
             {picture.length > 0 && (
               <>
                 {next < 2 && (
@@ -150,11 +146,11 @@ const ModalCreate = () => {
                   </button>
                 )}
                 {
-                  
+
                   next === 2 && (
                     <button
                       className="absolute right-0 text-blue-500 font-semibold"
-                      // onClick={}
+                    // onClick={}
                     >
                       Up
                     </button>
