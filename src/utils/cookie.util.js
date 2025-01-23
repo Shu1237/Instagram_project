@@ -9,9 +9,9 @@ export const getCookie = () => {
   }
 };
 
-export const setCookies = (token) => {
+export const setCookies = (name, value) => {
   try {
-    Cookies.set("jwt-token", token, {
+    Cookies.set(name, value, {
       expires: 7, // in days
       secure: true, // only if using HTTPS
       sameSite: "strict", // "strict" or "lax"
@@ -21,9 +21,9 @@ export const setCookies = (token) => {
   }
 };
 
-export const removeCookies = () => {
+export const removeCookies = (name) => {
   try {
-    Cookies.remove("jwt-token", { expires: -1 });
+    Cookies.remove(name, { expires: -1 });
   } catch (error) {
     console.error(error);
   }
