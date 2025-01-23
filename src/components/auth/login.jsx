@@ -42,7 +42,8 @@ function Login() {
       const response = await login({ variables: { input } });
       // console.log(response);
       if (response.data.login.token) {
-        setCookies(response.data.login.token);
+        setCookies("jwt-token", response.data.login.token);
+        setCookies("user_id", response.data.login.user.user_id);
       }
     } catch (err) {
       console.error("Login Error:", err);
