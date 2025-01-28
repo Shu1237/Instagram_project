@@ -67,7 +67,7 @@ export default function RightSide() {
   });
   const navigate = useNavigate();
   const handleSwitch = () => {
-    removeCookies();
+    removeCookies("jwt-token");
     window.location.href = "/";
   };
 
@@ -192,9 +192,10 @@ export default function RightSide() {
                 onClick={() => handleSendFriendRequest(user.user_id)}
                 disabled={loading}
                 className={`px-4 py-1.5 rounded font-semibold 
-                  ${checkFriendRequestStatus(user.user_id) === "Following"
-                    ? "bg-gray-200 text-black"
-                    : "bg-blue-500 text-white hover:bg-blue-600"
+                  ${
+                    checkFriendRequestStatus(user.user_id) === "Following"
+                      ? "bg-gray-200 text-black"
+                      : "bg-blue-500 text-white hover:bg-blue-600"
                   } 
                   transition`}
               >
@@ -206,22 +207,12 @@ export default function RightSide() {
           ))}
         </div>
 
-
         <div className="mt-20 w-4/5">
           <div className="text-xs text-gray-500 flex justify-between">
-            About
-            Help
-            Press
-            API
-            Jobs
-            Privacy
-            Terms
-            Locations
-            Language
-            Meta Verified
+            About Help Press API Jobs Privacy Terms Locations Language Meta
+            Verified
           </div>
           <div className="mt-8 text-xs text-gray-500 flex justify-center">
-
             &copy;{new Date().getFullYear()} {hsr.toUpperCase()}
           </div>
         </div>
