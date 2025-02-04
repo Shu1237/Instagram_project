@@ -29,10 +29,10 @@ const Menu = () => {
   }, []);
 
   return (
-    <div className='flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full' ref={dropdownRef} >
-      <div className="bg-green relative inline-block flex items-center rounded-[5px] " onClick={toggleMenu} >
+    <div className=' max-lg:w-[100px] flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full' ref={dropdownRef} >
+      <div className="bg-green relative flex items-center rounded-[5px] " onClick={toggleMenu} >
         <MenuOutlinedIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />
-        <div style={{ fontSize: '1.125rem', fontWeight: isOpen ? 700 : 400 }}>More</div>
+        <div style={{ fontSize: '1.125rem', fontWeight: isOpen ? 700 : 400 }} className='max-lg:hidden'>More</div>
         {isOpen && (
           <div className="absolute left-0 bottom-[40px] bg-white shadow-lg rounded-[10px] w-[250px] z-[1000]">
             <ul className='list-none p-[10px] m-[0]'>

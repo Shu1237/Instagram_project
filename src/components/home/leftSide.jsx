@@ -15,38 +15,56 @@ import ModalCreate from "../create/modalCreate";
 import NotificationsDropdown from "../notification/notification";
 import { useQuery } from "@apollo/client";
 import { ME_QUERY, GET_USERS_QUERY } from "../../graphql/query/user.query";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 export default function LeftSide() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const { loading, error, data } = useQuery(ME_QUERY);
   const modalRef = useRef();
-
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setIsNotificationsOpen(false);
       }
     };
-
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 1024);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      document.removeEventListener("mousedown", handleClickOutside);
+
+    }
   }, []);
+
+
+
+
   const linkProfile = `/profile/${data?.me?.user_id}`;
+  const linkMess = `/message/${data?.me?.user_id}/0`;
   return (
 
-    <div className="fixed ">
-      <div onClick={() => navigate('/')} className="w-full h-auto flex items-center justify-center cursor-pointer">
-        <img className="w-[150px] h-auto" src={logoInstagram} alt="logo" />
+    <div className=" fixed ">
+      <div onClick={() => navigate('/')} className="w-full h-auto flex items-center justify-center cursor-pointer max-lg:h-10">
+        {
+          isSmallScreen ? (
+            <FontAwesomeIcon icon={faInstagram} className="text-[38px]" /> // 
+          ) : (
+            <img src={logoInstagram} alt="Instagram" className="w-[150px] h-auto" />
+          )
+        }
       </div>
 
+
       <div className="flex flex-col mt-[20px] w-full">
-
-
-
         <MenuItem onClick={() => navigate('/')}
-          icon={<HomeIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />}
+          icon={<HomeIcon sx={{ fontSize: "35px", margin: "0 20px 0 0"   }} />}
           label="Home"
         />
 
@@ -65,7 +83,7 @@ export default function LeftSide() {
           }
           label="Reels"
         />
-        <MenuItem onClick={() => navigate('/messages')}
+        <MenuItem onClick={() => navigate(linkMess)}
           icon={
             <MapsUgcOutlinedIcon
               sx={{ fontSize: "35px", margin: "0 20px 0 0" }}
@@ -79,10 +97,10 @@ export default function LeftSide() {
               sx={{ fontSize: "35px", margin: "0 20px 0 0" }}
             />
           }
-          label="Notifications" 
+          label="Notifications"
 
         />
-     
+
         {
           isNotificationsOpen &&
           <NotificationsDropdown
@@ -95,13 +113,13 @@ export default function LeftSide() {
 
         <ModalCreate />
 
-        <div onClick={() => navigate(linkProfile)} className="flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full">
+        <div onClick={() => navigate(linkProfile)} className=" max-lg:w-[100px] flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full">
           <img
             src={profileImg}
             alt="Profile"
             className="w-[35px] h-[35px] rounded-full mr-[20px]"
           />
-          <div className="font-normal text-[16px] text-lg">Profile</div>
+          <div className="font-normal text-[16px] text-lg max-lg:hidden">Profile</div>
         </div>
 
         <div className="mt-[50px] w-full">
@@ -119,8 +137,9 @@ export default function LeftSide() {
 }
 
 const MenuItem = ({ icon, label, onClick }) => (
-  <div onClick={onClick} className="flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full">
+  <div onClick={onClick} className="flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full 
+   max-lg:none max-lg:w-[100px]">
     {icon}
-    <div className="font-normal text-[16px] text-lg">{label}</div>
+    <div className="font-normal text-[16px] text-lg max-lg:hidden">{label}</div>
   </div>
 );

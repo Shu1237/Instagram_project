@@ -19,7 +19,7 @@ export default function RightSide() {
   );
   const { loading: friendRequestsLoading, data: friendRequestsData } =
     useQuery(FRIEND_REQUEST_QUERY);
-  console.log(friendRequestsData);
+  // console.log(friendRequestsData);
 
   const checkFriendRequestStatus = (userId) => {
     const friendRequest = friendRequestsData?.friendRequests.find(
