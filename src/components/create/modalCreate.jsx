@@ -106,9 +106,13 @@ const ModalCreate = () => {
         <AddBoxOutlinedIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />
         <div className="font-normal text-[16px] text-lg">Create</div>
       </div> */}
-      <div onClick={() => setOpen(true)} className="flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full">
+      <div onClick={() => setOpen(true)} className="flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full
+      
+      max-lg:w-[100px]
+      
+      ">
         <AddBoxOutlinedIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />
-        <div className="font-normal text-[16px] text-lg">Create</div>
+        <div className="font-normal text-[16px] text-lg max-lg:hidden">Create</div>
       </div>
 
       <Modal

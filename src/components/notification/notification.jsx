@@ -12,6 +12,7 @@ export default function NotificationsDropdown({
     variables: { senderId: senderId, receiverId: receiverId },
   });
   if (!isOpen) return null;
+  console.log(data);
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       <div
@@ -42,8 +43,8 @@ export default function NotificationsDropdown({
               ) : (
                 data?.newNotification && (
                   <NotificationItem
-                    avatar={data.newNotification.sender.avatar}
-                    username={data.newNotification.sender.username}
+                    // avatar={data.newNotification.sender.avatar}
+                    // username={data.newNotification.sender.username}
                     action="sent you a friend request."
                     time={data.newNotification.created_at}
                   />
