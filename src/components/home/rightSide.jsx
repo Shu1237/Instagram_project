@@ -1,55 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../ui/css/rightSide.css";
 import ProfileRight from "../../assets/profilepic.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import avatars from "../../avatar.json";
 import { useMutation, useQuery } from "@apollo/client";
 import { ME_QUERY, GET_USERS_QUERY } from "../../graphql/query/user.query";
 import { removeCookies } from "../../utils/cookie.util";
-import { SEND_FRIEND_REQUEST_MUTATION } from "../../graphql/mutations/follow.mutation";
+import {
+  SEND_FRIEND_REQUEST_MUTATION,
+  CANCEL_FRIEND_REQUEST_MUTATION,
+  ACCEPT_FRIEND_REQUEST_MUTATION,
+} from "../../graphql/mutations/follow.mutation";
 import { FRIEND_REQUEST_QUERY } from "../../graphql/query/friendRequest.query";
+
 export default function RightSide() {
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(false);
   const { loading, error, data } = useQuery(ME_QUERY);
   const { id } = useParams();
   const [sendFriendRequest, { error: errorSendFriendRequest }] = useMutation(
     SEND_FRIEND_REQUEST_MUTATION
   );
+  const [cancelFriendRequest, { error: errorCancelFriendRequest }] =
+    useMutation(CANCEL_FRIEND_REQUEST_MUTATION);
+
+  const [acceptFriendRequest, { error: errorAcceptFriendRequest }] =
+    useMutation(ACCEPT_FRIEND_REQUEST_MUTATION);
+
   const { loading: friendRequestsLoading, data: friendRequestsData } =
     useQuery(FRIEND_REQUEST_QUERY);
-  // console.log(friendRequestsData);
 
-  const checkFriendRequestStatus = (userId) => {
-    const friendRequest = friendRequestsData?.friendRequests.find(
-      (request) =>
-        (request.sender_id === data?.me?.user_id &&
-          request.receiver_id === userId) ||
-        (request.receiver_id === data?.me?.user_id &&
-          request.sender_id === userId)
-    );
+  const [followStatus, setFollowStatus] = useState({}); // Track follow status for each user
 
-    if (friendRequest) {
-      if (friendRequest.sender_id === data?.me?.user_id) {
-        return "Following";
-      } else if (friendRequest.receiver_id === data?.me?.user_id) {
-        return "Follow Back";
-      }
+  // Initialize follow status based on friendRequestsData
+
+  useEffect(() => {
+    if (friendRequestsData?.friendRequests && data?.me?.user_id) {
+      const status = {};
+      console.log(friendRequestsData.friendRequests);
+      friendRequestsData.friendRequests.forEach((request) => {
+        if (request.status === "accepted") {
+          status[request.sender_id] = "Following";
+          status[request.receiver_id] = "Following";
+        } else {
+          if (request.sender_id === data.me.user_id) {
+            status[request.receiver_id] = "Following";
+          } else if (request.receiver_id === data.me.user_id) {
+            status[request.sender_id] = "Follow Back";
+          }
+        }
+      });
+      setFollowStatus(status);
     }
-    return "Follow";
-  };
+  }, [friendRequestsData, data?.me?.user_id]);
+
   const handleSendFriendRequest = async (receiverId) => {
     try {
+      setFollowStatus((prev) => ({ ...prev, [receiverId]: "Following" }));
       await sendFriendRequest({
         variables: { receiverId: receiverId },
       });
       setShowSuccess(true);
-      setIsFollowing(true);
       setTimeout(() => {
         setShowSuccess(false);
       }, 2000);
     } catch (error) {
+      setFollowStatus((prev) => ({ ...prev, [receiverId]: "Follow" }));
       setShowError(true);
       setTimeout(() => {
         setShowError(false);
@@ -58,6 +73,45 @@ export default function RightSide() {
     }
   };
 
+  const handleCancelFriendRequest = async (receiverId) => {
+    try {
+      setFollowStatus((prev) => ({ ...prev, [receiverId]: "Follow" }));
+      await cancelFriendRequest({
+        variables: { cancelFriendRequestId: receiverId },
+      });
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 2000);
+    } catch (error) {
+      setFollowStatus((prev) => ({ ...prev, [receiverId]: "Following" }));
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 2000);
+      console.log(error);
+    }
+  };
+
+  const handleAcceptFriendRequest = async (receiverId) => {
+    try {
+      setFollowStatus((prev) => ({ ...prev, [receiverId]: "Following" }));
+      await acceptFriendRequest({
+        variables: { acceptFriendRequestId: receiverId },
+      });
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 2000);
+    } catch (error) {
+      setFollowStatus((prev) => ({ ...prev, [receiverId]: "Follow Back" }));
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 2000);
+      console.log(error);
+    }
+  };
   const {
     loading: usersLoading,
     error: usersError,
@@ -65,6 +119,7 @@ export default function RightSide() {
   } = useQuery(GET_USERS_QUERY, {
     variables: { pageQuery: 1, limitQuery: 5 },
   });
+
   const navigate = useNavigate();
   const handleSwitch = () => {
     removeCookies("jwt-token");
@@ -85,12 +140,12 @@ export default function RightSide() {
     <div className="flex flex-col w-full max-w-[320px] px-4">
       {showError && (
         <div className="bg-red-500 text-white text-center py-2 mb-4">
-          {errorSendFriendRequest.message}
+          {errorSendFriendRequest?.message || errorCancelFriendRequest?.message}
         </div>
       )}
       {showSuccess && (
         <div className="bg-green-500 text-white text-center py-2 mb-4">
-          Friend request sent successfully!
+          Action completed successfully!
         </div>
       )}
       {/* Auth Section */}
@@ -189,19 +244,22 @@ export default function RightSide() {
               </div>
 
               <button
-                onClick={() => handleSendFriendRequest(user.user_id)}
-                disabled={loading}
+                onClick={() =>
+                  followStatus[user.user_id] === "Following"
+                    ? handleCancelFriendRequest(user.user_id)
+                    : followStatus[user.user_id] === "Follow Back"
+                    ? handleAcceptFriendRequest(user.user_id)
+                    : handleSendFriendRequest(user.user_id)
+                }
                 className={`px-4 py-1.5 rounded font-semibold 
-                  ${
-                    checkFriendRequestStatus(user.user_id) === "Following"
-                      ? "bg-gray-200 text-black"
-                      : "bg-blue-500 text-white hover:bg-blue-600"
-                  } 
-                  transition`}
+    ${
+      followStatus[user.user_id] === "Following"
+        ? "bg-gray-200 text-black"
+        : "bg-blue-500 text-white hover:bg-blue-600"
+    } 
+    transition`}
               >
-                {loading
-                  ? "Sending..."
-                  : checkFriendRequestStatus(user.user_id)}
+                {followStatus[user.user_id] || "Follow"}
               </button>
             </div>
           ))}

@@ -13,7 +13,6 @@ export const friendResolver = {
         const friendRequests = await FriendRequest.findAll({
           where: {
             [Op.or]: [{ sender_id: me }, { receiver_id: me }],
-            status: "pending",
           },
         });
         return friendRequests;
@@ -72,7 +71,14 @@ export const friendResolver = {
       try {
         if (!context.user)
           throw new Error("Not authenticated, Cannot accept friend request");
-        const friendRequest = await FriendRequest.findByPk(id);
+        const friendRequest = await FriendRequest.findOne({
+          where: {
+            [Op.and]: [
+              { sender_id: id },
+              { receiver_id: context.user.user.user_id },
+            ],
+          },
+        });
         if (!friendRequest) throw new Error("Friend request not found");
         if (context.user.user.user_id !== friendRequest.receiver_id)
           throw new Error("Cannot accept friend request. You are not receiver");
@@ -102,16 +108,34 @@ export const friendResolver = {
         throw new Error(error.message);
       }
     },
-    declineFriendRequest: async (_, { id }, context) => {
+    cancelFriendRequest: async (_, { id }, context) => {
       try {
         if (!context.user)
-          throw new Error("Not authenticated, Cannot decline friend request");
-        const friendRequest = await FriendRequest.findByPk(id);
+          throw new Error("Not authenticated, Cannot cancel friend request");
+        const friendRequest = await FriendRequest.findOne({
+          where: {
+            [Op.or]: {
+              [Op.and]: [
+                { sender_id: id },
+                { receiver_id: context.user.user.user_id },
+              ],
+              [Op.and]: [
+                { receiver_id: id },
+                { sender_id: context.user.user.user_id },
+              ],
+            },
+          },
+        });
         if (!friendRequest) throw new Error("Friend request not found");
+        const deleteNotification = await Notification.findOne({
+          where: {
+            friend_request_id: friendRequest.id,
+          },
+        });
+        await deleteNotification.destroy();
         await friendRequest.destroy();
         return {
-          status: "Destroy successfully !",
-          FriendRequest: friendRequest,
+          status: "Cancel Request Successfully !",
         };
       } catch (error) {
         throw new Error(error.message);
