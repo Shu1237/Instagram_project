@@ -7,6 +7,7 @@ export const FRIEND_REQUEST_QUERY = gql`
       receiver_id
       sender_id
       create_at
+      status
     }
   }
 `;

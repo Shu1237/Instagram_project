@@ -1,5 +1,5 @@
 import User from "../../models/mysql/user.js";
-
+import { Op } from "sequelize";
 const CACHE_KEYS = {
   USER: (id) => `USER_${id}`,
   USERS_PAGE: (page, limit) => `USERS_PAGE_${page}_LIMIT_${limit}`,
@@ -8,22 +8,30 @@ const CACHE_KEYS = {
 
 export const userResolver = {
   Query: {
-    async users(_, { pageQuery, limitQuery }, { cache }) {
+    async users(_, { pageQuery, limitQuery }, { cache, user }) {
       try {
         let page = pageQuery || 1,
           limit = limitQuery || 4;
         const offset = (page - 1) * limit;
 
-        const cacheKey = CACHE_KEYS.USERS_PAGE(page, limit);
-        const cachedUsers = await cache.get(cacheKey);
+        // const cacheKey = CACHE_KEYS.USERS_PAGE(page, limit);
+        // const cachedUsers = await cache.get(cacheKey);
 
-        if (cachedUsers) return cachedUsers;
+        // if (cachedUsers) return cachedUsers;
 
-        const users = await User.findAll({ offset, limit });
-        await cache.set(cacheKey, users, 300); // 5 minutes TTL
+        const users = await User.findAll({
+          where: {
+            user_id: {
+              [Op.not]: user.user.user_id,
+            },
+          },
+          offset,
+          limit,
+        });
+        // await cache.set(cacheKey, users, 300); // 5 minutes TTL
         return users;
       } catch (error) {
-        throw new Error("Error fetching users");
+        throw new Error(error.message);
       }
     },
 
