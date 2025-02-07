@@ -6,7 +6,6 @@ export default function NotificationsDropdown({ isOpen, onClose, receiverId }) {
   const { data, loading } = useSubscription(NEW_NOTIFICATIONS, {
     variables: { receiverId: receiverId },
   });
-  console.log(data);
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
