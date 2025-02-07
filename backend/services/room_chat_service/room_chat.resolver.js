@@ -13,6 +13,21 @@ export const roomChatsResolver = {
         throw new Error(error.message);
       }
     },
+    roomChats: async (_, __, context) => {
+      try {
+        if (!context.user)
+          throw new Error("Not authenticated, Cannot get room chats");
+        const myId = context.user.user.user_id;
+        const roomChats = await RoomChat.find({
+          users: {
+            $in: [myId],
+          },
+        });
+        return roomChats;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
   },
   RoomChat: {
     users: async (parent) => {

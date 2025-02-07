@@ -88,11 +88,20 @@ export const friendResolver = {
         friendRequest.status = "accepted";
         const sender = await User.findByPk(friendRequest.sender_id);
         const receiver = await User.findByPk(friendRequest.receiver_id);
-        const newRoomChat = new RoomChat({
-          roomName: `${sender.username} - ${receiver.username}`,
-          typeRoom: "single",
-          users: [friendRequest.sender_id, friendRequest.receiver_id],
+        const existedRoomChat = await RoomChat.findOne({
+          users: {
+            $all: [friendRequest.sender_id, friendRequest.receiver_id],
+          },
         });
+        if (!existedRoomChat) {
+          const newRoomChat = new RoomChat({
+            roomName: `${sender.username} - ${receiver.username}`,
+            typeRoom: "single",
+            users: [friendRequest.sender_id, friendRequest.receiver_id],
+          });
+          await newRoomChat.save();
+        }
+
         const newNotification = await Notification.create({
           type: "follow",
           sender_id: friendRequest.receiver_id,
@@ -104,7 +113,7 @@ export const friendResolver = {
             notificationAdded: newNotification,
           }
         );
-        await newRoomChat.save();
+
         await friendRequest.save();
         return friendRequest;
       } catch (error) {
