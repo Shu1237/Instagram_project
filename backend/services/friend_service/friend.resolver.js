@@ -58,9 +58,12 @@ export const friendResolver = {
           receiver_id: receiver_id,
           friend_request_id: friendRequest.id,
         });
-        await context.pubsub.publish(`NOTIFICATION_ADDED.${receiver_id}`, {
-          notificationAdded: newNotification,
-        });
+        if (context.pubsub) {
+          await context.pubsub.publish(`NOTIFICATION_ADDED.${receiver_id}`, {
+            notificationAdded: newNotification,
+          });
+        }
+
         return friendRequest;
       } catch (error) {
         console.error(error);
@@ -114,16 +117,10 @@ export const friendResolver = {
           throw new Error("Not authenticated, Cannot cancel friend request");
         const friendRequest = await FriendRequest.findOne({
           where: {
-            [Op.or]: {
-              [Op.and]: [
-                { sender_id: id },
-                { receiver_id: context.user.user.user_id },
-              ],
-              [Op.and]: [
-                { receiver_id: id },
-                { sender_id: context.user.user.user_id },
-              ],
-            },
+            [Op.or]: [
+              { sender_id: id, receiver_id: context.user.user.user_id },
+              { sender_id: context.user.user.user_id, receiver_id: id },
+            ],
           },
         });
         if (!friendRequest) throw new Error("Friend request not found");

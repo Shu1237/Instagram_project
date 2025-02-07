@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../ui/css/rightSide.css";
 import ProfileRight from "../../assets/profilepic.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery, useSubscription } from "@apollo/client";
 import { ME_QUERY, GET_USERS_QUERY } from "../../graphql/query/user.query";
 import { removeCookies } from "../../utils/cookie.util";
 import {
@@ -11,7 +11,6 @@ import {
   ACCEPT_FRIEND_REQUEST_MUTATION,
 } from "../../graphql/mutations/follow.mutation";
 import { FRIEND_REQUEST_QUERY } from "../../graphql/query/friendRequest.query";
-
 export default function RightSide() {
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -31,12 +30,13 @@ export default function RightSide() {
 
   const [followStatus, setFollowStatus] = useState({}); // Track follow status for each user
 
-  // Initialize follow status based on friendRequestsData
+  // console.log(data?.me?.user_id);
 
+  // Initialize follow status based on friendRequestsData
   useEffect(() => {
     if (friendRequestsData?.friendRequests && data?.me?.user_id) {
       const status = {};
-      console.log(friendRequestsData.friendRequests);
+
       friendRequestsData.friendRequests.forEach((request) => {
         if (request.status === "accepted") {
           status[request.sender_id] = "Following";
@@ -112,6 +112,7 @@ export default function RightSide() {
       console.log(error);
     }
   };
+
   const {
     loading: usersLoading,
     error: usersError,

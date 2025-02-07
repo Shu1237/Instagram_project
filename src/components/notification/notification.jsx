@@ -2,17 +2,12 @@ import React from "react";
 import { useSubscription } from "@apollo/client";
 import { NEW_NOTIFICATIONS } from "../../graphql/subscriptions/notification.subcription";
 import CloseIcon from "@material-ui/icons/Close";
-export default function NotificationsDropdown({
-  isOpen,
-  onClose,
-  senderId,
-  receiverId,
-}) {
+export default function NotificationsDropdown({ isOpen, onClose, receiverId }) {
   const { data, loading } = useSubscription(NEW_NOTIFICATIONS, {
-    variables: { senderId: senderId, receiverId: receiverId },
+    variables: { receiverId: receiverId },
   });
-  if (!isOpen) return null;
   console.log(data);
+  if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       <div
@@ -38,7 +33,7 @@ export default function NotificationsDropdown({
               This Week
             </h2>
             <div className="space-y-4">
-              {loading ? (
+              {/* {loading ? (
                 <p>Loading...</p>
               ) : (
                 data?.newNotification && (
@@ -49,7 +44,7 @@ export default function NotificationsDropdown({
                     time={data.newNotification.created_at}
                   />
                 )
-              )}
+              )} */}
             </div>
           </div>
         </div>
