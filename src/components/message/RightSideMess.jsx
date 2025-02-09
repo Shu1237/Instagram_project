@@ -98,7 +98,7 @@ const RightSideMess = () => {
         {roomChats?.map((roomChat) => (
           <div
             key={roomChat._id}
-            onClick={() => navigate(`/messages/${id}/${roomChat._id}`)}
+            onClick={() => navigate(`/message/${id}/${roomChat._id}`)}
             className="group flex items-center gap-3 p-2 transition-all duration-300 hover:bg-gray-100 rounded-lg cursor-pointer relative overflow-hidden"
           >
             {/* Hover effect layer */}
