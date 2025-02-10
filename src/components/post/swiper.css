@@ -1,0 +1,14 @@
+.swiper-slide-active {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+  }
+  .swiper-slide {
+    transition: transform 0.4s ease, filter 0.4s ease;
+  }
+  .swiper-button-next, .swiper-button-prev {
+    color: black;  /* Màu mũi tên */
+    /* background: rgba(0, 0, 0, 0.5); Nền đen mờ */
+    border-radius: 50%;
+    padding: 10px;
+  }
+  
