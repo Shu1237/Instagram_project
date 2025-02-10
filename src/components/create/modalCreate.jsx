@@ -31,7 +31,7 @@ const ModalCreate = () => {
   const MAX_IMAGES = 20;
   const MAX_CAPTION_LENGTH = 2200;
   const [emoji, setEmoji] = useState("");
-  const [createPost, { loading, error }] = useMutation(CREATE_POST_MUTATION, {
+  const [createPost, { loading, error, data }] = useMutation(CREATE_POST_MUTATION, {
     onError: () => {
       setShowError(true);
       setTimeout(() => setShowError(false), 3000); // Hide error after 3 seconds
@@ -145,6 +145,7 @@ const ModalCreate = () => {
           }
         }
       });
+      console.log("Create Post Response:", response);
     } catch (error) {
       console.error("Create Post Error:", error);
     }

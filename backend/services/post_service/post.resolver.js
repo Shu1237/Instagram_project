@@ -1,3 +1,4 @@
+import { console } from "inspector";
 import Post from "../../models/mongodb/post.model.js";
 import User from "../../models/mysql/user.js";
 import { GraphQLError } from "graphql";
@@ -6,7 +7,7 @@ export const postResolver = {
   Query: {
     getPosts: async () => {
       try {
-        const posts = await Post.find({ deleted: false });
+        const posts = await Post.find({ deleted: false }).sort({ created_at: -1 });
         return posts;
       } catch (error) {
         throw new GraphQLError(error.message, {
@@ -59,14 +60,14 @@ export const postResolver = {
     createPost: async (_, { input }) => {
       try {
         const { user_id, caption, media_urls } = input;
-        const post = new Post({
+
+        const post = await Post.create({
           user_id,
           caption,
           media_urls,
           created_by: user_id,
           created_at: new Date(),
         });
-        await post.save();
         return post;
       } catch (error) {
         throw new GraphQLError(error.message, {
