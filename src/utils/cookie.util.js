@@ -9,6 +9,15 @@ export const getCookie = () => {
   }
 };
 
+export const getCookies = (name) => {
+  try {
+    return Cookies.get(name);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 export const setCookies = (name, value) => {
   try {
     Cookies.set(name, value, {

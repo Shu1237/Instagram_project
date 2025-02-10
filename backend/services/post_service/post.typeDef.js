@@ -1,6 +1,9 @@
+import { Upload } from "antd";
 import gql from "graphql-tag";
 
+
 export const postTypeDef = gql`
+scalar Upload
     type Post {
         id: ID!,
         user_id: ID!,
@@ -13,7 +16,7 @@ export const postTypeDef = gql`
     input CreatePostInput {
         user_id: ID!,
         caption: String!,
-        media_urls: String,
+        media_urls: [Upload]!,
         status: String,
     }
     input UpdatePostInput {

@@ -15,6 +15,9 @@ import { useServer as setupWSConnection } from "graphql-ws/lib/use/ws";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { PubSub } from "graphql-subscriptions";
+import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
+
+
 connect();
 const app = express();
 const pubsub = new PubSub();
@@ -27,6 +30,8 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
+
+app.use(graphqlUploadExpress({ maxFileSize: 100000000, maxFiles: 10 }));
 
 const schema = makeExecutableSchema({
   typeDefs,

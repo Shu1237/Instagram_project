@@ -1,20 +1,49 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button, Modal } from "antd";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import CollectionsOutlinedIcon from "@mui/icons-material/CollectionsOutlined";
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { MdChevronLeft, MdChevronRight, MdUploadFile } from "react-icons/md";
 import { RxDotFilled } from "react-icons/rx";
 import Avatar from "../../assets/img1.png";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import IconPicker from "../comment/iconPick";
+import { useMutation } from "@apollo/client";
+import { CREATE_POST_MUTATION } from "../../graphql/mutations/post.mutation";
+import { getCookies } from "../../utils/cookie.util";
+import { uploadFile } from "../../utils/upload.util";
+
 const ModalCreate = () => {
   const [open, setOpen] = useState(false);
   const [next, setNext] = useState(0);
   const [picture, setPicture] = useState([]);
+  const [file, setFile] = useState([]);
   const [value, setValue] = useState("");
+  const [showError, setShowError] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [input, setInput] = useState({
+    user_id: "",
+    caption: "",
+    media_urls: "",
+    status: "",
+  });
+  const navigate = useNavigate();
   const MAX_IMAGES = 20;
   const MAX_CAPTION_LENGTH = 2200;
-  const [emoji, setEmoji] = useState(null);
+  const [emoji, setEmoji] = useState("");
+  const [createPost, { loading, error }] = useMutation(CREATE_POST_MUTATION, {
+    onError: () => {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000); // Hide error after 3 seconds
+    },
+    onCompleted: () => {
+      setShowSuccess(true);
+      setTimeout(() => {
+        navigate("/");
+        setShowSuccess(false);
+      }, 500); // Hide success after 3 seconds and navigate to /home
+    },
+  });
 
   const handleEmojiSelect = (selectedEmoji) => {
     setEmoji(selectedEmoji); // save emoji
@@ -53,6 +82,7 @@ const ModalCreate = () => {
     setOpen(false);
     setNext(0);
     setPicture([]);
+    setFile([]);
     setValue("");
   };
 
@@ -70,6 +100,7 @@ const ModalCreate = () => {
     );
     if (validFiles.length + picture.length <= MAX_IMAGES) {
       const newPictures = validFiles.map((file) => URL.createObjectURL(file));
+      setFile((prev) => [...prev, ...validFiles]);
       setPicture((prev) => [...prev, ...newPictures]);
     } else {
       alert(`You can only upload up to ${MAX_IMAGES} images or videos.`);
@@ -78,6 +109,7 @@ const ModalCreate = () => {
 
   const handleDeletePicture = (index) => {
     setPicture((prev) => prev.filter((_, i) => i !== index));
+    setFile((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleDrop = (e) => {
@@ -89,12 +121,35 @@ const ModalCreate = () => {
     if (validFiles.length + picture.length <= MAX_IMAGES) {
       const newPictures = validFiles.map((file) => URL.createObjectURL(file));
       setPicture((prev) => [...prev, ...newPictures]);
+      setFile((prev) => [...prev, ...validFiles]);
     } else {
       alert(`You can only upload up to ${MAX_IMAGES} images or videos.`);
     }
   };
 
   const handleDragOver = (e) => e.preventDefault();
+
+  const handlePost = async () => {
+    try {
+      const urls = await Promise.all(file.map((file) => uploadFile(file)));
+      const newInput = ({
+        user_id: getCookies("user_id"),
+        caption: value + emoji,
+        media_urls: urls,
+        status: "public"
+      });
+      const response = await createPost({
+        variables: {
+          input: {
+            ...newInput
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Create Post Error:", error);
+    }
+    handleClose();
+  }
 
   return (
     <>
@@ -121,6 +176,7 @@ const ModalCreate = () => {
         onOk={handleClose}
         onCancel={handleClose}
         width={800}
+        footer={null}
       >
         <div className="flex flex-col w-full max-w-[500px] mx-auto bg-white rounded-md p-6 shadow-sm text-center">
           <div className="text-lg font-semibold text-black mb-8 border-b pb-2 relative">
@@ -154,7 +210,7 @@ const ModalCreate = () => {
                   next === 2 && (
                     <button
                       className="absolute right-0 text-blue-500 font-semibold"
-                    // onClick={}
+                      onClick={handlePost}
                     >
                       Up
                     </button>
@@ -186,7 +242,7 @@ const ModalCreate = () => {
               <div className="text-gray-600 text-sm">
                 Drag photos and videos here
               </div>
-              <form>
+              <form encType="multipart/form-data">
                 <label
                   htmlFor="file-upload"
                   className="cursor-pointer bg-blue-500 text-white text-sm px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200"
@@ -198,6 +254,7 @@ const ModalCreate = () => {
                   type="file"
                   className="hidden"
                   multiple
+                  name="file"
                   onChange={handleSelectPicture}
                 />
               </form>
