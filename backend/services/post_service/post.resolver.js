@@ -1,4 +1,5 @@
 import Post from "../../models/mongodb/post.model.js";
+import User from "../../models/mysql/user.js";
 import { GraphQLError } from "graphql";
 
 export const postResolver = {
@@ -38,6 +39,22 @@ export const postResolver = {
       }
     },
   },
+  Post: {
+    user: async (parent) => {
+      try {
+        return await User.findOne({
+          where: { user_id: parent.user_id },
+          raw: true
+        });
+      } catch (error) {
+        throw new GraphQLError(error.message, {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+          },
+        });
+      }
+    }
+  },
   Mutation: {
     createPost: async (_, { input }) => {
       try {
@@ -59,7 +76,7 @@ export const postResolver = {
         });
       }
     },
-    updatedPost: async (_, { id, input }) => {
+    updatePost: async (_, { id, input }) => {
       try {
         const post = await Post.findOne({ _id: id });
         if (!post) {
@@ -69,12 +86,10 @@ export const postResolver = {
             },
           });
         }
-        const { caption, status } = input;
-        post.updated_at = new Date();
         const updatedPost = {
-          caption: post.caption || caption,
-          status: post.status || status,
-          updated_at: post.updated_at,
+          ...post.toObject(),
+          ...input,
+          updated_at: new Date(),
         };
         await Post.updateOne({ _id: id }, updatedPost);
         Object.assign(post, updatedPost);
@@ -87,7 +102,7 @@ export const postResolver = {
         });
       }
     },
-    deletedPost: async (_, { id }) => {
+    deletePost: async (_, { id }) => {
       try {
         const post = await Post.findOne({ _id: id });
         if (!post) {
@@ -97,9 +112,8 @@ export const postResolver = {
             },
           });
         }
-        const deletedPost = { deleted: true };
-        await Post.updateOne({ _id: id }, { $set: deletedPost });
-        Object.assign(post, deletedPost);
+        await Post.updateOne({ _id: id }, { $set: { deleted: true } });
+        post.deleted = true;
         return post;
       } catch (error) {
         throw new GraphQLError(error.message, {
