@@ -31,7 +31,7 @@ export default function LeftSide() {
       }
     };
     const handleResize = () => {
-      setIsSmallScreen(window.innerWidth <= 1024);
+      setIsSmallScreen(window.innerWidth <= 1280);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -45,10 +45,10 @@ export default function LeftSide() {
   const linkProfile = `/profile/${data?.me?.user_id}`;
   const linkMess = `/message/${data?.me?.user_id}/0`;
   return (
-    <div className=" fixed ">
+    <div className="">
       <div
         onClick={() => navigate("/")}
-        className="w-full h-auto flex items-center justify-center cursor-pointer max-lg:h-10"
+        className="w-full h-auto flex items-center justify-center cursor-pointer max-lg:justify-start max-lg:w-8"
       >
         {isSmallScreen ? (
           <FontAwesomeIcon icon={faInstagram} className="text-[38px]" /> //
@@ -56,12 +56,12 @@ export default function LeftSide() {
           <img
             src={logoInstagram}
             alt="Instagram"
-            className="w-[150px] h-auto"
+            className="w-[150px] h-auto max-xl:w-full"
           />
         )}
       </div>
 
-      <div className="flex flex-col mt-[20px] w-full">
+      <div className="flex flex-col mt-[20px] w-full ">
         <MenuItem
           onClick={() => navigate("/")}
           icon={<HomeIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />}
@@ -117,14 +117,16 @@ export default function LeftSide() {
 
         <div
           onClick={() => navigate(linkProfile)}
-          className=" max-lg:w-[100px] flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full"
+          className=" max-xl:w-8 max-xl:px-0 flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full"
+        
+        
         >
           <img
             src={profileImg}
             alt="Profile"
             className="w-[35px] h-[35px] rounded-full mr-[20px]"
           />
-          <div className="font-normal text-[16px] text-lg max-lg:hidden">
+          <div className="font-normal text-[16px] text-lg max-xl:hidden">
             Profile
           </div>
         </div>
@@ -147,9 +149,10 @@ const MenuItem = ({ icon, label, onClick }) => (
   <div
     onClick={onClick}
     className="flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full 
-   max-lg:none max-lg:w-[100px]"
+    max-xl:w-8 max-xl:px-0
+   "
   >
     {icon}
-    <div className="font-normal text-[16px] text-lg max-lg:hidden">{label}</div>
+    <div className="font-normal text-[16px] text-lg max-xl:hidden">{label}</div>
   </div>
 );
