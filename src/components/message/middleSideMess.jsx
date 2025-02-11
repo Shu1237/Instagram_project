@@ -2,12 +2,16 @@ import { useParams } from "react-router-dom";
 import Avatar from "../../assets/profilepic.png";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import ICon from "../comment/iconPick";
+
+import { useQuery, useMutation, useSubscription } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import {
   GET_ROOMCHATS_QUERY,
   GET_ONE_ROOMCHAT_QUERY,
 } from "../../graphql/query/roomChat.query";
-import { useQuery } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
+import { SET_TYPING_STATUS } from "../../graphql/mutations/chat.mutation";
+import { TYPING_STATUS_SUBSCRIPTION } from "../../graphql/subscriptions/chat.subscription";
 const MiddleSideMess = ({ id, idfr }) => {
   const navigate = useNavigate();
   const {
@@ -21,7 +25,46 @@ const MiddleSideMess = ({ id, idfr }) => {
   const myFriendInfo = roomChatData?.roomChat?.users.find(
     (user) => user.user_id !== id
   );
-  console.log(myFriendInfo);
+  // console.log(myFriendInfo);
+
+  //typing indicator
+  const [isTyping, setIsTyping] = useState(false);
+  const [typingStatus, setTypingStatus] = useState(false);
+  const [typingUser, setTypingUser] = useState(null);
+  const [setTypingStatusMutation] = useMutation(SET_TYPING_STATUS);
+  const handleTyping = (e) => {
+    if (e.target.value) {
+      setIsTyping(true);
+      setTypingStatusMutation({
+        variables: { roomChatId: idfr, isTyping: true },
+      });
+    } else {
+      setIsTyping(false);
+      setTypingStatusMutation({
+        variables: { roomChatId: idfr, isTyping: false },
+      });
+    }
+  };
+  //debound handling
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setIsTyping(false);
+      setTypingStatusMutation({
+        variables: { roomChatId: idfr, isTyping: false },
+      });
+    }, 2000);
+    return () => clearTimeout(timeoutId);
+  }, [isTyping]);
+
+  useSubscription(TYPING_STATUS_SUBSCRIPTION, {
+    variables: { roomChatId: idfr },
+    onData: (realData) => {
+      const checking = realData.data.data.typingStatus;
+      setTypingUser(checking.user);
+      if (checking.user.user_id !== id) setTypingStatus(checking.isTyping);
+    },
+  });
+
   if (!myFriendInfo) {
     return (
       <div className="h-screen flex items-center justify-center p-2">
@@ -218,6 +261,11 @@ const MiddleSideMess = ({ id, idfr }) => {
               View Profile
             </button>
           </div>
+          {typingStatus && typingUser?.user_id !== id && (
+            <div className="text-gray-500 text-sm mt-2">
+              {typingUser?.username} is typing...
+            </div>
+          )}
         </div>
         {/* buttomsection */}
         <div className="p-4 mt-auto flex flex-col ">
@@ -229,6 +277,7 @@ const MiddleSideMess = ({ id, idfr }) => {
               <input
                 className="w-full outline-none placeholder-gray-500 text-gray-700 bg-transparent"
                 placeholder="Message..."
+                onChange={handleTyping}
               />
             </div>
             <div className="flex items-center gap-3 pr-3 text-gray-600">

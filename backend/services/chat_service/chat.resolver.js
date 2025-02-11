@@ -4,9 +4,14 @@ import User from "../../models/mysql/user.js";
 import { PubSub } from "graphql-subscriptions";
 
 const CHAT_ADDED = "CHAT_ADDED";
-
+const TYPING_STATUS = "TYPING_STATUS";
 export const chatResolver = {
   Subscription: {
+    typingStatus: {
+      subscribe: (_, { roomChatId }, { pubsub }) => {
+        return pubsub.asyncIterableIterator([`${TYPING_STATUS}.${roomChatId}`]);
+      },
+    },
     messageAdded: {
       subscribe: (_, { roomChatId }, { pubsub }) => {
         return pubsub.asyncIterableIterator([`${CHAT_ADDED}.${roomChatId}`]);
@@ -27,6 +32,24 @@ export const chatResolver = {
     },
   },
   Mutation: {
+    setTypingStatus: async (_, { roomChatId, isTyping }, { pubsub, user }) => {
+      try {
+        // console.log(user.user.user_id);
+        const userTyping = await User.findOne({
+          where: {
+            user_id: user.user.user_id,
+          },
+        });
+        await pubsub.publish(`${TYPING_STATUS}.${roomChatId}`, {
+          typingStatus: {
+            isTyping: isTyping,
+            user: userTyping,
+          },
+        });
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
     sendChat: async (_, { input }, context) => {
       try {
         if (!context.user) {
