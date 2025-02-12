@@ -2,14 +2,13 @@ import gql from "graphql-tag";
 
 export const chatTypeDef = gql`
   input ChatInput {
-    userId: Int!
     roomChatId: ID!
     content: String
     images: [String]
   }
   type Chat {
     id: ID!
-    userId: Int!
+    user: User!
     roomChatId: ID!
     content: String
     images: [String]

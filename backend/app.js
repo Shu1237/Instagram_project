@@ -16,7 +16,7 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { PubSub } from "graphql-subscriptions";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
-
+import { userLoader } from "./utils/data_loader/user.data_loader.js";
 
 connect();
 const app = express();
@@ -75,12 +75,12 @@ const context = async ({ req, res }) => {
     const token = authHeader.split(" ")[1];
     try {
       const user = jwt.verify(token, ENV_VARS.JWT_SECRET_KEY);
-      return { req, user: user, cache: redisService, pubsub };
+      return { req, user: user, cache: redisService, pubsub, userLoader };
     } catch (error) {
       console.error("Token verification failed: ", error);
     }
   }
-  return { req, cache: redisService, pubsub };
+  return { req, cache: redisService, pubsub, userLoader };
 };
 
 const server = new ApolloServer({

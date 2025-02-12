@@ -4,3 +4,18 @@ export const SET_TYPING_STATUS = gql`
     setTypingStatus(roomChatId: $roomChatId, isTyping: $isTyping)
   }
 `;
+
+export const SEND_MESSAGE_MUTATION = gql`
+  mutation sendChat($input: ChatInput!) {
+    sendChat(input: $input) {
+      id
+      content
+      user {
+        user_id
+        full_name
+        avatar
+      }
+      createdAt
+    }
+  }
+`;

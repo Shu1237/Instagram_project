@@ -31,6 +31,15 @@ export const chatResolver = {
       return chat;
     },
   },
+  Chat: {
+    user: async (parent, _, { userLoader }) => {
+      try {
+        return await userLoader.load(parent.userId);
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+  },
   Mutation: {
     setTypingStatus: async (_, { roomChatId, isTyping }, { pubsub, user }) => {
       try {
@@ -55,10 +64,10 @@ export const chatResolver = {
         if (!context.user) {
           throw new Error("Unauthorized");
         }
-        const { userId, roomChatId, content, images } = input;
+        const { roomChatId, content, images } = input;
         const user = await User.findOne({
           where: {
-            user_id: userId,
+            user_id: context.user.user.user_id,
             is_active: 1,
           },
         });
@@ -69,11 +78,11 @@ export const chatResolver = {
         if (!roomChat) {
           throw new Error("Room chat not found");
         }
-        if (!roomChat.users.includes(userId)) {
+        if (!roomChat.users.includes(context.user.user.user_id)) {
           throw new Error("User is not a member of the room chat");
         }
         const chat = new Chat({
-          userId,
+          userId: context.user.user.user_id,
           roomChatId,
           content,
           images,

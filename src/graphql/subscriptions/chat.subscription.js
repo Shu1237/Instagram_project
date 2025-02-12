@@ -12,3 +12,17 @@ export const TYPING_STATUS_SUBSCRIPTION = gql`
     }
   }
 `;
+export const MESSAGE_ADDED_SUBSCRIPTION = gql`
+  subscription OnMessageAdded($roomChatId: ID!) {
+    messageAdded(roomChatId: $roomChatId) {
+      id
+      content
+      user {
+        user_id
+        full_name
+        avatar
+      }
+      createdAt
+    }
+  }
+`;
