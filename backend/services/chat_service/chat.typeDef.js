@@ -1,9 +1,14 @@
 import gql from "graphql-tag";
 
 export const chatTypeDef = gql`
+  input ChatInput {
+    roomChatId: ID!
+    content: String
+    images: [String]
+  }
   type Chat {
     id: ID!
-    userId: Int!
+    user: User!
     roomChatId: ID!
     content: String
     images: [String]
@@ -13,12 +18,7 @@ export const chatTypeDef = gql`
     deleted: Boolean
     deletedAt: String
   }
-  input ChatInput {
-    userId: Int!
-    roomChatId: ID!
-    content: String
-    images: [String]
-  }
+
   type Query {
     chats(roomChatId: ID!): [Chat]
     chat(id: ID!): Chat
@@ -26,8 +26,14 @@ export const chatTypeDef = gql`
 
   type Mutation {
     sendChat(input: ChatInput!): Chat!
+    setTypingStatus(roomChatId: ID!, isTyping: Boolean): Boolean
+  }
+  type dataTyping {
+    isTyping: Boolean
+    user: User
   }
   type Subscription {
     messageAdded(roomChatId: ID!): Chat!
+    typingStatus(roomChatId: ID!): dataTyping
   }
 `;

@@ -15,6 +15,7 @@ export default function RightSide() {
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const { loading, error, data } = useQuery(ME_QUERY);
+  // console.log(data);
   const { id } = useParams();
   const [sendFriendRequest, { error: errorSendFriendRequest }] = useMutation(
     SEND_FRIEND_REQUEST_MUTATION
@@ -158,7 +159,7 @@ export default function RightSide() {
               <Link to={`/profile/${data.me.user_id}`}>
                 <img
                   className="w-full h-full rounded-full object-cover hover:opacity-90 transition"
-                  src={data.me.avatar || ProfileRight}
+                  src={data?.me?.avatar}
                   alt={data.me.username}
                 />
               </Link>
