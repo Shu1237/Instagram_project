@@ -19,12 +19,10 @@ import OutgoingMessage from "./OutgoingMess";
 
 const MiddleSideMess = ({ id, idfr }) => {
   const chatContainerRef = useRef(null);
+  const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
@@ -39,6 +37,7 @@ const MiddleSideMess = ({ id, idfr }) => {
     variables: { roomChatId: idfr },
     onCompleted: (data) => {
       setMessages(data.chats);
+      scrollToBottom();
     },
   });
 
@@ -81,16 +80,16 @@ const MiddleSideMess = ({ id, idfr }) => {
   const [sendMessage] = useMutation(SEND_MESSAGE_MUTATION, {
     onCompleted: () => {
       setMessageContent("");
-      scrollToBottom({ behavior: "smooth" });
+      scrollToBottom();
     },
   });
 
   // Subscription for new messages
   useSubscription(MESSAGE_ADDED_SUBSCRIPTION, {
     variables: { roomChatId: idfr },
-    onData: ({ data }) => {
-      console.log(data);
-      const newMessage = data.data.messageAdded;
+    onData: (x) => {
+      console.log(x);
+      const newMessage = x.data.data.messageAdded;
       setMessages((prevMessages) => [...prevMessages, newMessage]);
       scrollToBottom();
     },

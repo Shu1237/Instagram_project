@@ -60,6 +60,7 @@ const serverCleanup = setupWSConnection(
       return {
         pubsub,
         connectionId,
+        userLoader,
       };
     },
 
