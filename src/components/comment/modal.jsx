@@ -9,7 +9,7 @@ import ShareRoundedIcon from "@mui/icons-material/ShareRounded";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import Avatar from "../../assets/img1.png";
 import Image from "../../assets/img2.png";
-import IconPicker from "./iconPick";
+import ICon from "./iconPick";
 
 const ModalPost = () => {
   const arryTyms = [
@@ -104,7 +104,11 @@ const ModalPost = () => {
       setPlaceholderVisible(false);
     }
   };
+  //Emoji
 
+  const handleEmojiChange = (emoji) => {
+    setValue((prevValue) => prevValue + emoji);
+  };
   const handleInputClick = () => {
     setPlaceholderVisible(false);
   };
@@ -216,7 +220,7 @@ const ModalPost = () => {
               <div className="flex justify-between mt-4 items-center">
                 <div className="flex items-center gap-2.5">
                   <div className="choose-icon">
-                    <IconPicker />
+                    <ICon onEmojiChange={handleEmojiChange} />
                   </div>
                   <div style={{ width: "300px" }}>
                     <input

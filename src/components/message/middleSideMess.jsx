@@ -89,7 +89,7 @@ const MiddleSideMess = ({ id, idfr }) => {
   useSubscription(MESSAGE_ADDED_SUBSCRIPTION, {
     variables: { roomChatId: idfr },
     onData: (x) => {
-      console.log(x);
+      // console.log(x);
       const newMessage = x.data.data.messageAdded;
       setMessages((prevMessages) => [...prevMessages, newMessage]);
       scrollToBottom();
@@ -133,6 +133,10 @@ const MiddleSideMess = ({ id, idfr }) => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+  const handleEmojiChange = (emoji) => {
+    // console.log(emoji);
+    setMessageContent((prevContent) => prevContent + emoji);
   };
   //scroll to load more messages
   const handleScroll = async () => {
@@ -346,7 +350,7 @@ const MiddleSideMess = ({ id, idfr }) => {
       <div className="p-4 mt-auto flex flex-col">
         <div className="flex flex-row items-center bg-white border-2 border-gray-300 rounded-3xl hover:border-gray-400 focus-within:border-blue-500 transition-colors group">
           <div className="pl-3 text-gray-500">
-            <ICon />
+            <ICon onEmojiChange={handleEmojiChange} />
           </div>
           <div className="flex-1 px-2 py-2">
             <input
