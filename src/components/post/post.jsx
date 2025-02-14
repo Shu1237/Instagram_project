@@ -7,7 +7,7 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import ModalPost from "../comment/modal";
 import { useQuery } from "@apollo/client";
 import { GET_POST_QUERY } from "../../graphql/query/post.query";
-import "swiper/css";
+
 import "./swiper.css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
