@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios'
 
 export const uploadFile = async (file) => {
     const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
