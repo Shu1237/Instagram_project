@@ -103,10 +103,11 @@ export const friendResolver = {
         }
 
         const newNotification = await Notification.create({
-          type: "follow",
+          type: "accepted",
           sender_id: friendRequest.receiver_id,
           receiver_id: friendRequest.sender_id,
         });
+        // send notifications for the sender about accepted friend requests
         await context.pubsub.publish(
           `NOTIFICATION_ADDED.${friendRequest.sender_id}`,
           {

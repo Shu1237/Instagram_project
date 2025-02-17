@@ -118,11 +118,9 @@ export default function LeftSide() {
         <div
           onClick={() => navigate(linkProfile)}
           className=" max-xl:w-8 max-xl:px-0 flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full"
-        
-        
         >
           <img
-            src={profileImg}
+            src={data?.me?.avatar}
             alt="Profile"
             className="w-[35px] h-[35px] rounded-full mr-[20px]"
           />
