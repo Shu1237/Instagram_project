@@ -1,12 +1,14 @@
 import React from "react";
-import { useSubscription } from "@apollo/client";
-import { NEW_NOTIFICATIONS } from "../../graphql/subscriptions/notification.subcription";
+import { useQuery } from "@apollo/client";
 import CloseIcon from "@material-ui/icons/Close";
+import { GET_NOTIFICATIONS_QUERY } from "../../graphql/query/notification.query";
+import formatTime from "../../utils/formatTime.util.js";
+import { Link } from "react-router-dom";
 export default function NotificationsDropdown({ isOpen, onClose, receiverId }) {
-  const { data, loading } = useSubscription(NEW_NOTIFICATIONS, {
-    variables: { receiverId: receiverId },
-  });
+  const { loading, data } = useQuery(GET_NOTIFICATIONS_QUERY);
   if (!isOpen) return null;
+  // console.log(data);
+  const dataArray = data?.myNotifications;
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       <div
@@ -32,18 +34,22 @@ export default function NotificationsDropdown({ isOpen, onClose, receiverId }) {
               This Week
             </h2>
             <div className="space-y-4">
-              {/* {loading ? (
+              {loading ? (
                 <p>Loading...</p>
               ) : (
-                data?.newNotification && (
-                  <NotificationItem
-                    // avatar={data.newNotification.sender.avatar}
-                    // username={data.newNotification.sender.username}
-                    action="sent you a friend request."
-                    time={data.newNotification.created_at}
-                  />
-                )
-              )} */}
+                dataArray.map((data) => {
+                  return (
+                    <NotificationItem
+                      key={data.id}
+                      avatar={data.sender.avatar}
+                      username={data.sender.username}
+                      action="starting to follow you"
+                      time={formatTime(data.create_at)}
+                      sender_id={data.sender.user_id}
+                    />
+                  );
+                })
+              )}
             </div>
           </div>
         </div>
@@ -52,11 +58,14 @@ export default function NotificationsDropdown({ isOpen, onClose, receiverId }) {
   );
 }
 
-function NotificationItem({ avatar, username, action, time }) {
+function NotificationItem({ avatar, username, action, time, sender_id }) {
   return (
     <div className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg">
       <div className="flex items-center space-x-3">
-        <img src={avatar} alt="" className="w-11 h-11 rounded-full" />
+        <Link to={`/profile/${sender_id}`}>
+          <img src={avatar} alt="" className="w-11 h-11 rounded-full" />
+        </Link>
+
         <div>
           <p className="text-sm">
             <span className="font-semibold">{username}</span> {action}

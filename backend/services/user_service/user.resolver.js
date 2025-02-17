@@ -1,4 +1,5 @@
 import User from "../../models/mysql/user.js";
+import FriendRequest from "../../models/mysql/friend_request.js";
 import { Op } from "sequelize";
 const CACHE_KEYS = {
   USER: (id) => `USER_${id}`,
@@ -50,6 +51,75 @@ export const userResolver = {
       } catch (error) {
         throw new Error("Error fetching user");
       }
+    },
+  },
+  User: {
+    followers: async (parent) => {
+      try {
+        const userId = parent.user_id;
+        // console.log(userId);
+        const followers = await FriendRequest.findAll({
+          where: {
+            [Op.or]: [
+              {
+                sender_id: userId,
+                status: "accepted",
+              },
+              {
+                receiver_id: userId,
+                status: ["accepted", "pending"],
+              },
+            ],
+          },
+        });
+        // console.log(followers);
+        const followerIds = followers.map((request) => {
+          return request.dataValues.sender_id === userId
+            ? request.dataValues.receiver_id
+            : request.dataValues.sender_id;
+        });
+        const followerUsers = await User.findAll({
+          where: {
+            user_id: {
+              [Op.in]: followerIds,
+            },
+          },
+        });
+        // console.log(followerUsers);
+        return followerUsers;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    following: async (parent) => {
+      const userId = parent.user_id;
+      const following = await FriendRequest.findAll({
+        where: {
+          [Op.or]: [
+            {
+              receiver_id: userId,
+              status: "accepted",
+            },
+            {
+              sender_id: userId,
+              status: ["accepted", "pending"],
+            },
+          ],
+        },
+      });
+      const followingIds = following.map((request) => {
+        return request.dataValues.sender_id === userId
+          ? request.dataValues.receiver_id
+          : request.dataValues.sender_id;
+      });
+      const followingUsers = await User.findAll({
+        where: {
+          user_id: {
+            [Op.in]: followingIds,
+          },
+        },
+      });
+      return followingUsers;
     },
   },
 

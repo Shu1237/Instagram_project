@@ -7,15 +7,15 @@ export const userTypeDef = gql`
     password: String
     avatar: String
     email: String
-    followers: [User!]!
-    following: [User!]!
+    followers: [User]
+    following: [User]
     bio: String
     phone: String
     is_active: Boolean
     created_by: String
     created_at: String
     updated_at: String
-    # posts: [Post!]!
+    posts: [Post]
     # stories: [Story!]!
   }
   input UpdateUserInput {
