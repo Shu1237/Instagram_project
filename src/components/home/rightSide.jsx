@@ -4,6 +4,7 @@ import ProfileRight from "../../assets/profilepic.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useSubscription } from "@apollo/client";
 import { ME_QUERY, GET_USERS_QUERY } from "../../graphql/query/user.query";
+import { NEW_NOTIFICATIONS } from "../../graphql/subscriptions/notification.subcription";
 import { removeCookies } from "../../utils/cookie.util";
 import {
   SEND_FRIEND_REQUEST_MUTATION,
@@ -11,9 +12,11 @@ import {
   ACCEPT_FRIEND_REQUEST_MUTATION,
 } from "../../graphql/mutations/follow.mutation";
 import { FRIEND_REQUEST_QUERY } from "../../graphql/query/friendRequest.query";
+import SmallNotification from "../notification/smallNotification";
 export default function RightSide() {
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [notification, setNotification] = useState(null);
   const { loading, error, data } = useQuery(ME_QUERY);
   // console.log(data);
   const { id } = useParams();
@@ -128,6 +131,14 @@ export default function RightSide() {
     window.location.href = "/";
   };
 
+  useSubscription(NEW_NOTIFICATIONS, {
+    variables: { receiverId: data?.me?.user_id },
+    onData: (x) => {
+      // console.log(x?.data?.data?.notificationAdded?.type);
+      const notification = x?.data?.data?.notificationAdded;
+      setNotification(notification);
+    },
+  });
   const hsr = "instagram from Meta";
 
   if (loading || usersLoading || friendRequestsLoading) {
@@ -148,6 +159,14 @@ export default function RightSide() {
       {showSuccess && (
         <div className="bg-green-500 text-white text-center py-2 mb-4">
           Action completed successfully!
+        </div>
+      )}
+      {notification && (
+        <div className="bg-green-500 text-white text-center py-2 mb-4">
+          <SmallNotification
+            notification={notification}
+            onClose={() => setNotification(null)}
+          />
         </div>
       )}
       {/* Auth Section */}

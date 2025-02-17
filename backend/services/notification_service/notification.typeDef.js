@@ -4,12 +4,16 @@ export const notificationTypeDef = gql`
   type Notification {
     id: ID!
     type: String!
-    sender_id: Int!
-    receiver_id: Int!
+    sender_id: ID!
+    receiver_id: ID!
     friend_request_id: Int
+    sender: User!
     create_at: String!
   }
+  type Query {
+    myNotifications: [Notification]
+  }
   type Subscription {
-    notificationAdded(receiver_id: Int!): Notification!
+    notificationAdded(receiver_id: ID!): Notification!
   }
 `;
