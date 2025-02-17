@@ -244,9 +244,7 @@ export default function RightSideProfile() {
         </div>
       </div>}
 
-        <div>
-          alalo
-        </div>
+      
 
 
 
