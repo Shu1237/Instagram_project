@@ -5,8 +5,10 @@ import BrokenImageOutlinedIcon from '@mui/icons-material/BrokenImageOutlined';
 import BookmarkAddedOutlinedIcon from '@mui/icons-material/BookmarkAddedOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import ReportGmailerrorredOutlinedIcon from '@mui/icons-material/ReportGmailerrorredOutlined';
+import { useNavigate } from 'react-router-dom';
 
 const Menu = () => {
+  const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -39,7 +41,7 @@ const Menu = () => {
         {isOpen && (
           <div className="absolute left-0 bottom-[40px] bg-white shadow-lg rounded-[10px] w-[250px] z-[1000]">
             <ul className='list-none p-[10px] m-[0]'>
-              <MenuItem icon={<SettingsOutlinedIcon />} label="Setting" />
+              <MenuItem onClick={()=>navigate('/dashboardPage')} icon={<SettingsOutlinedIcon />} label="Setting" />
               <MenuItem icon={<BrokenImageOutlinedIcon />} label="Your activity" />
               <MenuItem icon={<BookmarkAddedOutlinedIcon />} label="Saved" />
               <MenuItem icon={<LightModeOutlinedIcon />} label="Switch appearance" />
@@ -61,9 +63,9 @@ const Menu = () => {
   );
 };
 
-const MenuItem = ({ icon, label }) => {
+const MenuItem = ({ icon, label, onClick }) => {
   return (
-    <li className='py-[20px] px-[10px] cursor-pointer flex items-center justify-start rounded-[15px] hover:bg-[#ededed]'>
+    <li onClick={onClick} className='py-[20px] px-[10px] cursor-pointer flex items-center justify-start rounded-[15px] hover:bg-[#ededed]'>
       <span className='mr-[15px]' role="img" aria-label={label}>{icon}</span> {label}
     </li>
   );

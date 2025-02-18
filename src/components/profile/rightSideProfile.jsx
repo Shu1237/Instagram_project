@@ -189,7 +189,6 @@ export default function RightSideProfile() {
             </div>
           </div>
         </div>
-    
       </div> */}
       {state === 3 && <div className="flex justify-center   p-20"  >
         <div className="flex flex-col items-center gap-4">
