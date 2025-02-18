@@ -11,6 +11,7 @@ import Login from "../auth/login";
 import Signup from "../auth/register";
 import Profile from "../pages/profile";
 import Message from "../pages/message";
+import DashBoardPage from "../pages/dashboard";
 export default function App() {
   return (
     <Routes>
@@ -19,6 +20,7 @@ export default function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/message/:id/:idfr" element={<Message />} />
+      <Route path="dashboardPage" element={<DashBoardPage />} />
     </Routes>
   );
 }

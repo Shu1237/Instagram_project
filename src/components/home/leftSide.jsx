@@ -45,7 +45,7 @@ export default function LeftSide() {
   const linkProfile = `/profile/${data?.me?.user_id}`;
   const linkMess = `/message/${data?.me?.user_id}/0`;
   return (
-    <div className="">
+    <div className="fixed">
       <div
         onClick={() => navigate("/")}
         className="w-full h-auto flex items-center justify-center cursor-pointer max-lg:justify-start max-lg:w-8"
@@ -118,6 +118,9 @@ export default function LeftSide() {
         <div
           onClick={() => navigate(linkProfile)}
           className=" max-xl:w-8 max-xl:px-0 flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full"
+
+
+
         >
           <img
             src={data?.me?.avatar}
@@ -129,13 +132,14 @@ export default function LeftSide() {
           </div>
         </div>
 
-        <div className="mt-[50px] w-full">
-          <MenuItem
+        <div className="mt-[50px] w-full ">
+          {/* <MenuItem
+            className="max-xl:hidden" 
             icon={
               <GestureIcon sx={{ fontSize: "30px", margin: "0 20px 0 0" }} />
             }
             label="Threads"
-          />
+          /> */}
           <Menu />
         </div>
       </div>
