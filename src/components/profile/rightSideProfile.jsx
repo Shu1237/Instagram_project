@@ -11,12 +11,9 @@ import { useParams } from "react-router-dom";
 import FooterProfile from "./footerProfile";
 import HeaderProfile from "./headerProfile";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
+import * as localStorageFunctions from "../../utils/localStorage.util.js";
 export default function RightSideProfile() {
-  const {
-    loading: meLoading,
-    error: meError,
-    data: meData,
-  } = useQuery(ME_QUERY);
+  const userInfo = localStorageFunctions.getLocalStorage().user;
   const { id } = useParams();
   const { loading, error, data } = useQuery(GET_PROFILE, {
     variables: {
@@ -43,7 +40,7 @@ export default function RightSideProfile() {
   return (
     <div className="w-full max-w-[935px] mx-auto px-4 font-sans">
       {/* Profile Header */}
-      <HeaderProfile data={data} meData={meData} />
+      <HeaderProfile data={data} meData={userInfo} />
 
       {/* Story Highlights */}
       <div className="py-8">
