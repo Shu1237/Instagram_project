@@ -12,8 +12,10 @@ import { useMutation } from "@apollo/client";
 import { CREATE_POST_MUTATION } from "../../graphql/mutations/post.mutation";
 import { getCookies } from "../../utils/cookie.util";
 import { uploadFile } from "../../utils/upload.util";
-
+import * as localStorageFunctions from "../../utils/localStorage.util.js";
 const ModalCreate = () => {
+  const userInfo = localStorageFunctions.getLocalStorage()?.user;
+  // console.log(userInfo);
   const [open, setOpen] = useState(false);
   const [next, setNext] = useState(0);
   const [picture, setPicture] = useState([]);
@@ -31,26 +33,28 @@ const ModalCreate = () => {
   const MAX_IMAGES = 20;
   const MAX_CAPTION_LENGTH = 2200;
   const [emoji, setEmoji] = useState("");
-  const [createPost, { loading, error, data }] = useMutation(CREATE_POST_MUTATION, {
-    onError: () => {
-      setShowError(true);
-      setTimeout(() => setShowError(false), 3000); // Hide error after 3 seconds
-    },
-    onCompleted: () => {
-      setShowSuccess(true);
-      setTimeout(() => {
-        navigate("/");
-        setShowSuccess(false);
-      }, 500); // Hide success after 3 seconds and navigate to /home
-    },
-  });
+  const [createPost, { loading, error, data }] = useMutation(
+    CREATE_POST_MUTATION,
+    {
+      onError: () => {
+        setShowError(true);
+        setTimeout(() => setShowError(false), 3000); // Hide error after 3 seconds
+      },
+      onCompleted: () => {
+        setShowSuccess(true);
+        setTimeout(() => {
+          navigate("/");
+          setShowSuccess(false);
+        }, 500); // Hide success after 3 seconds and navigate to /home
+      },
+    }
+  );
 
   const handleEmojiSelect = (selectedEmoji) => {
     setEmoji(selectedEmoji); // save emoji
 
     setValue((v) => [...v, selectedEmoji]);
   };
-
 
   // bo chiu phan nay
   // const [currentIndex, setCurrentIndex] = useState(0);
@@ -132,25 +136,25 @@ const ModalCreate = () => {
   const handlePost = async () => {
     try {
       const urls = await Promise.all(file.map((file) => uploadFile(file)));
-      const newInput = ({
+      const newInput = {
         user_id: getCookies("user_id"),
         caption: value + emoji,
         media_urls: urls,
-        status: "public"
-      });
+        status: "public",
+      };
       const response = await createPost({
         variables: {
           input: {
-            ...newInput
-          }
-        }
+            ...newInput,
+          },
+        },
       });
       console.log("Create Post Response:", response);
     } catch (error) {
       console.error("Create Post Error:", error);
     }
     handleClose();
-  }
+  };
 
   return (
     <>
@@ -162,13 +166,18 @@ const ModalCreate = () => {
         <AddBoxOutlinedIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />
         <div className="font-normal text-[16px] text-lg">Create</div>
       </div> */}
-      <div onClick={() => setOpen(true)} className="flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full
+      <div
+        onClick={() => setOpen(true)}
+        className="flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full
       
         max-xl:w-8 max-xl:px-0
       
-      ">
+      "
+      >
         <AddBoxOutlinedIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />
-        <div className="font-normal text-[16px] text-lg max-xl:hidden">Create</div>
+        <div className="font-normal text-[16px] text-lg max-xl:hidden">
+          Create
+        </div>
       </div>
 
       <Modal
@@ -184,8 +193,8 @@ const ModalCreate = () => {
             {next === 0
               ? "Create New Post"
               : next === 1
-                ? "Edit Caption"
-                : "Share"}
+              ? "Edit Caption"
+              : "Share"}
             {picture.length > 0 && (
               <>
                 {next < 2 && (
@@ -206,18 +215,14 @@ const ModalCreate = () => {
                     Back
                   </button>
                 )}
-                {
-
-                  next === 2 && (
-                    <button
-                      className="absolute right-0 text-blue-500 font-semibold"
-                      onClick={handlePost}
-                    >
-                      Up
-                    </button>
-
-                  )
-                }
+                {next === 2 && (
+                  <button
+                    className="absolute right-0 text-blue-500 font-semibold"
+                    onClick={handlePost}
+                  >
+                    Up
+                  </button>
+                )}
               </>
             )}
 
@@ -311,11 +316,13 @@ const ModalCreate = () => {
               <div className="p-4 border rounded-lg shadow-md bg-white w-full max-w-md">
                 <div className="flex items-center mb-4">
                   <img
-                    src={Avatar}
+                    src={userInfo?.avatar}
                     alt="Profile"
                     className="w-10 h-10 rounded-full object-cover"
                   />
-                  <span className="ml-2 font-semibold">chi_123kaiz</span>
+                  <span className="ml-2 font-semibold">
+                    {userInfo?.username}
+                  </span>
                 </div>
 
                 <div className="mb-4">

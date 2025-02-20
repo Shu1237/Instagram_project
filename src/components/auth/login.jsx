@@ -5,11 +5,9 @@ import Home from "../pages/home";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "../../graphql/mutations/auth.mutation";
-import {
-  setCookies,
-  getCookie,
-  removeCookies,
-} from "../../utils/cookie.util";
+import { setCookies, getCookie, removeCookies } from "../../utils/cookie.util";
+import { getMyInformation } from "../../utils/jwt-decode.util.js";
+import * as localStorageFunctions from "../../utils/localStorage.util.js";
 function Login() {
   const [input, setInput] = useState({
     username: "",
@@ -45,6 +43,9 @@ function Login() {
         setCookies("jwt-token", response.data.login.token);
         setCookies("user_id", response.data.login.user.user_id);
       }
+      const token = getCookie();
+      const myInformation = getMyInformation(token);
+      localStorageFunctions.setLocalStorage(myInformation);
     } catch (err) {
       console.error("Login Error:", err);
     }

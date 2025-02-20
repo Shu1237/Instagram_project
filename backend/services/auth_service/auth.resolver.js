@@ -25,7 +25,13 @@ export const authResolver = {
           full_name,
           is_active: true,
         });
-        const token = generateToken(user);
+        const userInfo = {
+          user_id: user.user_id,
+          username: user.username,
+          full_name: user.full_name,
+          avatar: user.avatar,
+        };
+        const token = generateToken(userInfo);
         return {
           token,
           user,
