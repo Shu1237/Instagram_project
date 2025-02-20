@@ -7,7 +7,7 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import ModalPost from "../comment/modal";
 import { useQuery } from "@apollo/client";
 import { GET_POST_QUERY } from "../../graphql/query/post.query";
-
+import "swiper/css";
 import "./swiper.css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
@@ -79,6 +79,29 @@ function Post() {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+  const renderMedia = (url) => {
+    const isVideo = url?.match(/\.(mp4|webm|ogg)$/i);
+    return (
+      <div className="mt-3 flex justify-center">
+        {isVideo ? (
+          <video
+            controls
+            className="rounded-lg w-[90%] max-w-[500px] aspect-[4/5] object-cover shadow-md"
+          >
+            <source src={url} type="video/mp4" />
+          </video>
+        ) : (
+          <div className="w-[90%] max-w-[500px] overflow-hidden rounded-lg shadow-md">
+            <img
+              className="w-full aspect-[4/5] object-cover"
+              src={url}
+              alt=""
+            />
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -100,29 +123,29 @@ function Post() {
             </div>
 
             {/* Swiper chỉnh sửa */}
-            <Swiper
-              effect="coverflow"
-              centeredSlides={true}
-              coverflowEffect={{
-                rotate: 0,
-                stretch: 0,
-                depth: 100,
-                modifier: 2.5,
-                slideShadows: false,
-              }}
-              pagination={{ clickable: true }}
-              modules={[EffectCoverflow, Pagination, Navigation]}
-              navigation={true}
-              className="w-full max-w-md"
-            >
-              {post.media_urls.map((media, index) => (
-                <SwiperSlide key={index}>
-                  <div className="mt-[10px]">
-                    <img className="w-full" src={media} alt="" />
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
+            {post.media_urls.length > 1 ? (
+              <Swiper
+                effect="coverflow"
+                centeredSlides={true}
+                coverflowEffect={{
+                  rotate: 0,
+                  stretch: 0,
+                  depth: 100,
+                  modifier: 2.5,
+                  slideShadows: false,
+                }}
+                pagination={{ clickable: true }}
+                modules={[EffectCoverflow, Pagination, Navigation]}
+                navigation={true}
+                className="w-full max-w-md"
+              >
+                {post.media_urls.map((media, index) => (
+                  <SwiperSlide key={index}>{renderMedia(media)}</SwiperSlide>
+                ))}
+              </Swiper>
+            ) : (
+              renderMedia(post.media_urls[0])
+            )}
 
             <div className="w-full py-[5px] flex justify-between items-center">
               <div className="flex gap-[15px] items-center">

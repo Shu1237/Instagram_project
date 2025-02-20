@@ -47,6 +47,12 @@ export const loginMiddleware = async (args, next) => {
       //   ],
     },
   });
+  const userInfo = {
+    user_id: user.user_id,
+    username: user.username,
+    full_name: user.full_name,
+    avatar: user.avatar,
+  };
   if (!user) {
     throw new Error("User not found");
   }
@@ -57,7 +63,7 @@ export const loginMiddleware = async (args, next) => {
   if (!isPasswordValid) {
     throw new Error("Invalid password");
   }
-  const token = generateToken(user);
+  const token = generateToken(userInfo);
 
   return next(user, token);
 };
