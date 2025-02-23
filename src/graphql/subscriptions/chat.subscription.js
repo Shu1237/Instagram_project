@@ -17,6 +17,7 @@ export const MESSAGE_ADDED_SUBSCRIPTION = gql`
     messageAdded(roomChatId: $roomChatId) {
       id
       content
+      images
       user {
         user_id
         full_name
