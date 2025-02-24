@@ -18,6 +18,7 @@ import { ME_QUERY, GET_USERS_QUERY } from "../../graphql/query/user.query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import * as localStorageFunctions from "../../utils/localStorage.util.js";
+import SearchModal from "../ui/jsx/SearchModel.jsx";
 export default function LeftSide() {
   const navigate = useNavigate();
   const userInfo = localStorageFunctions.getLocalStorage()?.user;
@@ -25,6 +26,7 @@ export default function LeftSide() {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const modalRef = useRef();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -70,8 +72,13 @@ export default function LeftSide() {
         />
 
         <MenuItem
+          onClick={() => setIsSearchOpen(true)}
           icon={<SearchIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />}
           label="Search"
+        />
+        <SearchModal
+          isOpen={isSearchOpen}
+          onClose={() => setIsSearchOpen(false)}
         />
         <MenuItem
           onClick={() => navigate("/explore")}
