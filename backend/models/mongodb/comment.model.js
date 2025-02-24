@@ -26,11 +26,26 @@ const commentSchema = new mongoose.Schema(
     },
     created_at: {
       type: Date,
-      default: Date.now,
+      default: new Date(),
+    },
+    created_by: {
+      type: String,
+      required: true,
+    },
+    updated_at: {
+      type: Date,
+    },
+    updated_by: {
+      type: String,
+      default: null,
     },
   },
-  { timestamps: true }
 );
+
+commentSchema.index({ post_id: 1 });
+commentSchema.index({ user_id: 1 });
+commentSchema.index({ parent_id: 1 });
+commentSchema.index({ created_at: 1 });
 
 const Comment = mongoose.model("Comment", commentSchema);
 

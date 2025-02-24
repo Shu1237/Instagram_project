@@ -6,6 +6,7 @@ import { roomChatTypeDef } from "../services/room_chat_service/room_chat.typeDef
 import { chatTypeDef } from "../services/chat_service/chat.typeDef.js";
 import { likeTypeDef } from "../services/like_service/like.typeDef.js";
 import { notificationTypeDef } from "../services/notification_service/notification.typeDef.js";
+import { commentTypeDef } from "../services/comment_service/comment.typeDef.js";
 
 export const typeDefs = [
   authTypeDef,
@@ -16,4 +17,5 @@ export const typeDefs = [
   postTypeDef,
   likeTypeDef,
   notificationTypeDef,
+  commentTypeDef,
 ];
