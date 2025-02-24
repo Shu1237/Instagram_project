@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Modal } from "antd";
 import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
@@ -7,62 +7,32 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import MapsUgcOutlinedIcon from "@mui/icons-material/MapsUgcOutlined";
 import ShareRoundedIcon from "@mui/icons-material/ShareRounded";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
-import Avatar from "../../assets/img1.png";
-import Image from "../../assets/img2.png";
 import ICon from "./iconPick";
+import PropTypes from "prop-types";
+import "swiper/css";
+import "swiper/css/effect-coverflow";
+import "swiper/css/pagination";
+import 'swiper/css/navigation';
+import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import formatTime from "../../utils/formatTime.util";
+import { getCookie } from "../../utils/cookie.util";
+import { useNavigate } from "react-router-dom";
+import { getLocalStorage } from "../../utils/localStorage.util";
+import { useMutation, useLazyQuery } from "@apollo/client";
+import { POST_COMMENT_MUTATION } from "../../graphql/mutations/comment.mutation";
+import { GET_COMMENTS_QUERY } from "../../graphql/query/comment.query";
 
-const ModalPost = () => {
-  const arryTyms = [
+const ModalPost = ({ post }) => {
+  const [arryTyms, setArryTyms] = useState([
     {
-      img: Avatar,
-      username: "Alo",
-      small: "aloalaolao",
+      img: post.user.avatar,
+      username: post.user.full_name,
+      comment: post.caption,
+      created_at: formatTime(post.created_at),
       icon: <FavoriteBorderOutlinedIcon />,
     },
-    {
-      img: Avatar,
-      username: "Alo",
-      small: "aloalaolao",
-      icon: <FavoriteBorderOutlinedIcon />,
-    },
-    {
-      img: Avatar,
-      username: "Alo",
-      small: "aloalaolao",
-      icon: <FavoriteBorderOutlinedIcon />,
-    },
-    {
-      img: Avatar,
-      username: "Alo",
-      small: "aloalaolao",
-      icon: <FavoriteBorderOutlinedIcon />,
-    },
-    {
-      img: Avatar,
-      username: "Alo",
-      small: "aloalaolao",
-      icon: <FavoriteBorderOutlinedIcon />,
-    },
-    {
-      img: Avatar,
-      username: "Alo",
-      small: "aloalaolao",
-      icon: <FavoriteBorderOutlinedIcon />,
-    },
-    {
-      img: Avatar,
-      username: "Alo",
-      small: "aloalaolao",
-      icon: <FavoriteBorderOutlinedIcon />,
-    },
-    {
-      img: Avatar,
-      username: "Alo",
-      small: "aloalaolao",
-      icon: <FavoriteBorderOutlinedIcon />,
-    },
-  ];
-
+  ]);
   const [isLiked, setIsLiked] = useState(arryTyms.map(() => false));
   const [open, setOpen] = useState(false);
   const [nofLike, setNofLike] = useState(123156);
@@ -71,6 +41,56 @@ const ModalPost = () => {
   );
   const [value, setValue] = useState("");
   const [isPlaceholderVisible, setPlaceholderVisible] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const jwtToken = getCookie("jwt-token");
+    if (!jwtToken) {
+      navigate("/login");
+    }
+  }, [navigate]);
+  const user = getLocalStorage();
+
+  const [input, setInput] = useState({
+    post_id: post.id,
+    user_id: user.user.user_id,
+    parent_id: null,
+    content: "",
+    media_urls: [], //media này không phải là ảnh của bài post mà là ảnh của người comment có thể là gif hay meme j đó.
+  });
+  const [postComment] = useMutation(POST_COMMENT_MUTATION);
+
+  const [getComments, { data }] = useLazyQuery(GET_COMMENTS_QUERY, {
+    fetchPolicy: "network-only",
+  });
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    getComments({
+      variables: {
+        post_id: post.id
+      }
+    });
+  }, [open, getComments, post.id]);
+
+  const prevCommentsRef = React.useRef([]);
+
+  useEffect(() => {
+    if (data && data?.getComments) {
+      const updatedComments = data.getComments.map(comment => ({
+        img: comment.user.avatar,
+        username: comment.user.full_name,
+        comment: comment.content,
+        created_at: formatTime(comment.created_at),
+        icon: <FavoriteBorderOutlinedIcon />,
+      }));
+      if (JSON.stringify(prevCommentsRef.current) !== JSON.stringify(updatedComments)) {
+        setArryTyms(prevArryTyms => [...prevArryTyms, ...updatedComments]);
+        prevCommentsRef.current = updatedComments;
+      }
+    }
+  }, [data]);
 
   const handleHeartClick = (index) => {
     const newLiked = [...isLiked];
@@ -98,7 +118,7 @@ const ModalPost = () => {
     const value = event.target.value;
     setValue(value);
 
-    if (value.trim !== "") {
+    if (value.trim() !== "") {
       setPlaceholderVisible(true);
     } else {
       setPlaceholderVisible(false);
@@ -111,6 +131,49 @@ const ModalPost = () => {
   };
   const handleInputClick = () => {
     setPlaceholderVisible(false);
+  };
+
+  const handlePostComment = async () => {
+    try {
+      const response = await postComment({
+        variables: {
+          input: {
+            ...input,
+            content: value,
+          },
+        },
+      });
+      if (response.data.postComment) {
+        setValue("");
+        setPlaceholderVisible(true);
+      }
+    } catch (error) {
+      console.log("Post Comment Error:", error);
+    }
+  };
+
+  const renderMedia = (url) => {
+    const isVideo = url?.match(/\.(mp4|webm|ogg)$/i);
+    return (
+      <div className="mt-3 flex justify-center">
+        {isVideo ? (
+          <video
+            controls
+            className="rounded-lg w-full  h-full aspect-[4/5] object-cover shadow-md"
+          >
+            <source src={url} type="video/mp4" />
+          </video>
+        ) : (
+          <div className="w-full  h-full rounded-lg object-cover overflow-hidden shadow-md mt-3 flex justify-center">
+            <img
+              className="w-full  h-full rounded-lg object-cover"
+              src={url}
+              alt=""
+            />
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -128,30 +191,56 @@ const ModalPost = () => {
         onOk={() => setOpen(false)}
         onCancel={() => setOpen(false)}
         width={1300}
+        footer={null}
       >
         <div className="flex p-4">
           <div className="flex-1 pr-5">
-            <img
-              className="w-full  h-full rounded-lg object-cover"
-              src={Image}
-              alt=""
-            />
+            {post.media_urls.length > 0 ? (
+              <Swiper
+                effect="coverflow"
+                centeredSlides={true}
+                coverflowEffect={{
+                  rotate: 0,
+                  stretch: 0,
+                  depth: 100,
+                  modifier: 2.5,
+                  slideShadows: false,
+                }}
+                pagination={{ clickable: true }}
+                modules={[EffectCoverflow, Pagination, Navigation]}
+                navigation={{
+                  nextEl: '.swiper-button-next',
+                  prevEl: '.swiper-button-prev',
+                }}
+                className="w-full max-w-md"
+              >
+                {post.media_urls.map((media, index) => (
+                  <SwiperSlide key={index}>
+                    {renderMedia(media)}
+                  </SwiperSlide>
+                ))}
+                <div className="swiper-button-next"></div>
+                <div className="swiper-button-prev"></div>
+              </Swiper>
+            ) : (
+              renderMedia(post.media_urls[0])
+            )}
           </div>
           <div className="container-body-modal ">
             <div className="flex justify-between items-center p-4">
-              <div className="flex items-center">
+              <div className="flex items-center" id={user.user.user_id}>
                 <div className="mr-3">
-                  <img className="w-12 h-12 rounded-full" src={Avatar} alt="" />
+                  <img className="w-12 h-12 rounded-full" src={user.user.avatar} alt="" />
                 </div>
                 <div>
-                  <span className="font-bold text-base">Alalo</span>
+                  <span className="font-bold text-base">{user.user.full_name}</span>
                 </div>
               </div>
               <div className="cursor-pointer">
                 <ListOutlinedIcon sx={{ fontSize: "30px" }} />
               </div>
             </div>
-            <div className=" flex  flex-col overflow-y-auto h-[300px]  ">
+            <div className="flex flex-col overflow-y-auto h-[300px]">
               {arryTyms.map((item, index) => (
                 <div className="comment-container pt-[4px]" key={index}>
                   <div className="flex items-center mb-8">
@@ -164,9 +253,9 @@ const ModalPost = () => {
                     </div>
                     <div className="flex flex-col">
                       <span className="font-bold">{item.username}</span>
-                      <p className="text-sm">{item.small}</p>
+                      <p className="text-sm break-words">{item.comment}</p>
                       <div className="flex gap-2.5 text-sm">
-                        <div>1m</div>
+                        <div>{item.created_at}</div>
                         <div>See translation</div>
                       </div>
                     </div>
@@ -186,7 +275,7 @@ const ModalPost = () => {
                 </div>
               ))}
             </div>
-            <div className=" body-post-comment">
+            <div className="body-post-comment">
               <div className="mt-4">
                 <div className="flex justify-between mb-2">
                   <div className="flex gap-2.5">
@@ -242,6 +331,7 @@ const ModalPost = () => {
                         border: "none",
                         background: "rgba(35, 32, 32, 0)",
                       }}
+                      onClick={handlePostComment}
                     >
                       Post
                     </button>
@@ -265,6 +355,10 @@ const ModalPost = () => {
       </Modal>
     </>
   );
+};
+
+ModalPost.propTypes = {
+  post: PropTypes.object.isRequired,
 };
 
 export default ModalPost;

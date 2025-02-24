@@ -70,7 +70,6 @@ function Post() {
         setPlaceholderVisible(true);
       }
     };
-
     window.addEventListener("click", handleOutsideClick);
     return () => {
       window.removeEventListener("click", handleOutsideClick);
@@ -123,7 +122,7 @@ function Post() {
             </div>
 
             {/* Swiper chỉnh sửa */}
-            {post.media_urls.length > 1 ? (
+            {post.media_urls.length > 0 ? (
               <Swiper
                 effect="coverflow"
                 centeredSlides={true}
@@ -155,7 +154,7 @@ function Post() {
                 >
                   {clickHeart}
                 </div>
-                <ModalPost />
+                <ModalPost post={post} />
                 <ShareOutlinedIcon sx={{ fontSize: "30px" }} />
               </div>
               <div className="text-[30px]">
@@ -214,7 +213,7 @@ function Post() {
           </div>
         );
       })}
-    </div>
+    </div >
   );
 }
 
