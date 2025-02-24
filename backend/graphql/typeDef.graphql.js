@@ -7,7 +7,7 @@ import { chatTypeDef } from "../services/chat_service/chat.typeDef.js";
 import { likeTypeDef } from "../services/like_service/like.typeDef.js";
 import { notificationTypeDef } from "../services/notification_service/notification.typeDef.js";
 import { commentTypeDef } from "../services/comment_service/comment.typeDef.js";
-
+import { searchTypeDef } from "../services/search_service/search.typeDef.js";
 export const typeDefs = [
   authTypeDef,
   userTypeDef,
@@ -18,4 +18,5 @@ export const typeDefs = [
   likeTypeDef,
   notificationTypeDef,
   commentTypeDef,
+  searchTypeDef,
 ];
