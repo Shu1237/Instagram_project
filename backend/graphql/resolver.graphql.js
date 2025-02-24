@@ -7,7 +7,7 @@ import { chatResolver } from "../services/chat_service/chat.resolver.js";
 import { likeResolver } from "../services/like_service/like.resolver.js";
 import { notificationResolver } from "../services/notification_service/notification.resolver.js";
 import { commentResolver } from "../services/comment_service/comment.resolver.js";
-
+import { searchResolver } from "../services/search_service/search.resolver.js";
 export const resolvers = [
   authResolver,
   userResolver,
@@ -18,5 +18,5 @@ export const resolvers = [
   likeResolver,
   notificationResolver,
   commentResolver,
-
+  searchResolver,
 ];
