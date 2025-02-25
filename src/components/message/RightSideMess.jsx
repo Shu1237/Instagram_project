@@ -1,137 +1,199 @@
-import React from "react";
-import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
-import Avatar from "../../assets/profilepic.png";
-import story from "../../story.json";
-import UserAvatar from "../../assets/p15.jpg";
-import { useNavigate } from "react-router-dom";
-import { ME_QUERY, GET_USERS_QUERY } from "../../graphql/query/user.query";
-import { GET_ROOMCHATS_QUERY } from "../../graphql/query/roomChat.query";
-import { useQuery } from "@apollo/client";
+import { useRef, useEffect, useState } from "react";
+import { useQuery, useMutation, useSubscription } from "@apollo/client";
 
-const RightSideMess = () => {
-  const stories = story.story;
-  const navigate = useNavigate();
-  const { loading, error, data } = useQuery(ME_QUERY);
+import {
+  GET_ONE_ROOMCHAT_QUERY,
+} from "../../graphql/query/roomChat.query";
+import { GET_CHAT_IN_ROOM_QUERY } from "../../graphql/query/chat.query";
+import { SET_TYPING_STATUS, SEND_MESSAGE_MUTATION } from "../../graphql/mutations/chat.mutation";
+import { TYPING_STATUS_SUBSCRIPTION, MESSAGE_ADDED_SUBSCRIPTION } from "../../graphql/subscriptions/chat.subscription";
+import ButtonSection from "../message/buttonSection";
+import HeaderSection from "./headerSection";
+import BodySection from "./bodySection";
+
+const RightSideMess = ({ id, idfr }) => {
+  const chatContainerRef = useRef(null);
+  const messagesEndRef = useRef(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  const [messages, setMessages] = useState([]);
+  const [messageContent, setMessageContent] = useState("");
+  const [isMinimized, setIsMinimized] = useState(false);
+  // Fetch initial messages
+  const {
+    loading: chatLoading,
+    error: chatError,
+    data: chatData,
+    fetchMore,
+  } = useQuery(GET_CHAT_IN_ROOM_QUERY, {
+    variables: { roomChatId: idfr },
+    onCompleted: (data) => {
+      setMessages(data.chats);
+      scrollToBottom();
+    },
+  });
+
+  // Fetch room chat information
   const {
     loading: roomChatLoading,
     error: roomChatError,
     data: roomChatData,
-  } = useQuery(GET_ROOMCHATS_QUERY);
-
-  if (loading || roomChatLoading) {
-    return <p>Loading...</p>;
-  }
-
-  // user information
-  const id = data?.me?.user_id;
-  const userName = data?.me?.username;
-  const avatar = data?.me?.avatar;
-
-  // room chat information
-  const roomChats = roomChatData?.roomChats.map((roomChat) => {
-    const roomInfo = roomChat.users.find((user) => user.user_id !== id);
-    return { ...roomChat, roomInfo };
+  } = useQuery(GET_ONE_ROOMCHAT_QUERY, {
+    variables: { roomChatId: idfr },
   });
 
-  // console.log(roomChats);
+  // Room chat information
+  const myFriendInfo = roomChatData?.roomChat?.users.find(
+    (user) => user.user_id !== id
+  );
+
+  // Typing indicator
+  const [isTyping, setIsTyping] = useState(false);
+  const [typingStatus, setTypingStatus] = useState(false);
+  const [typingUser, setTypingUser] = useState(null);
+  const [setTypingStatusMutation] = useMutation(SET_TYPING_STATUS);
+
+  const handleTyping = (e) => {
+    setMessageContent(e.target.value);
+    if (e.target.value) {
+      setIsTyping(true);
+      setTypingStatusMutation({
+        variables: { roomChatId: idfr, isTyping: true },
+      });
+    } else {
+      setIsTyping(false);
+      setTypingStatusMutation({
+        variables: { roomChatId: idfr, isTyping: false },
+      });
+    }
+  };
+
+  // Send message mutation
+  const [sendMessage] = useMutation(SEND_MESSAGE_MUTATION, {
+    onCompleted: () => {
+      setMessageContent("");
+      setFiles([]);
+      scrollToBottom();
+    },
+  });
+
+  // Subscription for new messages
+  useSubscription(MESSAGE_ADDED_SUBSCRIPTION, {
+    variables: { roomChatId: idfr },
+    onData: (x) => {
+      console.log(x);
+      const newMessage = x.data.data.messageAdded;
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      scrollToBottom();
+    },
+  });
+  // Debounce typing indicator
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setIsTyping(false);
+      setTypingStatusMutation({
+        variables: { roomChatId: idfr, isTyping: false },
+      });
+    }, 2000);
+    return () => clearTimeout(timeoutId);
+  }, [isTyping]);
+
+  // Subscription for typing status
+  useSubscription(TYPING_STATUS_SUBSCRIPTION, {
+    variables: { roomChatId: idfr },
+    onData: ({ data }) => {
+      const typingStatus = data.data.typingStatus;
+      setTypingUser(typingStatus.user);
+      if (typingStatus.user.user_id !== id)
+        setTypingStatus(typingStatus.isTyping);
+    },
+  });
+
+  const handleSendMessage = async () => {
+    if (messageContent.trim() === "" && !files.length) return;
+    try {
+      const urls =
+        (await Promise.all(files.map((file) => uploadFile(file)))) || [];
+      await sendMessage({
+        variables: {
+          input: { roomChatId: idfr, content: messageContent, images: urls },
+        },
+      });
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+  const handleEmojiChange = (emoji) => {
+    // console.log(emoji);
+    setMessageContent((prevContent) => prevContent + emoji);
+  };
+
+  // handle sending files
+  const [files, setFiles] = useState([]);
+
+  const handleFileChange = (event) => {
+    const selectedFiles = Array.from(event.target.files).map((file) => {
+      return file.name;
+    });
+
+    setFiles([...files, ...selectedFiles]);
+    setMessageContent((prevContent) => prevContent + files.join("\n"));
+  };
+
+  //remove files
+  const removeFile = (index) => {
+    setFiles(files.filter((_, i) => i !== index));
+  };
+
+  if (!myFriendInfo) {
+    return (
+      <div className="h-screen flex items-center justify-center p-2">
+        <div className="flex flex-col items-center w-full max-w-sm text-center justify-center">
+          <svg
+            className="x1lliihq x1n2onr6 x5n08af"
+            fill="currentColor"
+            height="96"
+            viewBox="0 0 96 96"
+            width="96"
+          >
+            <path d="M48 0C21.532 0 0 21.533 0 48s21.532 48 48 48 48-21.532 48-48S74.468 0 48 0Zm0 94C22.636 94 2 73.364 2 48S22.636 2 48 2s46 20.636 46 46-20.636 46-46 46Zm12.227-53.284-7.257 5.507c-.49.37-1.166.375-1.661.005l-5.373-4.031a3.453 3.453 0 0 0-4.989.921l-6.756 10.718c-.653 1.027.615 2.189 1.582 1.453l7.257-5.507a1.382 1.382 0 0 1 1.661-.005l5.373 4.031a3.453 3.453 0 0 0 4.989-.92l6.756-10.719c.653-1.027-.615-2.189-1.582-1.453ZM48 25c-12.958 0-23 9.492-23 22.31 0 6.706 2.749 12.5 7.224 16.503.375.338.602.806.62 1.31l.125 4.091a1.845 1.845 0 0 0 2.582 1.629l4.563-2.013a1.844 1.844 0 0 1 1.227-.093c2.096.579 4.331.884 6.659.884 12.958 0 23-9.491 23-22.31S60.958 25 48 25Zm0 42.621c-2.114 0-4.175-.273-6.133-.813a3.834 3.834 0 0 0-2.56.192l-4.346 1.917-.118-3.867a3.833 3.833 0 0 0-1.286-2.727C29.33 58.54 27 53.209 27 47.31 27 35.73 36.028 27 48 27s21 8.73 21 20.31-9.028 20.31-21 20.31Z"></path>
+          </svg>
+          <h1 className="text-lg font-semibold mt-2">Your messages</h1>
+          <span className="text-gray-500">Send a message to start a chat.</span>
+          <button className="px-4 py-2 bg-blue-500 text-white rounded-md mt-4 hover:bg-blue-600 transition">
+            Send message
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="border-r border-gray-300 px-6 py-4 w-[350px] h-screen flex flex-col">
-      {/* Header */}
-      <div className="flex-shrink-0">
-        <div className="flex justify-between items-center max-md:hidden">
-          <span className="text-xl font-bold">{userName}</span>
-          <EditNoteOutlinedIcon sx={{ fontSize: 30 }} />
-        </div>
-
-        {/* Story Section */}
-        <div className="mt-6 max-md:hidden">
-          <div className="flex flex-row gap-4 overflow-y-auto scrollbar-hide max-w-full">
-            <div className="relative flex flex-col items-center">
-              <div className="absolute right-3 top-[-8px] pt-2 bg-white rounded-lg shadow-md">
-                <input
-                  type="text"
-                  placeholder="Note..."
-                  className="w-10 rounded-lg h-auto"
-                />
-              </div>
-              <div className="w-[60px] h-[60px] rounded-full border border-gray-300 overflow-hidden">
-                <img
-                  className="w-full h-full object-cover"
-                  src={avatar}
-                  alt="story"
-                />
-              </div>
-              <span className="text-sm text-gray-500 mt-1">Your note</span>
-            </div>
-            {stories.map((story, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center flex-shrink-0"
-              >
-                <div className="w-[60px] h-[60px] rounded-full border border-gray-300 overflow-hidden">
-                  <img
-                    className="w-full h-full object-cover"
-                    src={story.img}
-                    alt={story.name}
-                  />
-                </div>
-                <span className="text-sm text-gray-700 mt-1">{story.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Messages Header */}
-        <div className="mt-6 max-md:hidden">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-lg font-semibold">Messages</span>
-            <span className="text-sm text-gray-500 cursor-pointer">
-              Requests
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Messages List */}
-      <div className="flex-1 overflow-y-auto scrollbar-hide">
-        {roomChats?.map((roomChat) => (
-          <div
-            key={roomChat._id}
-            onClick={() => navigate(`/message/${id}/${roomChat._id}`)}
-            className="group flex items-center gap-3 p-2 transition-all duration-300 hover:bg-gray-100 rounded-lg cursor-pointer relative overflow-hidden"
-          >
-            {/* Hover effect layer */}
-            <div className="absolute inset-0 bg-purple-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-
-            {/* Avatar */}
-            <div className="relative flex-shrink-0">
-              <div className="w-12 h-12 rounded-full border-2 border-white ring-1 ring-gray-200 overflow-hidden">
-                <img
-                  className="w-full h-full object-cover"
-                  src={roomChat.roomInfo.avatar}
-                  alt="User"
-                />
-              </div>
-              {/* Online status indicator */}
-              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
-            </div>
-
-            {/* User info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-gray-800 truncate">
-                  {roomChat.roomInfo.username}
-                </span>
-              </div>
-              <p className="text-xs text-gray-500 truncate">
-                <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-1" />
-                Active 7m ago
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+    <div className="w-full h-screen flex flex-col">
+      <HeaderSection myFriendInfo={myFriendInfo} />
+      <BodySection
+        id={id}
+        messages={messages}
+        myFriendInfo={myFriendInfo}
+        messagesEndRef={messagesEndRef}
+        typingStatus={typingStatus}
+      />
+      <ButtonSection
+        id={id}
+        idfr={idfr}
+       handleEmojiChange={handleEmojiChange}
+       handleKeyPress={handleKeyPress}
+       handleTyping={handleTyping}
+       files={files}
+      />
     </div>
   );
 };
