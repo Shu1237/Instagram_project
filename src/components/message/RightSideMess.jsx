@@ -1,16 +1,20 @@
 import { useRef, useEffect, useState } from "react";
 import { useQuery, useMutation, useSubscription } from "@apollo/client";
 
-import {
-  GET_ONE_ROOMCHAT_QUERY,
-} from "../../graphql/query/roomChat.query";
+import { GET_ONE_ROOMCHAT_QUERY } from "../../graphql/query/roomChat.query";
 import { GET_CHAT_IN_ROOM_QUERY } from "../../graphql/query/chat.query";
-import { SET_TYPING_STATUS, SEND_MESSAGE_MUTATION } from "../../graphql/mutations/chat.mutation";
-import { TYPING_STATUS_SUBSCRIPTION, MESSAGE_ADDED_SUBSCRIPTION } from "../../graphql/subscriptions/chat.subscription";
-import ButtonSection from "../message/buttonSection";
+import {
+  SET_TYPING_STATUS,
+  SEND_MESSAGE_MUTATION,
+} from "../../graphql/mutations/chat.mutation";
+import {
+  TYPING_STATUS_SUBSCRIPTION,
+  MESSAGE_ADDED_SUBSCRIPTION,
+} from "../../graphql/subscriptions/chat.subscription";
+import BottomSection from "../message/buttonSection";
 import HeaderSection from "./headerSection";
 import BodySection from "./bodySection";
-
+import { uploadFile } from "../../utils/upload.util.js";
 const RightSideMess = ({ id, idfr }) => {
   const chatContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
@@ -148,11 +152,6 @@ const RightSideMess = ({ id, idfr }) => {
     setMessageContent((prevContent) => prevContent + files.join("\n"));
   };
 
-  //remove files
-  const removeFile = (index) => {
-    setFiles(files.filter((_, i) => i !== index));
-  };
-
   if (!myFriendInfo) {
     return (
       <div className="h-screen flex items-center justify-center p-2">
@@ -186,13 +185,15 @@ const RightSideMess = ({ id, idfr }) => {
         messagesEndRef={messagesEndRef}
         typingStatus={typingStatus}
       />
-      <ButtonSection
+      <BottomSection
         id={id}
         idfr={idfr}
-       handleEmojiChange={handleEmojiChange}
-       handleKeyPress={handleKeyPress}
-       handleTyping={handleTyping}
-       files={files}
+        handleEmojiChange={handleEmojiChange}
+        handleKeyPress={handleKeyPress}
+        handleTyping={handleTyping}
+        files={files}
+        setFiles={setFiles}
+        messageContent={messageContent}
       />
     </div>
   );
