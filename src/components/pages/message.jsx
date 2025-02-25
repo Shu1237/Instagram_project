@@ -1,6 +1,7 @@
 import LeftSideMess from "../message/LeftSideMess";
-import RightSideMess from "../message/RightSideMess";
-import MiddleSideMess from "../message/middleSideMess";
+import RightSideMess from '../message/RightSideMess'
+import MiddleSideMess from '../message/MiddleSideMess'
+
 import LeftSide from "../home/leftSide";
 import { useParams } from "react-router-dom";
 export default function Message() {
@@ -12,10 +13,10 @@ export default function Message() {
         <LeftSideMess />
       </div>
       <div className="flex-[0.15] p-2 ">
-        <RightSideMess id={id} />
+        < MiddleSideMess id={id} />
       </div>
       <div className="flex-[0.8]  ">
-        <MiddleSideMess id={id} idfr={idfr} />
+        <RightSideMess id={id} idfr={idfr} />
       </div>
     </div>
   );
