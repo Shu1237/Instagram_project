@@ -1,3 +1,4 @@
+// TODO: Make the room chat with multiple users .
 import { useParams } from "react-router-dom";
 import Avatar from "../../assets/profilepic.png";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
@@ -5,6 +6,7 @@ import ICon from "../comment/iconPick";
 import { useQuery, useMutation, useSubscription } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { useDropzone } from "react-dropzone";
 import {
   GET_ROOMCHATS_QUERY,
   GET_ONE_ROOMCHAT_QUERY,
@@ -16,11 +18,12 @@ import { TYPING_STATUS_SUBSCRIPTION } from "../../graphql/subscriptions/chat.sub
 import { MESSAGE_ADDED_SUBSCRIPTION } from "../../graphql/subscriptions/chat.subscription";
 import IncomingMessage from "./IncomingMess";
 import OutgoingMessage from "./OutgoingMess";
-
+import { X, Paperclip, FileText, Video, File, Image } from "lucide-react";
+import { UploadFile } from "@mui/icons-material";
+import { uploadFile } from "../../utils/upload.util";
 const MiddleSideMess = ({ id, idfr }) => {
   const chatContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -81,6 +84,7 @@ const MiddleSideMess = ({ id, idfr }) => {
   const [sendMessage] = useMutation(SEND_MESSAGE_MUTATION, {
     onCompleted: () => {
       setMessageContent("");
+      setFiles([]);
       scrollToBottom();
     },
   });
@@ -89,7 +93,7 @@ const MiddleSideMess = ({ id, idfr }) => {
   useSubscription(MESSAGE_ADDED_SUBSCRIPTION, {
     variables: { roomChatId: idfr },
     onData: (x) => {
-      // console.log(x);
+      console.log(x);
       const newMessage = x.data.data.messageAdded;
       setMessages((prevMessages) => [...prevMessages, newMessage]);
       scrollToBottom();
@@ -118,10 +122,14 @@ const MiddleSideMess = ({ id, idfr }) => {
   });
 
   const handleSendMessage = async () => {
-    if (messageContent.trim() === "") return;
+    if (messageContent.trim() === "" && !files.length) return;
     try {
+      const urls =
+        (await Promise.all(files.map((file) => uploadFile(file)))) || [];
       await sendMessage({
-        variables: { input: { roomChatId: idfr, content: messageContent } },
+        variables: {
+          input: { roomChatId: idfr, content: messageContent, images: urls },
+        },
       });
     } catch (error) {
       console.error("Error sending message:", error);
@@ -138,22 +146,29 @@ const MiddleSideMess = ({ id, idfr }) => {
     // console.log(emoji);
     setMessageContent((prevContent) => prevContent + emoji);
   };
-  //scroll to load more messages
-  const handleScroll = async () => {
-    if (chatContainerRef.current.scrollTop === 0) {
-      await fetchMore({
-        variables: {
-          roomChatId: idfr,
-          offset: messages.length,
-        },
-      });
-    }
+
+  // handle sending files
+  const [files, setFiles] = useState([]);
+
+  const handleFileChange = (event) => {
+    const selectedFiles = Array.from(event.target.files).map((file) => {
+      return file.name;
+    });
+
+    setFiles([...files, ...selectedFiles]);
+    setMessageContent((prevContent) => prevContent + files.join("\n"));
   };
-  useEffect(() => {
-    const chatContainer = chatContainerRef?.current;
-    chatContainer?.addEventListener("scroll", handleScroll);
-    return () => chatContainer?.removeEventListener("scroll", handleScroll);
-  }, [messages]);
+  // Xử lý kéo-thả file
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: "image/*,video/*,application/pdf,application/msword",
+    onDrop: (acceptedFiles) => {
+      setFiles([...files, ...acceptedFiles]);
+    },
+  });
+  //remove files
+  const removeFile = (index) => {
+    setFiles(files.filter((_, i) => i !== index));
+  };
 
   if (!myFriendInfo) {
     return (
@@ -353,6 +368,79 @@ const MiddleSideMess = ({ id, idfr }) => {
             <ICon onEmojiChange={handleEmojiChange} />
           </div>
           <div className="flex-1 px-2 py-2">
+            {/* Display selected files */}
+            {files.length > 0 && (
+              <div className="flex gap-3 overflow-x-auto py-2">
+                {files.map((file, index) => (
+                  <div key={index} className="relative">
+                    {/* Display file by type */}
+                    {file.type.startsWith("image/") && (
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={file.name}
+                        className="w-20 h-20 object-cover rounded-lg"
+                      />
+                    )}
+
+                    {file.type.startsWith("video/") && (
+                      <video
+                        src={URL.createObjectURL(file)}
+                        controls
+                        className="w-20 h-20 rounded-lg"
+                      />
+                    )}
+                    {file.type === "application/pdf" && (
+                      <div className="w-20 h-20 flex flex-col items-center justify-center bg-gray-200 rounded-lg">
+                        <FileText size={32} className="text-red-600" />
+                        <span
+                          className="text-xs text-gray-700 mt-1 truncate w-full"
+                          title={file.name}
+                        >
+                          {file.name}
+                        </span>
+                      </div>
+                    )}
+
+                    {file.type ===
+                      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" && (
+                      <div className="w-20 h-20 flex flex-col items-center justify-center bg-gray-200 rounded-lg">
+                        <FileText size={32} className="text-blue-600" />
+                        <span
+                          className="text-xs text-gray-700 mt-1 truncate w-full"
+                          title={file.name}
+                        >
+                          {file.name}
+                        </span>
+                      </div>
+                    )}
+
+                    {!file.type.startsWith("image/") &&
+                      !file.type.startsWith("video/") &&
+                      file.type !== "application/pdf" &&
+                      file.type !==
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" && (
+                        <div className="w-20 h-20 flex flex-col items-center justify-center bg-gray-200 rounded-lg">
+                          <File size={32} className="text-gray-600" />
+                          <span
+                            className="text-xs text-gray-700 mt-1 truncate w-full"
+                            title={file.name}
+                          >
+                            {file.name}
+                          </span>
+                        </div>
+                      )}
+
+                    {/* Delete button */}
+                    <button
+                      onClick={() => removeFile(index)}
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
             <input
               className="w-full outline-none placeholder-gray-500 text-gray-700 bg-transparent"
               placeholder="Message..."
@@ -361,6 +449,7 @@ const MiddleSideMess = ({ id, idfr }) => {
               onKeyDown={handleKeyPress}
             />
           </div>
+
           <div className="flex items-center gap-3 pr-3 text-gray-600">
             {/* Icons for voice, photo, etc. */}
             <button className="p-1 hover:text-blue-500 transition-colors">
@@ -413,38 +502,15 @@ const MiddleSideMess = ({ id, idfr }) => {
                 ></path>
               </svg>
             </button>
-            <button className="p-1 hover:text-blue-500 transition-colors">
-              <svg
-                aria-label="Add Photo or Video"
-                className="x1lliihq x1n2onr6 x5n08af"
-                fill="currentColor"
-                height="24"
-                role="img"
-                viewBox="0 0 24 24"
-                width="24"
-              >
-                <title>Add Photo or Video</title>
-                <path
-                  d="M6.549 5.013A1.557 1.557 0 1 0 8.106 6.57a1.557 1.557 0 0 0-1.557-1.557Z"
-                  fillRule="evenodd"
-                ></path>
-                <path
-                  d="m2 18.605 3.901-3.9a.908.908 0 0 1 1.284 0l2.807 2.806a.908.908 0 0 0 1.283 0l5.534-5.534a.908.908 0 0 1 1.283 0l3.905 3.905"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                ></path>
-                <path
-                  d="M18.44 2.004A3.56 3.56 0 0 1 22 5.564h0v12.873a3.56 3.56 0 0 1-3.56 3.56H5.568a3.56 3.56 0 0 1-3.56-3.56V5.563a3.56 3.56 0 0 1 3.56-3.56Z"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                ></path>
-              </svg>
-            </button>
+            {/* Kéo-thả file */}
+            <div
+              {...getRootProps()}
+              className="cursor-pointer p-2 rounded-full hover:bg-gray-200"
+            >
+              <input {...getInputProps()} />
+              <Image className="minhnghidaoday" />
+            </div>
+
             <button className="p-1 hover:text-blue-500 transition-colors">
               <svg
                 aria-label="Choose a GIF or sticker"

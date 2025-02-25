@@ -15,7 +15,13 @@ function Home() {
   }, []);
 
   return (
-    <div className={`${isSmallScreen ? 'flex flex-col-reverse' : 'flex w-full h-full font-montserrat p-0 m-0 box-border'}`}>
+    <div
+      className={`${
+        isSmallScreen
+          ? "flex flex-col-reverse"
+          : "flex w-full h-full font-montserrat p-0 m-0 box-border"
+      }`}
+    >
       {isSmallScreen ? (
         // Khi màn hình nhỏ, LeftSide sẽ nằm dưới MiddleSide
         <>
@@ -26,8 +32,6 @@ function Home() {
             <MiddleSide />
           </div>
         </>
-
-
       ) : (
         // Khi màn hình lớn, giao diện bình thường
         <div className="flex w-full h-full">

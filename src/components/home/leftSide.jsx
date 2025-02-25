@@ -17,13 +17,16 @@ import { useQuery } from "@apollo/client";
 import { ME_QUERY, GET_USERS_QUERY } from "../../graphql/query/user.query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
+import * as localStorageFunctions from "../../utils/localStorage.util.js";
+import SearchModal from "../ui/jsx/SearchModel.jsx";
 export default function LeftSide() {
   const navigate = useNavigate();
+  const userInfo = localStorageFunctions.getLocalStorage()?.user;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const { loading, error, data } = useQuery(ME_QUERY);
   const modalRef = useRef();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -42,8 +45,8 @@ export default function LeftSide() {
     };
   }, []);
 
-  const linkProfile = `/profile/${data?.me?.user_id}`;
-  const linkMess = `/message/${data?.me?.user_id}/0`;
+  const linkProfile = `/profile/${userInfo?.user_id}`;
+  const linkMess = `/message/${userInfo?.user_id}/0`;
   return (
     <div className="fixed">
       <div
@@ -69,8 +72,13 @@ export default function LeftSide() {
         />
 
         <MenuItem
+          onClick={() => setIsSearchOpen(true)}
           icon={<SearchIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />}
           label="Search"
+        />
+        <SearchModal
+          isOpen={isSearchOpen}
+          onClose={() => setIsSearchOpen(false)}
         />
         <MenuItem
           onClick={() => navigate("/explore")}
@@ -86,51 +94,53 @@ export default function LeftSide() {
           }
           label="Reels"
         />
-        <MenuItem
-          onClick={() => navigate(linkMess)}
-          icon={
-            <MapsUgcOutlinedIcon
-              sx={{ fontSize: "35px", margin: "0 20px 0 0" }}
-            />
-          }
-          label="Messages"
-        />
-        <MenuItem
-          onClick={() => setIsNotificationsOpen(true)}
-          icon={
-            <FavoriteBorderOutlinedIcon
-              sx={{ fontSize: "35px", margin: "0 20px 0 0" }}
-            />
-          }
-          label="Notifications"
-        />
+        {userInfo && (
+          <MenuItem
+            onClick={() => navigate(linkMess)}
+            icon={
+              <MapsUgcOutlinedIcon
+                sx={{ fontSize: "35px", margin: "0 20px 0 0" }}
+              />
+            }
+            label="Messages"
+          />
+        )}
+        {userInfo && (
+          <MenuItem
+            onClick={() => setIsNotificationsOpen(true)}
+            icon={
+              <FavoriteBorderOutlinedIcon
+                sx={{ fontSize: "35px", margin: "0 20px 0 0" }}
+              />
+            }
+            label="Notifications"
+          />
+        )}
 
         {isNotificationsOpen && (
           <NotificationsDropdown
             isOpen={isNotificationsOpen}
             onClose={() => setIsNotificationsOpen(false)}
-            receiverId={data?.me?.user_id}
+            receiverId={userInfo?.user_id}
           />
         )}
 
-        <ModalCreate />
-
-        <div
-          onClick={() => navigate(linkProfile)}
-          className=" max-xl:w-8 max-xl:px-0 flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full"
-
-
-
-        >
-          <img
-            src={data?.me?.avatar}
-            alt="Profile"
-            className="w-[35px] h-[35px] rounded-full mr-[20px]"
-          />
-          <div className="font-normal text-[16px] text-lg max-xl:hidden">
-            Profile
+        {userInfo && <ModalCreate />}
+        {userInfo && (
+          <div
+            onClick={() => navigate(linkProfile)}
+            className=" max-xl:w-8 max-xl:px-0 flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full"
+          >
+            <img
+              src={userInfo?.avatar}
+              alt="Profile"
+              className="w-[35px] h-[35px] rounded-full mr-[20px]"
+            />
+            <div className="font-normal text-[16px] text-lg max-xl:hidden">
+              Profile
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="mt-[50px] w-full ">
           {/* <MenuItem

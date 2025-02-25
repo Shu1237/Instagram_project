@@ -13,11 +13,13 @@ import {
 } from "../../graphql/mutations/follow.mutation";
 import { FRIEND_REQUEST_QUERY } from "../../graphql/query/friendRequest.query";
 import SmallNotification from "../notification/smallNotification";
+import * as localStorageFunctions from "../../utils/localStorage.util.js";
 export default function RightSide() {
+  const userInfo = localStorageFunctions.getLocalStorage()?.user;
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [notification, setNotification] = useState(null);
-  const { loading, error, data } = useQuery(ME_QUERY);
+  // const { loading, error, data } = useQuery(ME_QUERY);
   // console.log(data);
   const { id } = useParams();
   const [sendFriendRequest, { error: errorSendFriendRequest }] = useMutation(
@@ -35,10 +37,10 @@ export default function RightSide() {
   const [followStatus, setFollowStatus] = useState({}); // Track follow status for each user
 
   // console.log(data?.me?.user_id);
-
+  // console.log(userInfo.user_id);
   // Initialize follow status based on friendRequestsData
   useEffect(() => {
-    if (friendRequestsData?.friendRequests && data?.me?.user_id) {
+    if (friendRequestsData?.friendRequests && userInfo?.user_id) {
       const status = {};
 
       friendRequestsData.friendRequests.forEach((request) => {
@@ -46,16 +48,16 @@ export default function RightSide() {
           status[request.sender_id] = "Following";
           status[request.receiver_id] = "Following";
         } else {
-          if (request.sender_id === data.me.user_id) {
+          if (request.sender_id == userInfo.user_id) {
             status[request.receiver_id] = "Following";
-          } else if (request.receiver_id === data.me.user_id) {
+          } else if (request.receiver_id == userInfo.user_id) {
             status[request.sender_id] = "Follow Back";
           }
         }
       });
       setFollowStatus(status);
     }
-  }, [friendRequestsData, data?.me?.user_id]);
+  }, [friendRequestsData, userInfo?.user_id]);
 
   const handleSendFriendRequest = async (receiverId) => {
     try {
@@ -128,11 +130,12 @@ export default function RightSide() {
   const navigate = useNavigate();
   const handleSwitch = () => {
     removeCookies("jwt-token");
+    localStorageFunctions.removeLocalStorage();
     window.location.href = "/";
   };
 
   useSubscription(NEW_NOTIFICATIONS, {
-    variables: { receiverId: data?.me?.user_id },
+    variables: { receiverId: userInfo?.user_id },
     onData: (x) => {
       // console.log(x?.data?.data?.notificationAdded?.type);
       const notification = x?.data?.data?.notificationAdded;
@@ -141,7 +144,7 @@ export default function RightSide() {
   });
   const hsr = "instagram from Meta";
 
-  if (loading || usersLoading || friendRequestsLoading) {
+  if (usersLoading || friendRequestsLoading) {
     return (
       <div className="flex justify-center items-center h-full">
         <div className="animate-spin">Loading...</div>
@@ -171,15 +174,15 @@ export default function RightSide() {
       )}
       {/* Auth Section */}
       <div className="flex items-center justify-between py-4 mb-6">
-        {data?.me ? (
+        {userInfo ? (
           // Logged in user view
           <div className="flex items-center space-x-4">
             <div className="relative w-12 h-12">
-              <Link to={`/profile/${data.me.user_id}`}>
+              <Link to={`/profile/${userInfo?.user_id}`}>
                 <img
                   className="w-full h-full rounded-full object-cover hover:opacity-90 transition"
-                  src={data?.me?.avatar}
-                  alt={data.me.username}
+                  src={userInfo?.avatar}
+                  alt={userInfo?.username}
                 />
               </Link>
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
@@ -187,12 +190,14 @@ export default function RightSide() {
 
             <div className="flex flex-col">
               <Link
-                to={`/profile/${data.me.user_id}`}
+                to={`/profile/${userInfo?.user_id}`}
                 className="font-semibold text-sm hover:text-gray-500 transition"
               >
-                {data.me.username}
+                {userInfo?.username}
               </Link>
-              <span className="text-gray-500 text-sm">{data.me.full_name}</span>
+              <span className="text-gray-500 text-sm">
+                {userInfo?.full_name}
+              </span>
             </div>
             <button
               onClick={handleSwitch}
