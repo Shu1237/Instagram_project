@@ -19,12 +19,19 @@ export const chatResolver = {
     },
   },
   Query: {
-    chats: async (_, { roomChatId }) => {
-      const chats = await Chat.find({
-        roomChatId,
-        deleted: false,
-      }).populate("roomChatId");
-      return chats;
+    chats: async (_, { roomChatId }, context) => {
+      try {
+        if (!context.user) {
+          throw new Error("Not authenticated, Cannot fetch room chat");
+        }
+        const chats = await Chat.find({
+          roomChatId,
+          deleted: false,
+        }).populate("roomChatId");
+        return chats;
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
     chat: async (_, { id }) => {
       const chat = await Chat.findById(id).populate("roomChatId");

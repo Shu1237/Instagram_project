@@ -38,10 +38,9 @@ function Login() {
     e.preventDefault();
     try {
       const response = await login({ variables: { input } });
-      // console.log(response);
-      if (response.data.login.token) {
-        setCookies("jwt-token", response.data.login.token);
-        setCookies("user_id", response.data.login.user.user_id);
+      if (response?.data?.login?.token) {
+        setCookies("jwt-token", response?.data?.login?.token);
+        setCookies("user_id", response?.data?.login?.user?.user_id);
       }
       const token = getCookie();
       const myInformation = getMyInformation(token);
