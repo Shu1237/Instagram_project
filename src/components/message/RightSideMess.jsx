@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useSubscription } from "@apollo/client";
 
 import { GET_ONE_ROOMCHAT_QUERY } from "../../graphql/query/roomChat.query";
@@ -18,6 +19,7 @@ import { uploadFile } from "../../utils/upload.util.js";
 const RightSideMess = ({ id, idfr }) => {
   const chatContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const navigate = useNavigate();
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -46,6 +48,11 @@ const RightSideMess = ({ id, idfr }) => {
   } = useQuery(GET_ONE_ROOMCHAT_QUERY, {
     variables: { roomChatId: idfr },
   });
+  //handle error
+  if (roomChatError) {
+    console.warn(roomChatError);
+    navigate("/not-found");
+  }
 
   // Room chat information
   const myFriendInfo = roomChatData?.roomChat?.users.find(

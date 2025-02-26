@@ -17,11 +17,14 @@ const MiddleSideMess = () => {
     error: roomChatError,
     data: roomChatData,
   } = useQuery(GET_ROOMCHATS_QUERY);
-
+  //handle loading
   if (loading || roomChatLoading) {
     return <p>Loading...</p>;
   }
-
+  //handle error
+  if (error || roomChatError) {
+    navigate("/login");
+  }
   // user information
   const id = data?.me?.user_id;
   const userName = data?.me?.username;
@@ -109,7 +112,7 @@ const MiddleSideMess = () => {
               <div className="w-12 h-12 rounded-full border-2 border-white ring-1 ring-gray-200 overflow-hidden">
                 <img
                   className="w-full h-full object-cover"
-                  src={roomChat.roomInfo.avatar}
+                  src={roomChat?.roomInfo?.avatar}
                   alt="User"
                 />
               </div>

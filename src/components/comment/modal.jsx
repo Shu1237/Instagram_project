@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
-import 'swiper/css/navigation';
+import "swiper/css/navigation";
 import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import formatTime from "../../utils/formatTime.util";
@@ -53,7 +53,7 @@ const ModalPost = ({ post }) => {
 
   const [input, setInput] = useState({
     post_id: post.id,
-    user_id: user.user.user_id,
+    user_id: user?.user?.user_id,
     parent_id: null,
     content: "",
     media_urls: [], //media này không phải là ảnh của bài post mà là ảnh của người comment có thể là gif hay meme j đó.
@@ -69,8 +69,8 @@ const ModalPost = ({ post }) => {
     }
     getComments({
       variables: {
-        post_id: post.id
-      }
+        post_id: post.id,
+      },
     });
   }, [open, getComments, post.id]);
 
@@ -78,15 +78,18 @@ const ModalPost = ({ post }) => {
 
   useEffect(() => {
     if (data && data?.getComments) {
-      const updatedComments = data.getComments.map(comment => ({
-        img: comment.user.avatar,
-        username: comment.user.full_name,
+      const updatedComments = data.getComments.map((comment) => ({
+        img: comment?.user?.avatar,
+        username: comment?.user?.full_name,
         comment: comment.content,
         created_at: formatTime(comment.created_at),
         icon: <FavoriteBorderOutlinedIcon />,
       }));
-      if (JSON.stringify(prevCommentsRef.current) !== JSON.stringify(updatedComments)) {
-        setArryTyms(prevArryTyms => [...prevArryTyms, ...updatedComments]);
+      if (
+        JSON.stringify(prevCommentsRef.current) !==
+        JSON.stringify(updatedComments)
+      ) {
+        setArryTyms((prevArryTyms) => [...prevArryTyms, ...updatedComments]);
         prevCommentsRef.current = updatedComments;
       }
     }
@@ -209,15 +212,13 @@ const ModalPost = ({ post }) => {
                 pagination={{ clickable: true }}
                 modules={[EffectCoverflow, Pagination, Navigation]}
                 navigation={{
-                  nextEl: '.swiper-button-next',
-                  prevEl: '.swiper-button-prev',
+                  nextEl: ".swiper-button-next",
+                  prevEl: ".swiper-button-prev",
                 }}
                 className="w-full max-w-md"
               >
                 {post.media_urls.map((media, index) => (
-                  <SwiperSlide key={index}>
-                    {renderMedia(media)}
-                  </SwiperSlide>
+                  <SwiperSlide key={index}>{renderMedia(media)}</SwiperSlide>
                 ))}
                 <div className="swiper-button-next"></div>
                 <div className="swiper-button-prev"></div>
@@ -228,12 +229,18 @@ const ModalPost = ({ post }) => {
           </div>
           <div className="container-body-modal ">
             <div className="flex justify-between items-center p-4">
-              <div className="flex items-center" id={user.user.user_id}>
+              <div className="flex items-center" id={user?.user?.user_id}>
                 <div className="mr-3">
-                  <img className="w-12 h-12 rounded-full" src={user.user.avatar} alt="" />
+                  <img
+                    className="w-12 h-12 rounded-full"
+                    src={user?.user?.avatar}
+                    alt=""
+                  />
                 </div>
                 <div>
-                  <span className="font-bold text-base">{user.user.full_name}</span>
+                  <span className="font-bold text-base">
+                    {user?.user?.full_name}
+                  </span>
                 </div>
               </div>
               <div className="cursor-pointer">
@@ -252,7 +259,7 @@ const ModalPost = ({ post }) => {
                       />
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-bold">{item.username}</span>
+                      <span className="font-bold">{item?.username}</span>
                       <p className="text-sm break-words">{item.comment}</p>
                       <div className="flex gap-2.5 text-sm">
                         <div>{item.created_at}</div>
