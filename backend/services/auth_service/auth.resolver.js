@@ -1,7 +1,8 @@
 import User from "../../models/mysql/user.js";
 import { generateToken } from "../../utils/generateToken.util.js";
 import bcryptjs from "bcryptjs";
-
+import speakeasy from "speakeasy";
+import qrcode from "qrcode";
 import {
   signupMiddleware,
   loginMiddleware,
@@ -45,6 +46,60 @@ export const authResolver = {
           user,
         };
       });
+    },
+    //2FA logic
+    setup2FA: async (_, { userId }) => {
+      try {
+        const secret = speakeasy.generateSecret({ length: 20 });
+        const url = speakeasy.otpauthURL({
+          secret: secret.base32,
+          label: `Instagram ${userId}`,
+          issuer: "Instagram",
+        });
+        const qrCode = await qrcode.toDataURL(url);
+        await User.update(
+          {
+            twoFactorSecret: secret.base32,
+          },
+          {
+            where: {
+              user_id: userId,
+            },
+          }
+        );
+        return {
+          secret: secret.base32,
+          qrCode,
+        };
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    verify2FA: async (_, { userId, token }) => {
+      try {
+        const user = await User.findOne({
+          where: {
+            user_id: userId,
+          },
+        });
+        if (!user) {
+          throw new Error("User not found");
+        }
+        const verified = speakeasy.totp.verify({
+          secret: user.twoFactoSecret,
+          encoding: "base32",
+          token,
+        });
+        if (!verified) {
+          throw new Error("Invalid 2FA token");
+        }
+        return {
+          verified,
+          message: "2FA token is valid",
+        };
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
   },
 };
