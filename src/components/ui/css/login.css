@@ -70,7 +70,10 @@
   box-shadow: 0 0 8px rgba(106, 130, 251, 0.4);
   background-color: #fff;
 }
-
+.forgetPassword{
+  text-align: end;
+  color: red;
+}
 /* register */
 .linkSignIn,
 .linkSignUp {
