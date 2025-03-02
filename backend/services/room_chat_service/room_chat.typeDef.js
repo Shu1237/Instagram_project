@@ -14,7 +14,7 @@ export const roomChatTypeDef = gql`
     chats: [Chat]
   }
   type Query {
-    roomChat(roomChatId: ID!): RoomChat!
+    roomChat(roomChatId: ID!): RoomChat
     roomChats: [RoomChat]
     roomChatsForUser(userId: ID!): [RoomChat]!
   }

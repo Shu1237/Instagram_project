@@ -11,6 +11,14 @@ export const authTypeDef = gql`
     full_name: String
     email: String!
   }
+  type TwoFASetupPayload {
+    secret: String!
+    qrCode: String!
+  }
+  type TwoFAVerifyPayload {
+    verified: Boolean!
+    message: String!
+  }
   type AuthPayLoad {
     token: String!
     user: User!
@@ -21,5 +29,10 @@ export const authTypeDef = gql`
   type Mutation {
     signup(input: signupInput!): AuthPayLoad!
     login(input: loginInput!): AuthPayLoad!
+    setup2FA(userId: ID!): TwoFASetupPayload!
+    verify2FA(userId: ID!, token: String!): TwoFAVerifyPayload!
+    forgotPassword(email: String!): User!
+    checkResetPasswordToken(token: String!): Boolean!
+    resetPassword(userId: ID!, newPassword: String!): Boolean!
   }
 `;
