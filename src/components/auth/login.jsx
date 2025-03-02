@@ -61,7 +61,11 @@ function Login() {
         )}
 
         <div className="text-center">
-          <img src={logoInstagram} alt="Instagram Logo" className="mx-auto h-14 mb-2" />
+          <img
+            src={logoInstagram}
+            alt="Instagram Logo"
+            className="mx-auto h-14 mb-2"
+          />
           <h2 className="text-2xl font-semibold text-gray-700">Welcome Back</h2>
         </div>
 
@@ -93,7 +97,10 @@ function Login() {
           </div>
 
           <div className="text-right mb-4">
-            <Link to="/forgotpassword" className="text-sm text-blue-500 hover:underline">
+            <Link
+              to="/forgotpassword"
+              className="text-sm text-blue-500 hover:underline"
+            >
               Forgot password?
             </Link>
           </div>

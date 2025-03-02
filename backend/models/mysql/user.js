@@ -59,7 +59,7 @@ const User = sequelize.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    twoFactoSecret: {
+    twoFactorSecret: {
       type: DataTypes.STRING(255),
       allowNull: true,
     },

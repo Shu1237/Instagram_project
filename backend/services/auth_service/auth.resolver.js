@@ -1,5 +1,8 @@
 import User from "../../models/mysql/user.js";
+import ForgotPassword from "../../models/mongodb/forgot_password.model.js";
 import { generateToken } from "../../utils/generateToken.util.js";
+import { sendMail } from "../../utils/sendMail.util.js";
+import { generateRandomString } from "../../utils/generateRandomString.util.js";
 import bcryptjs from "bcryptjs";
 import speakeasy from "speakeasy";
 import qrcode from "qrcode";
@@ -97,6 +100,75 @@ export const authResolver = {
           verified,
           message: "2FA token is valid",
         };
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    //forgot password
+    forgotPassword: async (_, { email }) => {
+      try {
+        //check existed user
+        const existedUser = await User.findOne({
+          where: {
+            email: email,
+          },
+        });
+        if (!existedUser) throw new Error("Email not found");
+        // send otp to their email address
+        const existedEmailInForgotPassword = await ForgotPassword.findOne({
+          email: email,
+        });
+        if (!existedEmailInForgotPassword) {
+          const dataInfo = {
+            email: email,
+            otp: generateRandomString(6),
+            expireAt: Date.now() + 3 * 60 * 1000, //3 mins expire
+          };
+          const newForgot = new ForgotPassword(dataInfo);
+          await newForgot.save();
+          const subject = "Xác thực mã OTP";
+          const text = `Mã xác thực của bạn là <b>${dataInfo.otp}</b>. Mã OTP có hiệu lực trong vòng 3 phút, vui lòng không cung cấp mã OTP cho bất kỳ ai.`;
+          sendMail(dataInfo.email, subject, text);
+        }
+        return existedUser;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    //TODO: verifying the sent otp in their email
+    checkResetPasswordToken: async (_, { token }) => {
+      try {
+        const existedToken = await ForgotPassword.findOne({
+          otp: token,
+        });
+        if (!existedToken) throw new Error("Token not found");
+        return true;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+
+    //TODO: reset password
+    resetPassword: async (_, { userId, newPassword }) => {
+      try {
+        const user = await User.findOne({
+          where: {
+            user_id: userId,
+          },
+        });
+        if (!user) throw new Error("User not found");
+        const hashedPassword = await bcryptjs.hash(newPassword, 10);
+        await User.update(
+          {
+            password: hashedPassword,
+          },
+          {
+            where: {
+              user_id: userId,
+            },
+          }
+        );
+        return true;
       } catch (error) {
         throw new Error(error.message);
       }

@@ -31,5 +31,8 @@ export const authTypeDef = gql`
     login(input: loginInput!): AuthPayLoad!
     setup2FA(userId: ID!): TwoFASetupPayload!
     verify2FA(userId: ID!, token: String!): TwoFAVerifyPayload!
+    forgotPassword(email: String!): User!
+    checkResetPasswordToken(token: String!): Boolean!
+    resetPassword(userId: ID!, newPassword: String!): Boolean!
   }
 `;
