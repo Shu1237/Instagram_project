@@ -12,6 +12,7 @@ import Signup from "../auth/register";
 import Profile from "../pages/profile";
 import Message from "../pages/message";
 import DashBoardPage from "../pages/dashboard";
+import ForgotPassword from "../auth/forgetpassword";
 import NotFound from "../pages/404";
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/message/:id/:idfr" element={<Message />} />
       <Route path="dashboardPage" element={<DashBoardPage />} />
+      <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
