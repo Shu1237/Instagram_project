@@ -11,6 +11,8 @@ const ENV_VARS = {
   REDIS_PASSWORD: process.env.REDIS_PASSWORD,
   REDIS_PORT: process.env.REDIS_PORT,
   REDIS_HOST: process.env.REDIS_HOST,
+  SYSTEM_EMAIL: process.env.SYSTEM_EMAIL,
+  SYSTEM_PASS: process.env.SYSTEM_PASS,
   api: "http://localhost:",
 };
 export default ENV_VARS;
