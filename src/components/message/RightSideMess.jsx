@@ -31,7 +31,7 @@ const RightSideMess = ({ id, idfr }) => {
     loading: chatLoading,
     error: chatError,
     data: chatData,
-    fetchMore,
+    refetch,
   } = useQuery(GET_CHAT_IN_ROOM_QUERY, {
     variables: { roomChatId: idfr },
     onCompleted: (data) => {
@@ -39,6 +39,14 @@ const RightSideMess = ({ id, idfr }) => {
       scrollToBottom();
     },
   });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [refetch]);
 
   // Fetch room chat information
   const {
