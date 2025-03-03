@@ -48,10 +48,12 @@ export const loginMiddleware = async (args, next) => {
     },
   });
   const userInfo = {
-    user_id: user.user_id,
-    username: user.username,
-    full_name: user.full_name,
-    avatar: user.avatar,
+    user_id: user?.user_id,
+    username: user?.username,
+    full_name: user?.full_name,
+    avatar: user?.avatar,
+    email: user?.email,
+    created_at: user?.created_at,
   };
   if (!user) {
     throw new Error("User not found");
