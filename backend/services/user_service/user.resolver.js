@@ -126,17 +126,20 @@ export const userResolver = {
   Mutation: {
     async updateProfile(_, { input }, { cache, user }) {
       try {
-        const updatedUser = await User.update(input, {
-          where: { user_id: user.user_id },
-          returning: true,
+        const a = await User.update(input, {
+          where: { user_id: user.user.user_id },
+          // returning: true,
+          individualHooks: true,
         });
+        // console.log(a[1][0].dataValues);
+        const updatedUser = a[1][0].dataValues;
 
-        // Invalidate related caches
+        // // Invalidate related caches
         await Promise.all([
-          cache.del(CACHE_KEYS.USER(user.user_id)),
-          cache.del(CACHE_KEYS.USER_PROFILE(user.user_id)),
+          cache.del(CACHE_KEYS.USER(user.user.user_id)),
+          cache.del(CACHE_KEYS.USER_PROFILE(user.user.user_id)),
         ]);
-        await cache.set(CACHE_KEYS.USER(user.user_id), updatedUser, 300); // 5 minutes TTL
+        await cache.set(CACHE_KEYS.USER(user.user.user_id), updatedUser, 300); // 5 minutes TTL
         return updatedUser;
       } catch (error) {
         throw new Error(error.message);
