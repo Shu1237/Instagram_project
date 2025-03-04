@@ -122,7 +122,6 @@ export const userResolver = {
       return followingUsers;
     },
   },
-
   Mutation: {
     async updateProfile(_, { input }, { cache, user }) {
       try {
