@@ -7,6 +7,8 @@ export const ME_QUERY = gql`
       username
       full_name
       avatar
+      email
+      created_at
     }
   }
 `;

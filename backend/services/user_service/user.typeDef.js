@@ -19,18 +19,15 @@ export const userTypeDef = gql`
     # stories: [Story!]!
   }
   input UpdateUserInput {
-    username: String
     full_name: String
-    avatar: String
     email: String
-    bio: String
-    phone: String
+    avatar: String
   }
   type Query {
     user(user_id: ID!): User!
     users(pageQuery: Int, limitQuery: Int): [User!]!
   }
   type Mutation {
-    updateProfile(input: UpdateUserInput!): User!
+    updateProfile(input: UpdateUserInput): User!
   }
 `;
