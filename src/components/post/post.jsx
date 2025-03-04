@@ -14,6 +14,7 @@ import "swiper/css/pagination";
 import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import formatTime from "../../utils/formatTime.util";
+import loadingEffect from "../ui/jsx/loading-effect";
 function Post() {
   const [comment, setComment] = useState("");
   const clickOutsideRef = useRef(null);
@@ -76,7 +77,7 @@ function Post() {
     };
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return loadingEffect();
   if (error) return <p>Error: {error.message}</p>;
   const renderMedia = (url) => {
     const isVideo = url?.match(/\.(mp4|webm|ogg)$/i);
@@ -213,7 +214,7 @@ function Post() {
           </div>
         );
       })}
-    </div >
+    </div>
   );
 }
 
