@@ -1,190 +1,50 @@
-/* .middleHomeSide {
-    width: 100%;
-    border-left: 1px solid #999999;
-    padding: 0px 50px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
+/* Viền gradient Instagram đẹp hơn */
+.story-gradient-border {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
 }
 
-.storyBlock {
-   width: 725px;
-    height: 120px;
-    display: flex;
-    gap: 30px;
-    justify-content: center;
-    align-items: center;
-    overflow-x: auto;
-    
-} */
-.storyBlock::-webkit-scrollbar{
-    display: none;
+.story-gradient-border:hover {
+  transform: scale(1.05);
 }
 
-/* .storyParticular {
-    width: 66px;
-    height: 66px;
-    display: flex;
-    flex-direction: column;
-    justify-self: center;
-    align-items: center;
-
-
-} */
-
-.imageDIV {
-    width: 56px;
-    height: 56px;
-   
-    border-radius: 100%;
-    padding: 2px;
-
-    border: 2px solid purple;
-
+.story-gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
 }
 
-.statusImg {
-    width: 56px;
-    height: 56px;
-    border-radius: 100%;
-  
-  
-  
-}
-.profileName {
-    font-size: 12px;
+.story-image {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid black;
 }
 
-/* /////////////////// */
-.postSection{
-   
-    width: 60%;
+/* Hiệu ứng modal */
+.modal-fade {
+  animation: fadeIn 0.3s ease-in-out;
 }
-.post{
-    width: 100%;
-    margin-bottom: 40px;
-    border-bottom: 1px solid;
-    padding-bottom: 20px;
-}
-.postInfo{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.postInfoImg{
-    width: 42px;
-    height: 40px;
-    border-radius: 100%;
-  
-}
-.postInfousername{
-    font-size: 12px;
-    font-weight: 600;
-}
-.timiInfo{
-    color: #999999;
-    font-size: 14px;
-}
-.postImg{
-    margin-top: 10px;
-}
-.postImage{
-    width: 100%;
-}
-.inconBlock{
-    width: 100%;
-    padding: 5px 0;
-    display: flex;
-    align-self: center;
-    justify-content: space-between;
-}
-.lefticon{
-    display: flex;
-    gap: 15px;
-}
-.likeImg{
-    width: 25px;
-    height: 20px;
-    border-radius: 100%;
-    position: absolute;
-}
-.imgesLike{
-    position: relative;
-}
-.likeSection{
-    width: 100%;
-}
-.likeImg2{
-    width: 25px;
-    height: 20px;
-    border-radius: 100%;
-    position: absolute;
-    left: 3%;
-}
-.notLike{
-    font-size: 15px;
-    font-weight: 700;
-    position: absolute;
-    margin-left: 45px;
-}
-.postAbout{
-    width: 100%;
-    margin-top: 30px;
-    display: flex;
-}
-.aboutName{
-    font-size: 15px;
-    font-weight: 600;
-}
-.infoCommnet{
-    font-size:15px;
-    color: #999999;
-    margin-left: 10px;
-}
-.noOFComment,.addComment{
-    color: #999999;
-    margin-top: 5px;
-    font-size: 15px;
-}
-.no-underline{
-    text-decoration: none;
-    color: #34ABF8;
-}
-.addComment{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-.addComment input {
-    border: none;
-    outline: none;
-    font-size: 14px;
-    width: 100%;
-    padding: 8px 0;
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
-  
-  .addComment input:focus {
-
-    outline: none;
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  .addComment input::placeholder {
-    color: #bbb;
-  }
-  .post-button {
-    background-color: #0095f6;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .post-button:hover {
-    background-color: #0073e6;
-  }
+}
