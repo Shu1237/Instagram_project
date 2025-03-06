@@ -16,6 +16,7 @@ export const userTypeDef = gql`
     created_at: String
     updated_at: String
     posts: [Post]
+    isTwoFactorEnabled: Boolean
     # stories: [Story!]!
   }
   input UpdateUserInput {
@@ -26,6 +27,7 @@ export const userTypeDef = gql`
   type Query {
     user(user_id: ID!): User!
     users(pageQuery: Int, limitQuery: Int): [User!]!
+    getUser2FAStatus: Boolean
   }
   type Mutation {
     updateProfile(input: UpdateUserInput): User!

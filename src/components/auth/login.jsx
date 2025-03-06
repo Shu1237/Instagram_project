@@ -17,12 +17,21 @@ function Login() {
       setShowError(true);
       setTimeout(() => setShowError(false), 3000);
     },
-    onCompleted: () => {
-      setShowSuccess(true);
-      setTimeout(() => {
-        navigate("/");
-        setShowSuccess(false);
-      }, 500);
+    onCompleted: (data) => {
+      if (data.login.user.isTwoFactorEnabled) {
+        // Chuyển hướng đến trang xác nhận 2FA nếu đã bật 2FA
+        navigate("/verify-2fa", {
+          state: { userId: data.login.user.user_id },
+        });
+        return;
+      } else {
+        // Đăng nhập thành công nếu không bật 2FA
+        setShowSuccess(true);
+        setTimeout(() => {
+          navigate("/");
+          setShowSuccess(false);
+        }, 500);
+      }
     },
   });
 
@@ -34,6 +43,7 @@ function Login() {
     e.preventDefault();
     try {
       const response = await login({ variables: { input } });
+      // console.log(response);
       if (response?.data?.login?.token) {
         setCookies("jwt-token", response?.data?.login?.token);
         setCookies("user_id", response?.data?.login?.user?.user_id);
