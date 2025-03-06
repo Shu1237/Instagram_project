@@ -20,17 +20,20 @@ export const authTypeDef = gql`
     message: String!
   }
   type AuthPayLoad {
-    token: String!
+    token: String
     user: User!
   }
   type Query {
     me: User!
+    setup2FA: TwoFASetupPayload!
   }
+
   type Mutation {
     signup(input: signupInput!): AuthPayLoad!
     login(input: loginInput!): AuthPayLoad!
-    setup2FA(userId: ID!): TwoFASetupPayload!
-    verify2FA(userId: ID!, token: String!): TwoFAVerifyPayload!
+    verify2FALogin(userId: ID!, token: String!): String!
+    verify2FA(token: String!): TwoFAVerifyPayload!
+    cancel2FA: User
     forgotPassword(email: String!): User!
     checkResetPasswordToken(token: String!): Boolean!
     resetPassword(userId: ID!, newPassword: String!): Boolean!
