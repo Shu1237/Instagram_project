@@ -1,5 +1,20 @@
 import { gql } from "@apollo/client";
 
+export const VERIFY_2FA_CODE_MUTATION = gql`
+  mutation Verify2FACode($token: String!) {
+    verify2FA(token: $token) {
+      message
+      verified
+    }
+  }
+`;
+
+export const VERIFY_2FA_LOGIN_MUTATION = gql`
+  mutation verify2FALogin($userId: ID!, $token: String!) {
+    verify2FALogin(userId: $userId, token: $token)
+  }
+`;
+
 export const LOGIN_MUTATION = gql`
   mutation Login($input: loginInput!) {
     login(input: $input) {
@@ -7,6 +22,7 @@ export const LOGIN_MUTATION = gql`
       user {
         user_id
         username
+        isTwoFactorEnabled
       }
     }
   }

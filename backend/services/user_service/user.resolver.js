@@ -52,6 +52,15 @@ export const userResolver = {
         throw new Error("Error fetching user");
       }
     },
+    async getUser2FAStatus(_, __, context) {
+      try {
+        const userId = context.user.user.user_id;
+        const user = await User.findByPk(userId);
+        return user.isTwoFactorEnabled;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
   },
   User: {
     followers: async (parent) => {
