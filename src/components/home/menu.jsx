@@ -1,74 +1,71 @@
 import React, { useState, useRef, useEffect } from 'react';
-import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import BrokenImageOutlinedIcon from '@mui/icons-material/BrokenImageOutlined';
-import BookmarkAddedOutlinedIcon from '@mui/icons-material/BookmarkAddedOutlined';
-import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
-import ReportGmailerrorredOutlinedIcon from '@mui/icons-material/ReportGmailerrorredOutlined';
 import { useNavigate } from 'react-router-dom';
+import { MenuOutlined, SettingsOutlined, BrokenImageOutlined, BookmarkAddedOutlined, ReportGmailerrorredOutlined, DarkModeOutlined, LightModeOutlined } from '@mui/icons-material';
 
 const Menu = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.theme === "dark");
   const dropdownRef = useRef(null);
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleMenu = () => setIsOpen(!isOpen);
 
+  // Xử lý click bên ngoài để đóng menu
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
-
     window.addEventListener('click', handleClickOutside);
-
-    return () => {
-      window.removeEventListener('click', handleClickOutside);
-    };
+    return () => window.removeEventListener('click', handleClickOutside);
   }, []);
 
+  // Cập nhật dark mode trong localStorage & Tailwind
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.theme = "dark";
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.theme = "light";
+    }
+  }, [isDarkMode]);
+
   return (
-    <div className='  flex h-[40px] items-center px-[30px] rounded-[5px] cursor-pointer mb-[20px] hover:bg-[#ededed] w-full
-   max-xl:w-8 max-xl:px-0
-    
-    ' ref={dropdownRef} >
-      <div className="bg-green relative flex items-center rounded-[5px] " onClick={toggleMenu} >
-        <MenuOutlinedIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />
-        <div style={{ fontSize: '1.125rem', fontWeight: isOpen ? 700 : 400 }} className='max-xl:hidden'>More</div>
-        {isOpen && (
-          <div className="absolute left-0 bottom-[40px] bg-white shadow-lg rounded-[10px] w-[250px] z-[1000]">
-            <ul className='list-none p-[10px] m-[0]'>
-              <MenuItem onClick={()=>navigate('/dashboardPage')} icon={<SettingsOutlinedIcon />} label="Setting" />
-              <MenuItem icon={<BrokenImageOutlinedIcon />} label="Your activity" />
-              <MenuItem icon={<BookmarkAddedOutlinedIcon />} label="Saved" />
-              <MenuItem icon={<LightModeOutlinedIcon />} label="Switch appearance" />
-              <MenuItem icon={<ReportGmailerrorredOutlinedIcon />} label="Report a problem" />
-              <hr className='my-[10px] border-0 border-t-[1px] border-[#e0e0e0]' />
-              <li className='py-[20px] px-[10px] cursor-pointer flex items-center justify-start rounded-[15px] hover:bg-[#ededed]'>
-                Switch accounts
-              </li>
-              <li className='py-[20px] px-[10px] cursor-pointer flex items-center justify-start rounded-[15px] hover:bg-[#ededed]'>
-                Log out
-              </li>
-            </ul>
-          </div>
-        )}
-      </div>
+    <div className="relative flex items-center px-6 py-2 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 w-full max-xl:w-8 max-xl:px-0" ref={dropdownRef}>
+      <button onClick={toggleMenu} className="flex items-center space-x-2">
+        <MenuOutlined className="text-3xl" />
+        <span className="max-xl:hidden font-medium">More</span>
+      </button>
+
+      {isOpen && (
+        <div className="absolute bottom-[40px] left-0 mt-2 bg-white dark:bg-gray-800 shadow-lg rounded-lg w-60 z-50">
+          <ul className="p-2 space-y-1">
+            <MenuItem onClick={() => navigate('/dashboardPage')} icon={<SettingsOutlined />} label="Settings" />
+            <MenuItem onClick={() => navigate('/tracking-activity/interactions')} icon={<BrokenImageOutlined />} label="Your activity" />
+            <MenuItem icon={<BookmarkAddedOutlined />} label="Saved" />
+            <MenuItem 
+              onClick={() => setIsDarkMode(!isDarkMode)} 
+              icon={isDarkMode ? <LightModeOutlined /> : <DarkModeOutlined />} 
+              label={isDarkMode ? "Light mode" : "Dark mode"} 
+            />
+            <MenuItem icon={<ReportGmailerrorredOutlined />} label="Report a problem" />
+            <hr className="border-t border-gray-300 dark:border-gray-600" />
+            <MenuItem label="Switch accounts" />
+            <MenuItem label="Log out" />
+          </ul>
+        </div>
+      )}
     </div>
-
-
   );
 };
 
-const MenuItem = ({ icon, label, onClick }) => {
-  return (
-    <li onClick={onClick} className='py-[20px] px-[10px] cursor-pointer flex items-center justify-start rounded-[15px] hover:bg-[#ededed]'>
-      <span className='mr-[15px]' role="img" aria-label={label}>{icon}</span> {label}
-    </li>
-  );
-};
+const MenuItem = ({ icon, label, onClick }) => (
+  <li onClick={onClick} className="flex items-center px-3 py-2 cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+    {icon && <span className="mr-3">{icon}</span>}
+    {label}
+  </li>
+);
 
 export default Menu;

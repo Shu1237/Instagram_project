@@ -14,6 +14,8 @@ import Message from "../pages/message";
 import DashBoardPage from "../pages/dashboard";
 import NotFound from "../pages/404";
 import Verify2FA from "../auth/verify2fa";
+import Darkmode from "../Darkmode/darkmode";
+import TrackingActivity from "../pages/tracking_activity";
 export default function App() {
   return (
     <Routes>
@@ -25,6 +27,8 @@ export default function App() {
       <Route path="/message/:id/:idfr" element={<Message />} />
       <Route path="dashboardPage" element={<DashBoardPage />} />
       <Route path="*" element={<NotFound />} />
+      <Route path="test" element={<Darkmode />} />
+      <Route path="/tracking-activity/:status" element={<TrackingActivity />} />
     </Routes>
   );
 }
