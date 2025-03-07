@@ -12,10 +12,14 @@ import Signup from "../auth/register";
 import Profile from "../pages/profile";
 import Message from "../pages/message";
 import DashBoardPage from "../pages/dashboard";
-import NotFound from "../pages/404";
-import Verify2FA from "../auth/verify2fa";
+
 import Darkmode from "../Darkmode/darkmode";
 import TrackingActivity from "../pages/tracking_activity";
+import ForgotPassword from "../auth/forgetpassword";
+import PassWordSecurity from "../pages/password-security";
+import NotFound from "../pages/404";
+import Verify2FA from "../auth/verify2fa";
+
 export default function App() {
   return (
     <Routes>
@@ -26,9 +30,15 @@ export default function App() {
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/message/:id/:idfr" element={<Message />} />
       <Route path="dashboardPage" element={<DashBoardPage />} />
+
       <Route path="*" element={<NotFound />} />
       <Route path="test" element={<Darkmode />} />
       <Route path="/tracking-activity/:status" element={<TrackingActivity />} />
+
+      <Route path="/forgotpassword" element={<ForgotPassword />} />
+      <Route path="/password-security" element={<PassWordSecurity />} />
+      <Route path="*" element={<NotFound />} />
+
     </Routes>
   );
 }
