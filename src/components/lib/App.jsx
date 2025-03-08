@@ -30,15 +30,12 @@ export default function App() {
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/message/:id/:idfr" element={<Message />} />
       <Route path="dashboardPage" element={<DashBoardPage />} />
-
-      <Route path="*" element={<NotFound />} />
       <Route path="test" element={<Darkmode />} />
       <Route path="/tracking-activity/:status" element={<TrackingActivity />} />
 
       <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route path="/password-security" element={<PassWordSecurity />} />
       <Route path="*" element={<NotFound />} />
-
     </Routes>
   );
 }

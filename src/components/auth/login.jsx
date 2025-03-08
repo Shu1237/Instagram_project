@@ -47,10 +47,10 @@ function Login() {
       if (response?.data?.login?.token) {
         setCookies("jwt-token", response?.data?.login?.token);
         setCookies("user_id", response?.data?.login?.user?.user_id);
+        const token = getCookie();
+        const myInformation = getMyInformation(token);
+        localStorageFunctions.setLocalStorage(myInformation);
       }
-      const token = getCookie();
-      const myInformation = getMyInformation(token);
-      localStorageFunctions.setLocalStorage(myInformation);
     } catch (err) {
       console.error("Login Error:", err);
     }
