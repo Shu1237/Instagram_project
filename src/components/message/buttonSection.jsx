@@ -1,7 +1,8 @@
+import React, { useState, useRef } from "react";
 import ICon from "../comment/iconPick";
 import { useDropzone } from "react-dropzone";
 import { X, FileText, File, Image } from "lucide-react";
-
+// TODO: webRTC imports
 export default function BottomSection({
   setFiles,
   files,
@@ -10,17 +11,17 @@ export default function BottomSection({
   handleKeyPress,
   handleEmojiChange,
 }) {
-  // Xử lý kéo-thả file
   const { getRootProps, getInputProps } = useDropzone({
     accept: "image/*,video/*,application/pdf,application/msword",
     onDrop: (acceptedFiles) => {
       setFiles([...files, ...acceptedFiles]);
     },
   });
-  //remove files
+
   const removeFile = (index) => {
     setFiles(files.filter((_, i) => i !== index));
   };
+
   return (
     <div className="p-4 mt-auto flex flex-col">
       <div className="flex flex-row items-center bg-white border-2 border-gray-300 rounded-3xl hover:border-gray-400 focus-within:border-blue-500 transition-colors group">
@@ -28,12 +29,10 @@ export default function BottomSection({
           <ICon onEmojiChange={handleEmojiChange} />
         </div>
         <div className="flex-1 px-2 py-2">
-          {/* Display selected files */}
           {files.length > 0 && (
             <div className="flex gap-3 overflow-x-auto py-2">
               {files.map((file, index) => (
                 <div key={index} className="relative">
-                  {/* Display file by type */}
                   {file.type.startsWith("image/") && (
                     <img
                       src={URL.createObjectURL(file)}
@@ -41,7 +40,6 @@ export default function BottomSection({
                       className="w-20 h-20 object-cover rounded-lg"
                     />
                   )}
-
                   {file.type.startsWith("video/") && (
                     <video
                       src={URL.createObjectURL(file)}
@@ -60,7 +58,6 @@ export default function BottomSection({
                       </span>
                     </div>
                   )}
-
                   {file.type ===
                     "application/vnd.openxmlformats-officedocument.wordprocessingml.document" && (
                     <div className="w-20 h-20 flex flex-col items-center justify-center bg-gray-200 rounded-lg">
@@ -73,7 +70,6 @@ export default function BottomSection({
                       </span>
                     </div>
                   )}
-
                   {!file.type.startsWith("image/") &&
                     !file.type.startsWith("video/") &&
                     file.type !== "application/pdf" &&
@@ -89,8 +85,6 @@ export default function BottomSection({
                         </span>
                       </div>
                     )}
-
-                  {/* Delete button */}
                   <button
                     onClick={() => removeFile(index)}
                     className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
@@ -109,9 +103,7 @@ export default function BottomSection({
             onKeyDown={handleKeyPress}
           />
         </div>
-
         <div className="flex items-center gap-3 pr-3 text-gray-600">
-          {/* Icons for voice, photo, etc. */}
           <button className="p-1 hover:text-blue-500 transition-colors">
             <svg
               aria-label="Voice Clip"
@@ -162,7 +154,6 @@ export default function BottomSection({
               ></path>
             </svg>
           </button>
-          {/* Kéo-thả file */}
           <div
             {...getRootProps()}
             className="cursor-pointer p-2 rounded-full hover:bg-gray-200"
@@ -170,7 +161,6 @@ export default function BottomSection({
             <input {...getInputProps()} />
             <Image className="minhnghidaoday" />
           </div>
-
           <button className="p-1 hover:text-blue-500 transition-colors">
             <svg
               aria-label="Choose a GIF or sticker"
