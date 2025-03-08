@@ -19,7 +19,7 @@ import ForgotPassword from "../auth/forgetpassword";
 import PassWordSecurity from "../pages/password-security";
 import NotFound from "../pages/404";
 import Verify2FA from "../auth/verify2fa";
-
+import VideoCallPage from "../webRTC/videoCallPage";
 export default function App() {
   return (
     <Routes>
@@ -32,9 +32,9 @@ export default function App() {
       <Route path="dashboardPage" element={<DashBoardPage />} />
       <Route path="test" element={<Darkmode />} />
       <Route path="/tracking-activity/:status" element={<TrackingActivity />} />
-
       <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route path="/password-security" element={<PassWordSecurity />} />
+      <Route path="/video-call" element={<VideoCallPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

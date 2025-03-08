@@ -53,7 +53,7 @@ const ModalCreate = () => {
   const handleEmojiSelect = (selectedEmoji) => {
     setEmoji(selectedEmoji); // save emoji
 
-    setValue((v) => [...v, selectedEmoji]);
+    setValue((v) => [...v, selectedEmoji].join(""));
   };
 
   // bo chiu phan nay
