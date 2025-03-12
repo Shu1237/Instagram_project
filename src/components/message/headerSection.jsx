@@ -1,13 +1,13 @@
 import { FiVideo, FiPhone } from "react-icons/fi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function HeaderSection({ myFriendInfo }) {
   const navigate = useNavigate();
-
+  const { idfr } = useParams();
   const startVideoCall = () => {
-    navigate("/video-call");
+    navigate("/video-call/" + idfr);
   };
 
   return (

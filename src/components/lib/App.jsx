@@ -34,7 +34,7 @@ export default function App() {
       <Route path="/tracking-activity/:status" element={<TrackingActivity />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route path="/password-security" element={<PassWordSecurity />} />
-      <Route path="/video-call" element={<VideoCallPage />} />
+      <Route path="/video-call/:roomId" element={<VideoCallPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
