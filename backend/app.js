@@ -17,7 +17,7 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import { PubSub } from "graphql-subscriptions";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
 import { userLoader } from "./utils/data_loader/user.data_loader.js";
-import { Server as SocketIOServer } from "socket.io";
+import signaling from "./signaling.js";
 // Connect to the database
 connect();
 
@@ -45,66 +45,8 @@ const schema = makeExecutableSchema({
 // Create HTTP server
 const httpServer = createServer(app);
 
-// Create WebSocket server
-const io = new SocketIOServer(httpServer, {
-  cors: {
-    origin: "http://localhost:5173", // Allow client-side connection
-    credentials: true,
-  },
-});
-
-const rooms = {}; // Store room participants
-
-io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId) => {
-    if (!rooms[roomId]) {
-      rooms[roomId] = new Set();
-    }
-    rooms[roomId].add(userId);
-
-    socket.join(roomId);
-    socket.to(roomId).emit("user-connected", userId);
-    console.log(`User ${userId} joined room ${roomId}`);
-  });
-  socket.on("offer", ({ roomId, offer, userId }) => {
-    if (rooms[roomId]?.has(userId)) {
-      console.log(`User ${userId} OFFERED`);
-      socket.to(roomId).emit("receive-offer", { offer, userId });
-    } else {
-      console.warn(`Invalid offer from user ${userId} in room ${roomId}`);
-    }
-  });
-
-  socket.on("answer", ({ roomId, answer, userId }) => {
-    if (rooms[roomId]?.has(userId)) {
-      console.log(`User ${userId} ANSWERED`);
-      socket.to(roomId).emit("receive-answer", { answer, userId });
-    } else {
-      console.warn(`Invalid answer from user ${userId} in room ${roomId}`);
-    }
-  });
-
-  socket.on("ice-candidate", ({ roomId, candidate, userId }) => {
-    if (rooms[roomId]?.has(userId)) {
-      console.log("Received ICE candidate from:", userId);
-      socket.to(roomId).emit("receive-ice-candidate", { candidate, userId });
-    }
-  });
-
-  socket.on("leave-room", (roomId, userId) => {
-    if (rooms[roomId]) {
-      rooms[roomId].delete(userId);
-      socket.to(roomId).emit("user-disconnected", userId);
-      socket.leave(roomId);
-      console.log(`User ${userId} left room ${roomId}`);
-
-      // If the room is empty, delete it
-      if (rooms[roomId].size === 0) {
-        delete rooms[roomId];
-      }
-    }
-  });
-});
+// Signaling server setup
+signaling(httpServer);
 
 // WebSocket setup for GraphQL subscriptions
 const wsServer = new WebSocketServer({

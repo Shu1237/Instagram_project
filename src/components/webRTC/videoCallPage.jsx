@@ -26,11 +26,14 @@ export default function VideoCallPage() {
   const remoteVideoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(false);
   const [isCameraOff, setIsCameraOff] = useState(false);
+  const [userName, setUserName] = useState("");
   const peerConnectionRef = useRef(null);
   const navigate = useNavigate();
   const userInfo = localStorage.getLocalStorage()?.user;
 
   useEffect(() => {
+    setUserName(userInfo?.name || "User");
+
     const localStreamSetup = async () => {
       try {
         // Get local media stream
@@ -205,14 +208,21 @@ export default function VideoCallPage() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-white text-black">
       <div className="relative w-full max-w-6xl h-[70vh] grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-100 rounded-xl shadow-lg">
-        <video
-          ref={localVideoRef}
-          autoPlay
-          muted
-          className={`w-full h-full bg-black rounded-lg ${
-            isCameraOff ? "hidden" : ""
-          }`}
-        />
+        <div className="relative w-full h-full bg-black rounded-lg">
+          <video
+            ref={localVideoRef}
+            autoPlay
+            muted
+            className={`w-full h-full rounded-lg ${
+              isCameraOff ? "hidden" : ""
+            }`}
+          />
+          {isCameraOff && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 rounded-lg">
+              <span className="text-white text-2xl">{userName}</span>
+            </div>
+          )}
+        </div>
         <video
           ref={remoteVideoRef}
           autoPlay
