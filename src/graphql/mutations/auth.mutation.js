@@ -58,3 +58,17 @@ export const RESET_PASSWORD_MUTATION = gql`
     resetPassword(userId: $userId, newPassword: $newPassword)
   }
 `;
+
+export const GOOGLE_LOGIN_MUTATION = gql`
+  mutation GoogleLogin($googleToken: String!) {
+    googleLogin(googleToken: $googleToken) {
+      token
+      user {
+        user_id
+        username
+        full_name
+        avatar
+      }
+    }
+  }
+`;

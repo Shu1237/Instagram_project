@@ -66,6 +66,5 @@ export const loginMiddleware = async (args, next) => {
     throw new Error("Invalid password");
   }
   const token = generateToken(userInfo);
-
   return next(user, token);
 };

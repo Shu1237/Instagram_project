@@ -37,5 +37,6 @@ export const authTypeDef = gql`
     forgotPassword(email: String!): User!
     checkResetPasswordToken(token: String!): Boolean!
     resetPassword(userId: ID!, newPassword: String!): Boolean!
+    googleLogin(googleToken: String!): AuthPayLoad!
   }
 `;

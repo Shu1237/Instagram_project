@@ -5,11 +5,14 @@ import { sendMail } from "../../utils/sendMail.util.js";
 import { generateRandomString } from "../../utils/generateRandomString.util.js";
 import bcryptjs from "bcryptjs";
 import speakeasy from "speakeasy";
+import { OAuth2Client } from "google-auth-library";
 import qrcode from "qrcode";
 import {
   signupMiddleware,
   loginMiddleware,
 } from "../../middlewares/auth.middleware.js";
+import ENV_VARS from "../../config/envVars.config.js";
+const client = new OAuth2Client(ENV_VARS.GOOGLE_CLIENT_ID);
 export const authResolver = {
   Query: {
     me(_, __, context) {
@@ -86,6 +89,7 @@ export const authResolver = {
       return await loginMiddleware(args, async (user, token) => {
         // check 2fa of user
         if (user.twoFactorSecret) {
+          console.log("Have a 2FA");
           return {
             user,
           };
@@ -288,6 +292,46 @@ export const authResolver = {
           }
         );
         return true;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    // google login
+    googleLogin: async (_, { googleToken }) => {
+      try {
+        const ticket = await client.verifyIdToken({
+          idToken: googleToken,
+          audience: ENV_VARS.GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        const { email, sub: googleId } = payload;
+        let user = await User.findOne({
+          where: {
+            email: email,
+          },
+        });
+        // console.log(ticket);
+        if (!user) {
+          user = await User.create({
+            email: email,
+            username: payload.name,
+            full_name: payload.given_name,
+            avatar: payload.picture,
+            password: "",
+            is_active: true,
+          });
+        }
+        const userInfo = {
+          user_id: user.user_id,
+          username: user.username,
+          full_name: user.full_name,
+          avatar: user.avatar,
+        };
+        const token = generateToken(userInfo);
+        return {
+          token,
+          user,
+        };
       } catch (error) {
         throw new Error(error.message);
       }
