@@ -2,11 +2,17 @@ import logoInstagram from "../../assets/logo.png";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
-import { LOGIN_MUTATION } from "../../graphql/mutations/auth.mutation";
+import {
+  LOGIN_MUTATION,
+  GOOGLE_LOGIN_MUTATION,
+} from "../../graphql/mutations/auth.mutation";
 import { setCookies, getCookie } from "../../utils/cookie.util";
 import { getMyInformation } from "../../utils/jwt-decode.util.js";
 import * as localStorageFunctions from "../../utils/localStorage.util.js";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+// import { process } from "react-scripts";
 
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 function Login() {
   const [input, setInput] = useState({ username: "", password: "" });
   const [showError, setShowError] = useState(false);
@@ -17,15 +23,28 @@ function Login() {
       setShowError(true);
       setTimeout(() => setShowError(false), 3000);
     },
-    onCompleted: () => {
-      setShowSuccess(true);
-      setTimeout(() => {
-        navigate("/");
-        setShowSuccess(false);
-      }, 500);
+    onCompleted: (data) => {
+      if (data.login.user.isTwoFactorEnabled) {
+        // Chuyển hướng đến trang xác nhận 2FA nếu đã bật 2FA
+        navigate("/verify-2fa", {
+          state: { userId: data.login.user.user_id },
+        });
+        return;
+      } else {
+        // Đăng nhập thành công nếu không bật 2FA
+        setShowSuccess(true);
+        setTimeout(() => {
+          navigate("/");
+          setShowSuccess(false);
+        }, 500);
+      }
     },
   });
-
+  const [googleLogin] = useMutation(GOOGLE_LOGIN_MUTATION, {
+    onError: (error) => {
+      console.error("Google Login Error:", error);
+    },
+  });
   const handleChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -34,18 +53,37 @@ function Login() {
     e.preventDefault();
     try {
       const response = await login({ variables: { input } });
+      // console.log(response);
       if (response?.data?.login?.token) {
         setCookies("jwt-token", response?.data?.login?.token);
         setCookies("user_id", response?.data?.login?.user?.user_id);
+        const token = getCookie();
+        const myInformation = getMyInformation(token);
+        localStorageFunctions.setLocalStorage(myInformation);
       }
-      const token = getCookie();
-      const myInformation = getMyInformation(token);
-      localStorageFunctions.setLocalStorage(myInformation);
     } catch (err) {
       console.error("Login Error:", err);
     }
   };
-
+  const handleGoogleLoginSuccess = async (response) => {
+    try {
+      const googleToken = response.credential;
+      const { data } = await googleLogin({ variables: { googleToken } });
+      if (data.googleLogin.token) {
+        setCookies("jwt-token", data.googleLogin.token);
+        setCookies("user_id", data.googleLogin.user.user_id);
+        const token = getCookie();
+        const myInformation = getMyInformation(token);
+        localStorageFunctions.setLocalStorage(myInformation);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Google Login Error:", error);
+    }
+  };
+  const handleGoogleLoginFailure = (error) => {
+    console.error("Google Login Error:", error);
+  };
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">
@@ -122,6 +160,14 @@ function Login() {
             </Link>
           </p>
         </form>
+        <GoogleOAuthProvider clientId={googleClientId}>
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onFailure={handleGoogleLoginFailure}
+            buttonText="Login with Google"
+            className="w-full"
+          />
+        </GoogleOAuthProvider>
       </div>
     </div>
   );

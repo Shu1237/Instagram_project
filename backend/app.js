@@ -17,10 +17,14 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import { PubSub } from "graphql-subscriptions";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
 import { userLoader } from "./utils/data_loader/user.data_loader.js";
-
+import signaling from "./signaling.js";
+// Connect to the database
 connect();
+
 const app = express();
 const pubsub = new PubSub();
+
+// Middleware
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -30,46 +34,47 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
-
 app.use(graphqlUploadExpress({ maxFileSize: 100000000, maxFiles: 10 }));
 
+// Create schema
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
 });
+
+// Create HTTP server
 const httpServer = createServer(app);
 
-//websocket setup
+// Signaling server setup
+signaling(httpServer);
+
+// WebSocket setup for GraphQL subscriptions
 const wsServer = new WebSocketServer({
   server: httpServer,
   path: "/graphql",
 });
+
 // Track active connections
 const activeConnections = new Set();
 const serverCleanup = setupWSConnection(
   {
     schema,
     context: async (ctx) => {
-      // Add connection tracking
       const connectionId = Math.random().toString(36).slice(2);
       activeConnections.add(connectionId);
-
-      // Add to context for cleanup
       ctx.connectionId = connectionId;
-
       return {
         pubsub,
         connectionId,
         userLoader,
       };
     },
-
-    // Add connection timeout
     connectionInitWaitTimeout: 10000,
   },
   wsServer
 );
 
+// Apollo Server context
 const context = async ({ req, res }) => {
   const authHeader = req.headers["authorization"];
   if (authHeader) {
@@ -84,6 +89,7 @@ const context = async ({ req, res }) => {
   return { req, cache: redisService, pubsub, userLoader };
 };
 
+// Apollo Server setup
 const server = new ApolloServer({
   schema,
   plugins: [
@@ -100,10 +106,12 @@ const server = new ApolloServer({
   ],
 });
 
+// Start the server
 const startServer = async () => {
   await redisService.connect();
   await server.start();
   app.use("/graphql", expressMiddleware(server, { context }));
+
   httpServer.listen(ENV_VARS.PORT, () => {
     console.log(
       `🚀 HTTP server ready at http://localhost:${ENV_VARS.PORT}/graphql`
@@ -111,6 +119,7 @@ const startServer = async () => {
     console.log(
       `🚀 WebSocket server ready at ws://localhost:${ENV_VARS.PORT}/graphql`
     );
+    console.log(`🚀 Socket.IO server ready at ws://localhost:${ENV_VARS.PORT}`);
   });
 };
 

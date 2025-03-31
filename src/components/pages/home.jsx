@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import LeftSide from "../home/leftSide";
 import MiddleSide from "../home/middleSide";
 import RightSide from "../home/rightSide";
-
+import Darkmode from "../Darkmode/darkmode";
 function Home() {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 867);
 
@@ -26,6 +26,7 @@ function Home() {
         // Khi màn hình nhỏ, LeftSide sẽ nằm dưới MiddleSide
         <>
           <div className="">
+
             <LeftSide />
           </div>
           <div className="">
@@ -35,6 +36,7 @@ function Home() {
       ) : (
         // Khi màn hình lớn, giao diện bình thường
         <div className="flex w-full h-full">
+        
           {/* Left Side */}
           <div className="p-6 flex-[0.2] max-xl:flex-[0.05] min-w-0">
             <LeftSide />

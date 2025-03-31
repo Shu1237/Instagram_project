@@ -1,5 +1,19 @@
 import { gql } from "@apollo/client";
 
+export const SET_UP_2FA = gql`
+  query SetUp2FA {
+    setup2FA {
+      secret
+      qrCode
+    }
+  }
+`;
+export const GET_USER_2FA_STATUS = gql`
+  query GetUser2FAStatus {
+    getUser2FAStatus
+  }
+`;
+
 export const ME_QUERY = gql`
   query Authentication {
     me {
@@ -7,6 +21,8 @@ export const ME_QUERY = gql`
       username
       full_name
       avatar
+      email
+      created_at
     }
   }
 `;

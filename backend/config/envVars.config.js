@@ -13,6 +13,8 @@ const ENV_VARS = {
   REDIS_HOST: process.env.REDIS_HOST,
   SYSTEM_EMAIL: process.env.SYSTEM_EMAIL,
   SYSTEM_PASS: process.env.SYSTEM_PASS,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   api: "http://localhost:",
 };
 export default ENV_VARS;

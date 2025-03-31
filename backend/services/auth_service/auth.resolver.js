@@ -5,16 +5,59 @@ import { sendMail } from "../../utils/sendMail.util.js";
 import { generateRandomString } from "../../utils/generateRandomString.util.js";
 import bcryptjs from "bcryptjs";
 import speakeasy from "speakeasy";
+import { OAuth2Client } from "google-auth-library";
 import qrcode from "qrcode";
 import {
   signupMiddleware,
   loginMiddleware,
 } from "../../middlewares/auth.middleware.js";
+import ENV_VARS from "../../config/envVars.config.js";
+const client = new OAuth2Client(ENV_VARS.GOOGLE_CLIENT_ID);
 export const authResolver = {
   Query: {
     me(_, __, context) {
       if (!context.user) throw new Error("Not authenticated !" + context);
       return context.user.user;
+    },
+    setup2FA: async (_, __, context) => {
+      try {
+        const userId = context.user.user.user_id;
+        const secret = speakeasy.generateSecret({ length: 20 });
+
+        // Generate OTPAuth URL
+        const url = speakeasy.otpauthURL({
+          secret: secret.base32,
+          label: `Instagram ${userId}`,
+          issuer: "Instagram",
+          encoding: "base32",
+        });
+
+        // Generate QR Code
+        const qrCode = await qrcode.toDataURL(url);
+
+        // Save the secret to the database
+        await User.update(
+          {
+            twoFactorSecret: secret.base32,
+          },
+          {
+            where: {
+              user_id: userId,
+            },
+          }
+        );
+
+        // console.log("Generated Secret:", secret.base32);
+        // console.log("OTPAuth URL:", url);
+
+        return {
+          secret: secret.base32,
+          qrCode,
+        };
+      } catch (error) {
+        console.error("Error in setup2FA:", error.message);
+        throw new Error(error.message);
+      }
     },
   },
   Mutation: {
@@ -44,6 +87,13 @@ export const authResolver = {
     },
     login: async (_, args) => {
       return await loginMiddleware(args, async (user, token) => {
+        // check 2fa of user
+        if (user.twoFactorSecret) {
+          console.log("Have a 2FA");
+          return {
+            user,
+          };
+        }
         return {
           token,
           user,
@@ -51,35 +101,12 @@ export const authResolver = {
       });
     },
     //2FA logic
-    setup2FA: async (_, { userId }) => {
+
+    verify2FA: async (_, { token }, context) => {
       try {
-        const secret = speakeasy.generateSecret({ length: 20 });
-        const url = speakeasy.otpauthURL({
-          secret: secret.base32,
-          label: `Instagram ${userId}`,
-          issuer: "Instagram",
-        });
-        const qrCode = await qrcode.toDataURL(url);
-        await User.update(
-          {
-            twoFactorSecret: secret.base32,
-          },
-          {
-            where: {
-              user_id: userId,
-            },
-          }
-        );
-        return {
-          secret: secret.base32,
-          qrCode,
-        };
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    },
-    verify2FA: async (_, { userId, token }) => {
-      try {
+        const userId = context.user.user.user_id;
+
+        // Find the user
         const user = await User.findOne({
           where: {
             user_id: userId,
@@ -88,19 +115,115 @@ export const authResolver = {
         if (!user) {
           throw new Error("User not found");
         }
-        const verified = speakeasy.totp.verify({
-          secret: user.twoFactoSecret,
+
+        // Verify the token
+        const checking = {
+          secret: user.dataValues.twoFactorSecret,
           encoding: "base32",
-          token,
-        });
+          token: token,
+          window: 2, // Allow a small margin of error
+        };
+
+        // console.log("Secret from DB:", checking.secret);
+        // console.log("Token to Verify:", checking.token);
+
+        const verified = speakeasy.totp.verify(checking);
+
+        // console.log("Verification Result:", verified);
+
         if (!verified) {
           throw new Error("Invalid 2FA token");
         }
+        // Update user's 2FA status
+        await User.update(
+          {
+            isTwoFactorEnabled: true,
+          },
+          {
+            where: {
+              user_id: userId,
+            },
+          }
+        );
+
         return {
           verified,
           message: "2FA token is valid",
         };
       } catch (error) {
+        console.error("Error in verify2FA:", error.message);
+        throw new Error(error.message);
+      }
+    },
+    cancel2FA: async (_, __, context) => {
+      try {
+        const userId = context.user.user.user_id;
+        // Find the user
+        const user = await User.findOne({
+          where: {
+            user_id: userId,
+          },
+        });
+        if (!user) {
+          throw new Error("User not found");
+        }
+        // Update user's 2FA status
+        await User.update(
+          {
+            isTwoFactorEnabled: false,
+            twoFactorSecret: null,
+          },
+          {
+            where: {
+              user_id: userId,
+            },
+          }
+        );
+
+        return user;
+      } catch (error) {
+        console.error("Error in cancel2FA:", error.message);
+        throw new Error(error.message);
+      }
+    },
+    verify2FALogin: async (_, { userId, token }) => {
+      try {
+        // Find the user
+        const user = await User.findOne({
+          where: {
+            user_id: userId,
+          },
+        });
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        // Verify the token
+        const checking = {
+          secret: user.dataValues.twoFactorSecret,
+          encoding: "base32",
+          token: token,
+          window: 2, // Allow a small margin of error
+        };
+
+        const verified = speakeasy.totp.verify(checking);
+
+        if (!verified) {
+          throw new Error("Invalid 2FA token");
+        }
+        const userInfo = {
+          user_id: user?.user_id,
+          username: user?.username,
+          full_name: user?.full_name,
+          avatar: user?.avatar,
+          email: user?.email,
+          created_at: user?.created_at,
+        };
+        const tokenjwt = generateToken(userInfo);
+
+        return tokenjwt;
+      } catch (error) {
+        console.error("Error in verify2FA:", error.message);
         throw new Error(error.message);
       }
     },
@@ -135,7 +258,7 @@ export const authResolver = {
         throw new Error(error.message);
       }
     },
-    //TODO: verifying the sent otp in their email
+    // verifying the sent otp in their email
     checkResetPasswordToken: async (_, { token }) => {
       try {
         const existedToken = await ForgotPassword.findOne({
@@ -148,7 +271,7 @@ export const authResolver = {
       }
     },
 
-    //TODO: reset password
+    // reset password
     resetPassword: async (_, { userId, newPassword }) => {
       try {
         const user = await User.findOne({
@@ -169,6 +292,46 @@ export const authResolver = {
           }
         );
         return true;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    // google login
+    googleLogin: async (_, { googleToken }) => {
+      try {
+        const ticket = await client.verifyIdToken({
+          idToken: googleToken,
+          audience: ENV_VARS.GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        const { email, sub: googleId } = payload;
+        let user = await User.findOne({
+          where: {
+            email: email,
+          },
+        });
+        // console.log(ticket);
+        if (!user) {
+          user = await User.create({
+            email: email,
+            username: payload.name,
+            full_name: payload.given_name,
+            avatar: payload.picture,
+            password: "",
+            is_active: true,
+          });
+        }
+        const userInfo = {
+          user_id: user.user_id,
+          username: user.username,
+          full_name: user.full_name,
+          avatar: user.avatar,
+        };
+        const token = generateToken(userInfo);
+        return {
+          token,
+          user,
+        };
       } catch (error) {
         throw new Error(error.message);
       }

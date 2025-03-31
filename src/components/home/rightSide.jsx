@@ -14,6 +14,7 @@ import {
 import { FRIEND_REQUEST_QUERY } from "../../graphql/query/friendRequest.query";
 import SmallNotification from "../notification/smallNotification";
 import * as localStorageFunctions from "../../utils/localStorage.util.js";
+import loadingEffect from "../ui/jsx/loading-effect.jsx";
 export default function RightSide() {
   const userInfo = localStorageFunctions.getLocalStorage()?.user;
   const [showError, setShowError] = useState(false);
@@ -145,11 +146,7 @@ export default function RightSide() {
   const hsr = "instagram from Meta";
 
   if (usersLoading || friendRequestsLoading) {
-    return (
-      <div className="flex justify-center items-center h-full">
-        <div className="animate-spin">Loading...</div>
-      </div>
-    );
+    return loadingEffect();
   }
 
   return (
