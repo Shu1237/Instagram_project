@@ -19,9 +19,10 @@ import formatTime from "../../utils/formatTime.util";
 import { getCookie } from "../../utils/cookie.util";
 import { useNavigate } from "react-router-dom";
 import { getLocalStorage } from "../../utils/localStorage.util";
-import { useMutation, useLazyQuery } from "@apollo/client";
+import { useMutation, useLazyQuery, useSubscription } from "@apollo/client";
 import { POST_COMMENT_MUTATION } from "../../graphql/mutations/comment.mutation";
 import { GET_COMMENTS_QUERY } from "../../graphql/query/comment.query";
+import { POSTING_COMMENT_SUBSCRIPTION } from "../../graphql/subscriptions/comment.subscription";
 
 const ModalPost = ({ post }) => {
   const [arryTyms, setArryTyms] = useState([
@@ -45,11 +46,35 @@ const ModalPost = ({ post }) => {
 
   useEffect(() => {
     const jwtToken = getCookie("jwt-token");
-    if (!jwtToken) {
+    if (open && !jwtToken) {
+      console.log(open);
       navigate("/login");
     }
-  }, [navigate]);
+  }, [navigate, open]);
   const user = getLocalStorage();
+
+  const { data: commentPostedData } = useSubscription(POSTING_COMMENT_SUBSCRIPTION, {
+    variables: {
+      post_id: post.id,
+      parent_id: null,
+    },
+    skip: !open,
+  });
+
+  useEffect(() => {
+    if (open && commentPostedData) {
+      setArryTyms((prevArryTyms) => [
+        ...prevArryTyms,
+        {
+          img: commentPostedData.commentPosted.user.avatar,
+          username: commentPostedData.commentPosted.user.full_name,
+          comment: commentPostedData.commentPosted.content,
+          created_at: formatTime(commentPostedData.commentPosted.created_at),
+          icon: <FavoriteBorderOutlinedIcon />,
+        },
+      ]);
+    }
+  }, [open, commentPostedData]);
 
   const [input, setInput] = useState({
     post_id: post.id,

@@ -31,7 +31,7 @@ export const postTypeDef = gql`
     }
 
     type Query {
-        getPosts: [Post]
+        getPosts(page: Int!): [Post]
         getAPost(id: ID!): Post
     }
 
