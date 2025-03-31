@@ -1,6 +1,9 @@
+import { subscribe } from "diagnostics_channel";
 import Comment from "../../models/mongodb/comment.model.js";
 import User from "../../models/mysql/user.js";
 import { GraphQLError } from "graphql";
+
+const COMMENT_POSTED = "COMMENT_POSTED";
 
 export const commentResolver = {
     Query: {
@@ -36,7 +39,7 @@ export const commentResolver = {
     },
 
     Mutation: {
-        postComment: async (_, { input }) => {
+        postComment: async (_, { input }, { pubsub }) => {
             try {
                 const { post_id, user_id, parent_id, content, media_urls } = input;
                 const comment = new Comment({
@@ -48,6 +51,7 @@ export const commentResolver = {
                     created_at: new Date(),
                     created_by: user_id,
                 })
+                pubsub.publish(`${COMMENT_POSTED}.${post_id}.${parent_id}`, { commentPosted: comment });
                 await comment.save();
                 return comment;
             } catch (error) {
@@ -90,6 +94,22 @@ export const commentResolver = {
                         code: "INTERNAL_SERVER_ERROR",
                     },
                 });
+            }
+        }
+    },
+
+    Subscription: {
+        commentPosted: {
+            subscribe: (_, { post_id, parent_id }, { pubsub }) => {
+                try {
+                    return pubsub.asyncIterableIterator(`${COMMENT_POSTED}.${post_id}.${parent_id}`);
+                } catch (error) {
+                    throw new GraphQLError(error.message, {
+                        extensions: {
+                            code: "INTERNAL_SERVER_ERROR",
+                        },
+                    });
+                }
             }
         }
     }

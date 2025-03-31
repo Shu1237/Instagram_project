@@ -33,7 +33,11 @@ export const commentTypeDef = gql`
 
     type Mutation {
         postComment(input: PostCommentInput!): Comment
-        updateComment(id: ID!, input: PostCommentInput): Comment
+        updateComment(id: ID!, input: PostCommentInput!): Comment
         deleteComment(id: ID!): Comment
+    }
+
+    type Subscription {
+        commentPosted(post_id: ID!, parent_id: ID): Comment
     }
 `;

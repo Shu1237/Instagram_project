@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const GET_POST_QUERY = gql`
-    query GetPosts {
-        getPosts {
+    query GetPosts($page: Int!) {
+        getPosts(page: $page) {
         id
         user {
             user_id

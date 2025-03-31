@@ -1,13 +1,34 @@
-import { console } from "inspector";
 import Post from "../../models/mongodb/post.model.js";
-import User from "../../models/mysql/user.js";
 import { GraphQLError } from "graphql";
+import { redisService } from "../../config/redis.config.js";
+import { userLoader } from "../../utils/data_loader/user.data_loader.js";
+
+const CACHE = {
+  CACHE_KEY: "posts",
+  CACHE_EXPIRATION: 300,
+}
 
 export const postResolver = {
   Query: {
-    getPosts: async () => {
+    getPosts: async (_, { page }) => {
       try {
-        const posts = await Post.find({ deleted: false }).sort({ created_at: -1 });
+        const limit = 5;
+        const skip = (page - 1) * limit;
+        const cachedPosts = await redisService.get(`${CACHE.CACHE_KEY}_${page}`);
+        if (cachedPosts) {
+          return JSON.parse(cachedPosts);
+        }
+        const posts = await Post.find({ deleted: false }).sort({ created_at: -1 }).limit(limit).skip(skip);
+        const formattedPosts = posts.map(post => {
+          const objTempt = post.toObject();
+          objTempt.id = post._id;
+          delete objTempt._id;
+          return objTempt;
+        });
+        const cacheSuccess = await redisService.set(`${CACHE.CACHE_KEY}_${page}`, JSON.stringify(formattedPosts), CACHE.CACHE_EXPIRATION);
+        if (!cacheSuccess) {
+          console.warn("Failed to cache posts");
+        }
         return posts;
       } catch (error) {
         throw new GraphQLError(error.message, {
@@ -43,10 +64,7 @@ export const postResolver = {
   Post: {
     user: async (parent) => {
       try {
-        return await User.findOne({
-          where: { user_id: parent.user_id },
-          raw: true
-        });
+        return await userLoader.load(parent.user_id);
       } catch (error) {
         throw new GraphQLError(error.message, {
           extensions: {
