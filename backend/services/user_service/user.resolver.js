@@ -1,5 +1,6 @@
 import User from "../../models/mysql/user.js";
 import FriendRequest from "../../models/mysql/friend_request.js";
+import Post from "../../models/mongodb/post.model.js";
 import { Op } from "sequelize";
 const CACHE_KEYS = {
   USER: (id) => `USER_${id}`,
@@ -49,7 +50,7 @@ export const userResolver = {
         await cache.set(cacheKey, user, 300); // 5 minutes TTL
         return user;
       } catch (error) {
-        throw new Error("Error fetching user");
+        throw new Error(error.message);
       }
     },
     async getUser2FAStatus(_, __, context) {
@@ -57,6 +58,19 @@ export const userResolver = {
         const userId = context.user.user.user_id;
         const user = await User.findByPk(userId);
         return user.isTwoFactorEnabled;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    async getUserPosts(_, { user_id }) {
+      try {
+        if (!user_id) {
+          throw new Error("Miss the user_id parameter");
+        }
+        const posts = await Post.find({
+          user_id: user_id,
+        });
+        return posts;
       } catch (error) {
         throw new Error(error.message);
       }
@@ -129,6 +143,17 @@ export const userResolver = {
         },
       });
       return followingUsers;
+    },
+    posts: async (parent) => {
+      try {
+        const userId = parent.user_id;
+        const posts = await Post.find({
+          user_id: userId,
+        });
+        return posts;
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
   },
   Mutation: {

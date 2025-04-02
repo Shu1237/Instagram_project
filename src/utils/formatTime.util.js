@@ -1,9 +1,34 @@
 const formatTime = (time) => {
   try {
-    const postDate = new Date(parseInt(time));
-    const now = new Date();
-    const timeDiff = Math.abs(now - postDate);
+    // Handle falsy values (null, undefined, empty string)
+    if (!time) return "Invalid time";
 
+    let postDate;
+
+    // Handle Date object
+    if (time instanceof Date) {
+      postDate = time;
+    }
+    // Handle string and number inputs
+    else if (typeof time === "string" || typeof time === "number") {
+      postDate = new Date(time);
+    }
+    // Handle invalid types (objects, arrays, booleans, functions)
+    else {
+      return "Invalid time";
+    }
+
+    // Check if postDate is valid
+    if (isNaN(postDate.getTime())) {
+      return "Invalid time";
+    }
+
+    const now = new Date();
+
+    // Prevent negative timestamps (future dates)
+    if (postDate > now) return "In the future";
+
+    const timeDiff = Math.abs(now - postDate);
     const secondsDiff = Math.floor(timeDiff / 1000);
     const minutesDiff = Math.floor(timeDiff / (1000 * 60));
     const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
@@ -12,26 +37,17 @@ const formatTime = (time) => {
     const monthsDiff = Math.floor(daysDiff / 30);
     const yearsDiff = Math.floor(daysDiff / 365);
 
-    let timeAgo;
-    if (secondsDiff < 60) {
-      timeAgo = `${secondsDiff} seconds ago`;
-    } else if (minutesDiff < 60) {
-      timeAgo = `${minutesDiff} minutes ago`;
-    } else if (hoursDiff < 24) {
-      timeAgo = `${hoursDiff} hours ago`;
-    } else if (daysDiff < 7) {
-      timeAgo = `${daysDiff} days ago`;
-    } else if (weeksDiff < 4) {
-      timeAgo = `${weeksDiff} weeks ago`;
-    } else if (monthsDiff < 12) {
-      timeAgo = `${monthsDiff} months ago`;
-    } else {
-      timeAgo = `${yearsDiff} years ago`;
-    }
+    if (secondsDiff < 60) return `${secondsDiff} seconds ago`;
+    if (minutesDiff < 60) return `${minutesDiff} minutes ago`;
+    if (hoursDiff < 24) return `${hoursDiff} hours ago`;
+    if (daysDiff < 7) return `${daysDiff} days ago`;
+    if (weeksDiff < 4) return `${weeksDiff} weeks ago`;
+    if (monthsDiff < 12) return `${monthsDiff} months ago`;
 
-    return timeAgo;
+    return `${yearsDiff} years ago`;
   } catch (error) {
-    throw new Error(error.message);
+    console.error("Error in formatTime:", error);
+    return "Invalid time";
   }
 };
 

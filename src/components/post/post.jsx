@@ -65,32 +65,38 @@ function Post() {
 
   useEffect(() => {
     setTimeout(() => {
-      console.log("Intersection Observer đã được khởi tạo!", observerRef.current);
+      console.log(
+        "Intersection Observer đã được khởi tạo!",
+        observerRef.current
+      );
       if (isFetching.current) return; // Nếu đang fetch thì không làm gì cả
       if (!observerRef.current) return;
-      const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          console.log("Intersection Observer kích hoạt!");
-          isFetching.current = true;
-          fetchMore({
-            variables: { page: page + 1 },
-            updateQuery: (prev, { fetchMoreResult }) => {
-              console.log("Previous posts:", prev);
-              if (!fetchMoreResult) return prev;
-              console.log("FetchMoreResult posts:", fetchMoreResult);
-              return {
-                getPosts: [...fetchMoreResult.getPosts],
-              };
-            },
-          }).finally(() => {
-            isFetching.current = false;
-            setPage((prevPage) => prevPage + 1);
-          });
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            console.log("Intersection Observer kích hoạt!");
+            isFetching.current = true;
+            fetchMore({
+              variables: { page: page + 1 },
+              updateQuery: (prev, { fetchMoreResult }) => {
+                console.log("Previous posts:", prev);
+                if (!fetchMoreResult) return prev;
+                console.log("FetchMoreResult posts:", fetchMoreResult);
+                return {
+                  getPosts: [...fetchMoreResult.getPosts],
+                };
+              },
+            }).finally(() => {
+              isFetching.current = false;
+              setPage((prevPage) => prevPage + 1);
+            });
+          }
+        },
+        {
+          rootMargin: "100px",
+          threshold: 1.0,
         }
-      }, {
-        rootMargin: "100px",
-        threshold: 1.0,
-      });
+      );
       observer.observe(observerRef.current);
       return () => {
         observer.unobserve(observerRef.current);
@@ -114,7 +120,11 @@ function Post() {
           </video>
         ) : (
           <div className="w-[90%] max-w-[500px] overflow-hidden rounded-lg shadow-md">
-            <img className="w-full aspect-[4/5] object-cover" src={url} alt="" />
+            <img
+              className="w-full aspect-[4/5] object-cover"
+              src={url}
+              alt=""
+            />
           </div>
         )}
       </div>
@@ -126,12 +136,22 @@ function Post() {
       {data?.getPosts?.length > 0 ? (
         <>
           {data.getPosts.map((post) => {
-            let timeAgo = formatTime(post.created_at);
+            let timeAgo;
+            timeAgo = formatTime(post?.created_at);
             return (
-              <div key={post.id} className="w-full mb-[40px] border-b pb-[20px]">
+              <div
+                key={post.id}
+                className="w-full mb-[40px] border-b pb-[20px]"
+              >
                 <div className="w-full flex items-center gap-[10px]">
-                  <img className="w-[42px] h-[40px] rounded-full" src={post.user.avatar} alt="" />
-                  <div className="text-[12px] font-semibold">{post.user.full_name}</div>
+                  <img
+                    className="w-[42px] h-[40px] rounded-full"
+                    src={post.user.avatar}
+                    alt=""
+                  />
+                  <div className="text-[12px] font-semibold">
+                    {post.user.full_name}
+                  </div>
                   <div className="text-[#999999] text-[14px]">{timeAgo}</div>
                 </div>
 
@@ -152,7 +172,9 @@ function Post() {
                     className="w-full max-w-md"
                   >
                     {post.media_urls.map((media, index) => (
-                      <SwiperSlide key={index}>{renderMedia(media)}</SwiperSlide>
+                      <SwiperSlide key={index}>
+                        {renderMedia(media)}
+                      </SwiperSlide>
                     ))}
                   </Swiper>
                 ) : (
@@ -166,7 +188,9 @@ function Post() {
                       className="text-[30px] mb-[8px] cursor-pointer ease-in duration-300 transform hover:scale-110"
                     >
                       {liked ? (
-                        <FavoriteOutlinedIcon sx={{ fontSize: "30px", color: "red" }} />
+                        <FavoriteOutlinedIcon
+                          sx={{ fontSize: "30px", color: "red" }}
+                        />
                       ) : (
                         <FavoriteBorderOutlinedIcon sx={{ fontSize: "30px" }} />
                       )}
@@ -178,10 +202,17 @@ function Post() {
                     <BookmarkBorderOutlinedIcon />
                   </div>
                 </div>
-                <div className="w-full text-[15px] font-semibold">{post.caption}</div>
-                <div className="w-full text-[15px] font-semibold">{nofLike} likes</div>
+                <div className="w-full text-[15px] font-semibold">
+                  {post.caption}
+                </div>
+                <div className="w-full text-[15px] font-semibold">
+                  {nofLike} likes
+                </div>
 
-                <div className="flex mt-[5px] text-[#999999] text-[15px]" ref={clickOutsideRef}>
+                <div
+                  className="flex mt-[5px] text-[#999999] text-[15px]"
+                  ref={clickOutsideRef}
+                >
                   <input
                     value={comment}
                     onChange={handleCommentChange}
@@ -198,7 +229,7 @@ function Post() {
               </div>
             );
           })}
-          < div key={page} ref={observerRef} className="h-10" />
+          <div key={page} ref={observerRef} className="h-10" />
         </>
       ) : (
         <p>No posts found.</p>

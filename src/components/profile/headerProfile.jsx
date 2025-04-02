@@ -16,12 +16,7 @@ const HeaderProfile = ({ data, meData }) => {
       <div className="flex-grow">
         <div className="flex items-center mb-4 space-x-4">
           <h2 className="text-xl font-light">{data?.user?.username}</h2>
-          <button className="bg-[#EFEFEF] p-2 rounded-md font-medium hover:bg-[#DBDBDB]">
-            Edit profile
-          </button>
-          <button className="bg-[#EFEFEF] p-2 rounded-md font-medium hover:bg-[#DBDBDB]">
-            View archive
-          </button>
+
           <div className="text-back cursor-pointer p-2  ">
             <svg
               aria-label="Options"
@@ -53,30 +48,29 @@ const HeaderProfile = ({ data, meData }) => {
             </svg>
           </div>
 
-          {parseInt(meData?.me?.user_id) !==
-            parseInt(data?.user?.user_id) && (
-              <button className="px-4 py-1.5 bg-blue-500 text-red-500 font-semibold rounded">
-                Follow
-              </button>
-            )}
+          {parseInt(meData.user_id) !== parseInt(data?.user?.user_id) && (
+            <button className="px-4 py-1.5 bg-blue-500  font-semibold rounded">
+              Follow
+            </button>
+          )}
         </div>
 
         {/* Stats */}
         <div className="flex flex-row gap-10 font-sans text-gray-600">
           <span>
-            <strong>0</strong> posts
+            <strong>{data?.user?.posts?.length}</strong> posts
           </span>
           <span>
-            <strong>0</strong> followers
+            <strong>{data?.user?.followers?.length}</strong> followers
           </span>
           <span>
-            <strong>0</strong> following
+            <strong>{data?.user?.following?.length}</strong> following
           </span>
         </div>
 
-        <div  className="font-semibold  mt-7">{data?.user?.full_name}</div>
+        <div className="font-semibold  mt-7">{data?.user?.full_name}</div>
       </div>
     </div>
-  )
-}
-export default HeaderProfile
+  );
+};
+export default HeaderProfile;
