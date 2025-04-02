@@ -50,7 +50,7 @@ export const userResolver = {
         await cache.set(cacheKey, user, 300); // 5 minutes TTL
         return user;
       } catch (error) {
-        throw new Error("Error fetching user");
+        throw new Error(error.message);
       }
     },
     async getUser2FAStatus(_, __, context) {
@@ -143,6 +143,17 @@ export const userResolver = {
         },
       });
       return followingUsers;
+    },
+    posts: async (parent) => {
+      try {
+        const userId = parent.user_id;
+        const posts = await Post.find({
+          user_id: userId,
+        });
+        return posts;
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
   },
   Mutation: {

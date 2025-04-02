@@ -1,5 +1,4 @@
 const HeaderProfile = ({ data, meData }) => {
-  console.log(data.user.user_id, meData.user_id);
   return (
     <div className="flex items-start py-8  gap-4">
       {/* Avatar Section */}
@@ -59,13 +58,13 @@ const HeaderProfile = ({ data, meData }) => {
         {/* Stats */}
         <div className="flex flex-row gap-10 font-sans text-gray-600">
           <span>
-            <strong>0</strong> posts
+            <strong>{data?.user?.posts?.length}</strong> posts
           </span>
           <span>
-            <strong>0</strong> followers
+            <strong>{data?.user?.followers?.length}</strong> followers
           </span>
           <span>
-            <strong>0</strong> following
+            <strong>{data?.user?.following?.length}</strong> following
           </span>
         </div>
 

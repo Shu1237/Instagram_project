@@ -42,6 +42,32 @@ export const GET_PROFILE = gql`
       username
       full_name
       avatar
+      posts {
+        id
+      }
+      followers {
+        user_id
+      }
+      following {
+        user_id
+      }
+    }
+  }
+`;
+export const GET_USER_POST_PROFILE = gql`
+  query getPosts($userId: ID!) {
+    getUserPosts(user_id: $userId) {
+      id
+      user {
+        user_id
+        full_name
+        avatar
+      }
+      caption
+      media_urls
+      status
+      created_at
+      updated_at
     }
   }
 `;
