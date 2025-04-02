@@ -1,16 +1,12 @@
 import React, { useState } from "react";
-import Image from "../../assets/img3.png";
-import Image1 from "../../assets/img2.png";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
-import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
-import SwitchAccountOutlinedIcon from "@mui/icons-material/SwitchAccountOutlined";
+import Image1 from "../../assets/img2.png";
+import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import { GET_PROFILE, ME_QUERY } from "../../graphql/query/user.query";
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import FooterProfile from "./footerProfile";
 import HeaderProfile from "./headerProfile";
-import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import * as localStorageFunctions from "../../utils/localStorage.util.js";
 import loadingEffect from "../ui/jsx/loading-effect.jsx";
 export default function RightSideProfile() {
@@ -33,20 +29,6 @@ export default function RightSideProfile() {
       {/* Profile Header */}
       <HeaderProfile data={data} meData={userInfo} />
 
-      {/* Story Highlights */}
-      <div className="py-8">
-        <div className="flex items-center space-x-8">
-          <div className="flex flex-col items-center">
-            <div className="w-[77px] h-[77px] rounded-full border-2 border-gray-300 flex items-center justify-center mb-2">
-              <div className="w-[72px] h-[72px] rounded-full bg-gray-100 flex items-center justify-center">
-                <PostAddOutlinedIcon className="text-gray-500" />
-              </div>
-            </div>
-            <span className="text-xs">New</span>
-          </div>
-        </div>
-      </div>
-
       {/* Navigation Tabs */}
       <div className="border-t border-gray-200 ">
         <div className="flex justify-center space-x-16">
@@ -58,24 +40,6 @@ export default function RightSideProfile() {
           >
             <PostAddOutlinedIcon fontSize="small" />
             <span>POSTS</span>
-          </button>
-          <button
-            className={`py-4 font-semibold text-sm tracking-wider flex items-center space-x-2 ${
-              state === 2 ? "border-t border-black text-black" : "text-gray-500"
-            }`}
-            onClick={() => handeleClick(2)}
-          >
-            <BookmarkBorderOutlinedIcon fontSize="small" />
-            <span>SAVED</span>
-          </button>
-          <button
-            className={`py-4 font-semibold text-sm tracking-wider flex items-center space-x-2 ${
-              state === 3 ? "border-t border-black text-black" : "text-gray-500"
-            }`}
-            onClick={() => handeleClick(3)}
-          >
-            <SwitchAccountOutlinedIcon fontSize="small" />
-            <span>TAGGED</span>
           </button>
         </div>
       </div>
@@ -130,15 +94,15 @@ export default function RightSideProfile() {
               </svg>
             </div>
             <h1 className="font-bold text-3xl">Share Photos </h1>
-            <p>When people tag you in photos, they'll appear here. </p>
+            <p>When people tag you in photos, they will appear here. </p>
             <div className="mt-4 text-[#0095F7] hover:text-black">
               Share your First photo
             </div>
           </div>
         </div>
       )}
-      {/* post pciture */}
-      {/* <div className="grid grid-cols-3   p-4 max-lg:grid-cols-2 max-md:grid-cols-1">
+      {/* post pictures */}
+      <div className="grid grid-cols-3   p-4 max-lg:grid-cols-2 max-md:grid-cols-1">
         <div className="relative w-[280px] h-[350px] rounded-lg shadow-lg cursor-pointer overflow-hidden group">
           <img
             src={Image1}
@@ -174,60 +138,7 @@ export default function RightSideProfile() {
             </div>
           </div>
         </div>
-      </div> */}
-      {state === 3 && (
-        <div className="flex justify-center   p-20">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-[75px] h-[71px] ">
-              <svg
-                aria-label="Photos of you"
-                className="x1lliihq x1n2onr6 x5n08af w-full"
-                fill="currentColor"
-                height="62"
-                role="img"
-                viewBox="0 0 96 96"
-                width="62"
-              >
-                <title>Photos of you</title>
-                <circle
-                  cx="48"
-                  cy="48"
-                  fill="none"
-                  r="47"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M56.826 44.119a8.824 8.824 0 1 1-8.823-8.825 8.823 8.823 0 0 1 8.823 8.825Z"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeMiterlimit="10"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M63.69 67.999a9.038 9.038 0 0 0-9.25-8.998H41.56A9.038 9.038 0 0 0 32.31 68"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M48 20.215c-2.94 0-7.125 8.76-11.51 8.785h-4.705A8.785 8.785 0 0 0 23 37.784v22.428a8.785 8.785 0 0 0 8.785 8.785h32.43A8.785 8.785 0 0 0 73 60.212V37.784A8.785 8.785 0 0 0 64.215 29h-4.704c-4.385-.026-8.57-8.785-11.511-8.785Z"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeMiterlimit="10"
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
-            <h1 className="font-bold text-3xl">Photo Of you</h1>
-            <p>When people tag you in photos, they'll appear here. </p>
-          </div>
-        </div>
-      )}
+      </div>
 
       {/* Footer Links */}
       <FooterProfile />

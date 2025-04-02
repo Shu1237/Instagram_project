@@ -28,6 +28,7 @@ export const userTypeDef = gql`
     user(user_id: ID!): User!
     users(pageQuery: Int, limitQuery: Int): [User!]!
     getUser2FAStatus: Boolean
+    getUserPosts(user_id: ID!): [Post]
   }
   type Mutation {
     updateProfile(input: UpdateUserInput): User!

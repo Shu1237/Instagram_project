@@ -53,13 +53,16 @@ const ModalPost = ({ post }) => {
   }, [navigate, open]);
   const user = getLocalStorage();
 
-  const { data: commentPostedData } = useSubscription(POSTING_COMMENT_SUBSCRIPTION, {
-    variables: {
-      post_id: post.id,
-      parent_id: null,
-    },
-    skip: !open,
-  });
+  const { data: commentPostedData } = useSubscription(
+    POSTING_COMMENT_SUBSCRIPTION,
+    {
+      variables: {
+        post_id: post.id,
+        parent_id: null,
+      },
+      skip: !open,
+    }
+  );
 
   useEffect(() => {
     if (open && commentPostedData) {
