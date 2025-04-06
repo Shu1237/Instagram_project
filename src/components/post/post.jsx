@@ -19,7 +19,7 @@ function Post() {
   const clickOutsideRef = useRef(null);
   const [isPlaceholderVisible, setPlaceholderVisible] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const [nofLike, setNofLike] = useState(123156);
+
   const [liked, setLiked] = useState(false);
   const [page, setPage] = useState(1);
   const observerRef = useRef(null);
@@ -33,7 +33,7 @@ function Post() {
   // Xử lý khi bấm vào nút tim
   const handleHeartClick = () => {
     setLiked(!liked);
-    setNofLike((prev) => (liked ? Math.max(0, prev - 1) : prev + 1));
+    // setNofLike((prev) => (liked ? Math.max(0, prev - 1) : prev + 1));
   };
 
   // Xử lý khi thay đổi comment
@@ -106,7 +106,7 @@ function Post() {
 
   if (loading) return <p>Loading...</p>;
 
-  if (error) return <p>Error: {error.message}</p>;
+  // if (error) return <p>Error: {error.message}</p>;
   const renderMedia = (url) => {
     const isVideo = url?.match(/\.(mp4|webm|ogg)$/i);
     return (
@@ -203,10 +203,10 @@ function Post() {
                   </div>
                 </div>
                 <div className="w-full text-[15px] font-semibold">
-                  {post.caption}
+                  {post?.caption}
                 </div>
                 <div className="w-full text-[15px] font-semibold">
-                  {nofLike} likes
+                  {post?.interaction?.length} likes
                 </div>
 
                 <div
