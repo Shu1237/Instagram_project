@@ -88,8 +88,7 @@ export const authResolver = {
     login: async (_, args) => {
       return await loginMiddleware(args, async (user, token) => {
         // check 2fa of user
-        if (user.twoFactorSecret) {
-          console.log("Have a 2FA");
+        if (user.isTwoFactorEnabled) {
           return {
             user,
           };
