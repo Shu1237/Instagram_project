@@ -11,6 +11,7 @@ export const NEW_NOTIFICATIONS = gql`
         username
         avatar
       }
+      type
     }
   }
 `;

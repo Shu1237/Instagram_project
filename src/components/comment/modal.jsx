@@ -36,7 +36,7 @@ const ModalPost = ({ post }) => {
   ]);
   const [isLiked, setIsLiked] = useState(arryTyms.map(() => false));
   const [open, setOpen] = useState(false);
-  const [nofLike, setNofLike] = useState(123156);
+  // const [nofLike, setNofLike] = useState(0);
   const [clickHeart, setClickHeart] = useState(
     <FavoriteBorderOutlinedIcon sx={{ fontSize: "30px" }} />
   );
@@ -129,21 +129,21 @@ const ModalPost = ({ post }) => {
     setIsLiked(newLiked);
   };
 
-  const newNofLike = () => {
-    setNofLike((n) => n + 1);
-  };
+  // const newNofLike = () => {
+  //   setNofLike((n) => n + 1);
+  // };
 
-  const handleHeartClickBottom = () => {
-    if (clickHeart.type === FavoriteBorderOutlinedIcon) {
-      setClickHeart(
-        <FavoriteOutlinedIcon sx={{ fontSize: "30px", color: "red" }} />
-      );
-      newNofLike();
-    } else {
-      setClickHeart(<FavoriteBorderOutlinedIcon />);
-      setNofLike(nofLike > 0 ? nofLike - 1 : 0);
-    }
-  };
+  // const handleHeartClickBottom = () => {
+  //   if (clickHeart.type === FavoriteBorderOutlinedIcon) {
+  //     setClickHeart(
+  //       <FavoriteOutlinedIcon sx={{ fontSize: "30px", color: "red" }} />
+  //     );
+  //     // newNofLike();
+  //   } else {
+  //     setClickHeart(<FavoriteBorderOutlinedIcon />);
+  //     setNofLike(nofLike > 0 ? nofLike - 1 : 0);
+  //   }
+  // };
 
   const handleComment = (event) => {
     const value = event.target.value;
@@ -316,7 +316,7 @@ const ModalPost = ({ post }) => {
                   <div className="flex gap-2.5">
                     <div
                       className="cursor-pointer mt-[2px]"
-                      onClick={handleHeartClickBottom}
+                      // onClick={handleHeartClickBottom}
                     >
                       {clickHeart}
                     </div>
@@ -333,7 +333,7 @@ const ModalPost = ({ post }) => {
                   </div>
                 </div>
 
-                <div className="font-bold mb-2">{nofLike} Likes</div>
+                {/* <div className="font-bold mb-2">{nofLike} Likes</div> */}
                 <div className="text-gray-500 text-base">
                   <div>{`${new Date().toLocaleString("en-US", {
                     month: "long",

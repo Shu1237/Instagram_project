@@ -65,6 +65,15 @@ class RedisService {
       return false;
     }
   }
+  async sadd(key, value) {
+    try {
+      await this.client.sAdd(key, value);
+      return true;
+    } catch (error) {
+      console.error("[Redis] SADD Error:", error);
+      return false;
+    }
+  }
   async quit() {
     try {
       await this.client.quit();
@@ -72,6 +81,24 @@ class RedisService {
     } catch (error) {
       console.error("[Redis] Quit Error:", error);
       throw error;
+    }
+  }
+  async keys(pattern) {
+    try {
+      const keys = await this.client.keys(pattern);
+      return keys;
+    } catch (error) {
+      console.error("[Redis] KEYS Error:", error);
+      return null;
+    }
+  }
+  async smembers(key) {
+    try {
+      const members = await this.client.sMembers(key);
+      return members;
+    } catch (error) {
+      console.error("[Redis] SMEMBERS Error:", error);
+      return null;
     }
   }
 }

@@ -114,12 +114,12 @@ const startServer = async () => {
 
   httpServer.listen(ENV_VARS.PORT, () => {
     console.log(
-      `🚀 HTTP server ready at http://localhost:${ENV_VARS.PORT}/graphql`
+      ` HTTP server ready at http://localhost:${ENV_VARS.PORT}/graphql`
     );
     console.log(
-      `🚀 WebSocket server ready at ws://localhost:${ENV_VARS.PORT}/graphql`
+      `WebSocket server ready at ws://localhost:${ENV_VARS.PORT}/graphql`
     );
-    console.log(`🚀 Socket.IO server ready at ws://localhost:${ENV_VARS.PORT}`);
+    console.log(`Socket.IO server ready at ws://localhost:${ENV_VARS.PORT}`);
   });
 };
 

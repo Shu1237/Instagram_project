@@ -1,12 +1,14 @@
 import Post from "../../models/mongodb/post.model.js";
+import Notification from "../../models/mysql/notifications.js";
 import { GraphQLError } from "graphql";
 import { redisService } from "../../config/redis.config.js";
 import { userLoader } from "../../utils/data_loader/user.data_loader.js";
-
+import _ from "lodash";
+import startSyncLikeWorker from "../../utils/syncLikeWorker.util.js";
 const CACHE = {
   CACHE_KEY: "posts",
   CACHE_EXPIRATION: 300,
-}
+};
 
 export const postResolver = {
   Query: {
@@ -14,18 +16,27 @@ export const postResolver = {
       try {
         const limit = 5;
         const skip = (page - 1) * limit;
-        const cachedPosts = await redisService.get(`${CACHE.CACHE_KEY}_${page}`);
+        const cachedPosts = await redisService.get(
+          `${CACHE.CACHE_KEY}_${page}`
+        );
         if (cachedPosts) {
           return JSON.parse(cachedPosts);
         }
-        const posts = await Post.find({ deleted: false }).sort({ created_at: -1 }).limit(limit).skip(skip);
-        const formattedPosts = posts.map(post => {
+        const posts = await Post.find({ deleted: false })
+          .sort({ created_at: -1 })
+          .limit(limit)
+          .skip(skip);
+        const formattedPosts = posts.map((post) => {
           const objTempt = post.toObject();
           objTempt.id = post._id;
           delete objTempt._id;
           return objTempt;
         });
-        const cacheSuccess = await redisService.set(`${CACHE.CACHE_KEY}_${page}`, JSON.stringify(formattedPosts), CACHE.CACHE_EXPIRATION);
+        const cacheSuccess = await redisService.set(
+          `${CACHE.CACHE_KEY}_${page}`,
+          JSON.stringify(formattedPosts),
+          CACHE.CACHE_EXPIRATION
+        );
         if (!cacheSuccess) {
           console.warn("Failed to cache posts");
         }
@@ -72,7 +83,7 @@ export const postResolver = {
           },
         });
       }
-    }
+    },
   },
   Mutation: {
     createPost: async (_, { input }) => {
@@ -140,6 +151,30 @@ export const postResolver = {
             code: "INTERNAL_SERVER_ERROR",
           },
         });
+      }
+    },
+    likePost: async (_, { id, userId }, context) => {
+      try {
+        if (!context.user)
+          throw new Error("Not authenticated, Cannot like post");
+        const post = await Post.findOne({ _id: id });
+        if (!post) throw new Error("Post not found");
+        if (post.interaction.includes(userId))
+          throw new Error("You already liked this post");
+        //optimize with redis , save likes into redis using set
+        redisService.sadd(`post:${id}:pendingLikes`, userId);
+        const newNotification = await Notification.create({
+          type: "like",
+          sender_id: userId,
+          receiver_id: post.user_id,
+        });
+        await context.pubsub.publish(`NOTIFICATION_ADDED.${post.user_id}`, {
+          notificationAdded: newNotification,
+        });
+        startSyncLikeWorker();
+        return true;
+      } catch (error) {
+        throw new Error(error.message);
       }
     },
   },

@@ -20,7 +20,26 @@ const SmallNotification = ({ notification, onClose }) => {
         <p className="font-semibold text-lg text-gray-800">
           {notification?.sender?.username}
         </p>
-        <p className="text-gray-600">Đã bắt đầu follow bạn</p>
+        {(notification?.type === "follow" ||
+          notification?.type === "accepted") && (
+          <p className="text-gray-600">Đã bắt đầu follow bạn</p>
+        )}
+        {notification?.type === "comment" && (
+          <p className="text-gray-600">Đã bình luận bài viết của bạn</p>
+        )}
+        {notification?.type === "reply" && (
+          <p className="text-gray-600">Đã trả lời bình luận của bạn</p>
+        )}
+        {notification?.type === "mention" && (
+          <p className="text-gray-600">Đã nhắc đến bạn trong bình luận</p>
+        )}
+        {notification?.type === "share" && (
+          <p className="text-gray-600">Đã chia sẻ bài viết của bạn</p>
+        )}
+        {notification?.type === "like" && (
+          <p className="text-gray-600">Đã thích bài viết của bạn</p>
+        )}
+
         <p className="text-sm text-gray-400">
           {formatTime(notification?.create_at)}
         </p>

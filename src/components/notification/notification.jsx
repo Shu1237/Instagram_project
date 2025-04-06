@@ -43,7 +43,7 @@ export default function NotificationsDropdown({ isOpen, onClose, receiverId }) {
                       key={data.id}
                       avatar={data.sender.avatar}
                       username={data.sender.username}
-                      action="starting to follow you"
+                      type={data.type}
                       time={formatTime(data.create_at)}
                       sender_id={data.sender.user_id}
                     />
@@ -58,7 +58,7 @@ export default function NotificationsDropdown({ isOpen, onClose, receiverId }) {
   );
 }
 
-function NotificationItem({ avatar, username, action, time, sender_id }) {
+function NotificationItem({ avatar, username, type, time, sender_id }) {
   return (
     <div className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg">
       <div className="flex items-center space-x-3">
@@ -68,7 +68,18 @@ function NotificationItem({ avatar, username, action, time, sender_id }) {
 
         <div>
           <p className="text-sm">
-            <span className="font-semibold">{username}</span> {action}
+            <span className="font-semibold">{username}</span>
+            {type === "like" && " liked your post."}
+            {type === "follow" && " started following you."}
+            {type === "comment" && " commented on your post."}
+            {type === "mention" && " mentioned you in a comment."}
+            {type === "tag" && " tagged you in a photo."}
+            {type === "message" && " sent you a message."}
+            {type === "story" && " shared a story."}
+            {type === "reaction" && " reacted to your story."}
+            {type === "request" && " sent you a friend request."}
+            {type === "accepted" && " accepted your friend request."}
+
             <span className="text-gray-500 ml-1">{time}</span>
           </p>
         </div>

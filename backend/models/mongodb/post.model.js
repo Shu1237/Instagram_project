@@ -1,3 +1,4 @@
+import { Interaction } from "chart.js";
 import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema(
@@ -17,6 +18,10 @@ const postSchema = new mongoose.Schema(
     status: {
       type: String,
       default: "public",
+    },
+    interaction: {
+      type: Array,
+      default: [],
     },
     created_at: {
       type: Date,
