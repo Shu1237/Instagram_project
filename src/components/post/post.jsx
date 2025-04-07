@@ -76,6 +76,36 @@ function Post() {
             likePostId: postId,
             userId: userId,
           },
+          update: (cache, { data: { likePost } }) => {
+            try {
+              // Đọc dữ liệu hiện tại từ cache
+              const existingData = cache.readQuery({
+                query: GET_POST_QUERY,
+                variables: { page },
+              });
+
+              // Cập nhật bài viết được like
+              const updatedPosts = existingData.getPosts.map((post) =>
+                post.id === postId
+                  ? {
+                      ...post,
+                      interaction: [...post.interaction, userId], // Thêm userId vào interaction
+                    }
+                  : post
+              );
+
+              // Ghi lại dữ liệu đã cập nhật vào cache
+              cache.writeQuery({
+                query: GET_POST_QUERY,
+                variables: { page },
+                data: {
+                  getPosts: updatedPosts,
+                },
+              });
+            } catch (error) {
+              console.error("Error updating cache:", error);
+            }
+          },
         });
       } catch (err) {
         console.error("Lỗi like bài viết:", err);

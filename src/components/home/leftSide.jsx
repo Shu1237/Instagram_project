@@ -80,7 +80,7 @@ export default function LeftSide() {
           isOpen={isSearchOpen}
           onClose={() => setIsSearchOpen(false)}
         />
-        <MenuItem
+        {/* <MenuItem
           onClick={() => navigate("/explore")}
           icon={<ExploreIcon sx={{ fontSize: "35px", margin: "0 20px 0 0" }} />}
           label="Explore"
@@ -93,7 +93,7 @@ export default function LeftSide() {
             />
           }
           label="Reels"
-        />
+        /> */}
         {userInfo && (
           <MenuItem
             onClick={() => navigate(linkMess)}
@@ -142,16 +142,18 @@ export default function LeftSide() {
           </div>
         )}
 
-        <div className="mt-[50px] w-full ">
-          {/* <MenuItem
-            className="max-xl:hidden" 
-            icon={
-              <GestureIcon sx={{ fontSize: "30px", margin: "0 20px 0 0" }} />
-            }
-            label="Threads"
-          /> */}
-          <Menu />
-        </div>
+        {userInfo && (
+          <div className="mt-[50px] w-full ">
+            {/* <MenuItem
+          className="max-xl:hidden" 
+          icon={
+            <GestureIcon sx={{ fontSize: "30px", margin: "0 20px 0 0" }} />
+          }
+          label="Threads"
+        /> */}
+            <Menu />
+          </div>
+        )}
       </div>
     </div>
   );
