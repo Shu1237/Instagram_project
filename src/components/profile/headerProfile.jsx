@@ -50,7 +50,7 @@ const HeaderProfile = ({ data, meData }) => {
             </div>
           </Link>
 
-          {parseInt(meData.user_id) !== parseInt(data?.user?.user_id) && (
+          {parseInt(meData?.user_id) !== parseInt(data?.user?.user_id) && (
             <button className="px-4 py-1.5 bg-blue-500  font-semibold rounded">
               Follow
             </button>
