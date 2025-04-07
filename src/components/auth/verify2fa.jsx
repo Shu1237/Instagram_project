@@ -59,37 +59,85 @@ function Verify2FA() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">
-        <h2 className="text-2xl font-semibold text-gray-700 text-center">
-          Xác Minh 2FA
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-blue-50 px-4">
+      <div className="bg-white shadow-2xl rounded-2xl p-8 max-w-md w-full animate-fade-in-up">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
+          Xác Minh Hai Yếu Tố (2FA)
         </h2>
+        <p className="text-center text-gray-500 text-sm mb-6">
+          Bảo vệ tài khoản của bạn bằng một lớp bảo mật bổ sung.
+        </p>
 
+        {/* Hướng dẫn sử dụng app */}
+        <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg text-gray-700 text-sm">
+          <p>
+            Mở ứng dụng <strong>Google Authenticator</strong> trên điện thoại
+            của bạn
+          </p>
+          <p className="mt-1">
+            Nhập mã gồm 6 chữ số được tạo bởi ứng dụng vào ô bên dưới.
+          </p>
+        </div>
+
+        {/* Form nhập mã xác minh */}
         <form className="mt-6" onSubmit={handleVerify}>
-          <div className="mb-4">
-            <label className="block text-gray-600 text-sm">Mã Xác Minh</label>
+          <label className="block mb-2 text-gray-600 text-sm font-medium">
+            Mã Xác Minh
+          </label>
+          <div className="relative">
             <input
               type="text"
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Nhập mã xác minh"
+              className="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-md transition duration-200 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:outline-none text-base placeholder-gray-400"
+              placeholder="Nhập mã 6 chữ số"
               required
             />
+            <div className="absolute inset-y-0 right-4 flex items-center text-gray-400">
+              🔒
+            </div>
           </div>
 
           {errorMessage && (
-            <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
+            <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
           )}
 
           <button
             type="submit"
-            className={`w-full bg-blue-500 text-white py-2 rounded-lg font-semibold ${
-              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
+            className={`mt-6 w-full py-3 rounded-xl font-semibold transition duration-300 text-white ${
+              loading
+                ? "bg-blue-300 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600 hover:shadow-lg"
             }`}
             disabled={loading}
           >
-            {loading ? "Đang xác minh..." : "Xác Minh"}
+            {loading ? (
+              <span className="flex justify-center items-center gap-2">
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  ></path>
+                </svg>
+                Đang xác minh...
+              </span>
+            ) : (
+              "Xác Minh"
+            )}
           </button>
         </form>
       </div>

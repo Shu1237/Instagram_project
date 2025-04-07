@@ -91,53 +91,106 @@ export default function TwoFASetup() {
 
   // Hiển thị form thiết lập 2FA
   return (
-    <div className="flex flex-col items-center gap-4 p-6 bg-white rounded-xl shadow-md max-w-md mx-auto">
-      <h2 className="text-xl font-semibold">Bật Xác thực Hai Yếu tố (2FA)</h2>
+    <div className="flex flex-col gap-6 p-6 bg-white rounded-2xl shadow-xl max-w-lg mx-auto text-gray-800">
+      <h2 className="text-2xl font-bold text-center">
+        Bật Xác Thực Hai Yếu Tố (2FA)
+      </h2>
 
-      {/* Hiển thị QR Code */}
-      {setupLoading ? (
-        <p>Đang tải QR Code...</p>
-      ) : setupError ? (
-        <p className="text-red-500">
-          Lỗi khi tải QR code: {setupError.message}
+      {/* Step 1: Install app */}
+      <div>
+        <h3 className="font-semibold text-lg mb-2">Bước 1: Tải Ứng Dụng</h3>
+        <p>
+          Tải <strong>Google Authenticator</strong>
+          trên điện thoại của bạn:
         </p>
-      ) : qrCode ? (
-        <img src={qrCode} alt="QR Code" />
-      ) : null}
+        <div className="flex justify-center gap-4 mt-3">
+          <a
+            href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+              alt="Google Play"
+              className="w-36 hover:scale-105 transition-transform"
+            />
+          </a>
+          <a
+            href="https://apps.apple.com/us/app/google-authenticator/id388497605"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
+              alt="App Store"
+              className="w-36 hover:scale-105 transition-transform"
+            />
+          </a>
+        </div>
+      </div>
 
-      {/* Hiển thị Secret Key */}
-      {secret && (
-        <p className="text-gray-700 text-sm">
-          Khóa bí mật:{" "}
-          <span className="font-mono bg-gray-200 px-2 py-1 rounded">
-            {secret}
-          </span>
-        </p>
-      )}
+      {/* Step 2: Scan QR */}
+      <div>
+        <h3 className="font-semibold text-lg mb-2">Bước 2: Quét Mã QR</h3>
+        {setupLoading ? (
+          <p>Đang tải mã QR...</p>
+        ) : setupError ? (
+          <p className="text-red-500">Lỗi khi tải QR: {setupError.message}</p>
+        ) : qrCode ? (
+          <div className="flex flex-col items-center gap-2">
+            <img
+              src={qrCode}
+              alt="QR Code"
+              className="w-40 h-40 border rounded"
+            />
+            <p className="text-sm text-center">
+              Dùng ứng dụng để quét mã này hoặc nhập khóa thủ công bên dưới.
+            </p>
+          </div>
+        ) : null}
 
-      {/* Nhập mã xác minh */}
-      <input
-        type="text"
-        placeholder="Nhập mã xác minh"
-        value={verificationCode}
-        onChange={(e) => setVerificationCode(e.target.value)}
-        className="border border-gray-300 rounded px-3 py-2 w-full"
-        disabled={isVerified || setupLoading || verifyLoading}
-      />
+        {secret && (
+          <div className="mt-2 text-sm text-center">
+            <p>Khóa bí mật:</p>
+            <div className="mt-1 bg-gray-100 px-3 py-2 rounded font-mono text-base inline-block">
+              {secret}
+            </div>
+          </div>
+        )}
+      </div>
 
-      {/* Hiển thị thông báo lỗi */}
-      {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
+      {/* Step 3: Enter code */}
+      <div>
+        <h3 className="font-semibold text-lg mb-2">Bước 3: Nhập Mã Xác Minh</h3>
+        <input
+          type="text"
+          placeholder="Nhập mã từ ứng dụng"
+          value={verificationCode}
+          onChange={(e) => setVerificationCode(e.target.value)}
+          disabled={isVerified || setupLoading || verifyLoading}
+          className="w-full border border-gray-300 rounded px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        {errorMessage && (
+          <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+        )}
+      </div>
 
-      {/* Nút xác minh */}
+      {/* Button */}
       <button
         onClick={handleVerify}
         disabled={isVerified || setupLoading || verifyLoading}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
+        className={`w-full py-3 rounded text-white text-lg font-medium transition-colors ${
+          isVerified
+            ? "bg-green-500 cursor-default"
+            : verifyLoading
+            ? "bg-blue-300 cursor-wait"
+            : "bg-blue-500 hover:bg-blue-600"
+        }`}
       >
         {verifyLoading
           ? "Đang xác minh..."
           : isVerified
-          ? "2FA Đã Bật"
+          ? "✅ 2FA Đã Bật"
           : "Xác Minh & Bật 2FA"}
       </button>
     </div>

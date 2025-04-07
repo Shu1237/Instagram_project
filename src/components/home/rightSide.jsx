@@ -228,76 +228,78 @@ export default function RightSide() {
       </div>
 
       {/* Suggested Users Section */}
-      <div className="mt-4">
-        <div className="flex justify-between items-center mb-4">
-          <span className="text-gray-500 font-semibold text-sm">
-            Suggested for you
-          </span>
-          <button className="text-xs font-semibold hover:text-gray-500">
-            See All
-          </button>
-        </div>
+      {userInfo && (
+        <div className="mt-4">
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-gray-500 font-semibold text-sm">
+              Suggested for you
+            </span>
+            <button className="text-xs font-semibold hover:text-gray-500">
+              See All
+            </button>
+          </div>
 
-        {/* Users List */}
-        <div className="space-y-3">
-          {usersData?.users?.map((user) => (
-            <div
-              key={user.user_id}
-              className="flex items-center justify-between group py-2"
-            >
-              <div className="flex items-center space-x-3">
-                <Link
-                  to={`/profile/${user.user_id}`}
-                  className="flex items-center space-x-3"
-                >
-                  <img
-                    src={user.avatar || ProfileRight}
-                    alt={user.username}
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-sm font-semibold">
-                      {user.username}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      Suggested for you
-                    </span>
-                  </div>
-                </Link>
-              </div>
-
-              <button
-                onClick={() =>
-                  followStatus[user.user_id] === "Following"
-                    ? handleCancelFriendRequest(user.user_id)
-                    : followStatus[user.user_id] === "Follow Back"
-                    ? handleAcceptFriendRequest(user.user_id)
-                    : handleSendFriendRequest(user.user_id)
-                }
-                className={`px-4 py-1.5 rounded font-semibold 
-    ${
-      followStatus[user.user_id] === "Following"
-        ? "bg-gray-200 text-black"
-        : "bg-blue-500 text-white hover:bg-blue-600"
-    } 
-    transition`}
+          {/* Users List */}
+          <div className="space-y-3">
+            {usersData?.users?.map((user) => (
+              <div
+                key={user.user_id}
+                className="flex items-center justify-between group py-2"
               >
-                {followStatus[user.user_id] || "Follow"}
-              </button>
-            </div>
-          ))}
-        </div>
+                <div className="flex items-center space-x-3">
+                  <Link
+                    to={`/profile/${user.user_id}`}
+                    className="flex items-center space-x-3"
+                  >
+                    <img
+                      src={user.avatar || ProfileRight}
+                      alt={user.username}
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-sm font-semibold">
+                        {user.username}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        Suggested for you
+                      </span>
+                    </div>
+                  </Link>
+                </div>
 
-        <div className="mt-20 w-4/5">
-          <div className="text-xs text-gray-500 flex justify-between">
-            About Help Press API Jobs Privacy Terms Locations Language Meta
-            Verified
+                <button
+                  onClick={() =>
+                    followStatus[user.user_id] === "Following"
+                      ? handleCancelFriendRequest(user.user_id)
+                      : followStatus[user.user_id] === "Follow Back"
+                      ? handleAcceptFriendRequest(user.user_id)
+                      : handleSendFriendRequest(user.user_id)
+                  }
+                  className={`px-4 py-1.5 rounded font-semibold 
+  ${
+    followStatus[user.user_id] === "Following"
+      ? "bg-gray-200 text-black"
+      : "bg-blue-500 text-white hover:bg-blue-600"
+  } 
+  transition`}
+                >
+                  {followStatus[user.user_id] || "Follow"}
+                </button>
+              </div>
+            ))}
           </div>
-          <div className="mt-8 text-xs text-gray-500 flex justify-center">
-            &copy;{new Date().getFullYear()} {hsr.toUpperCase()}
+
+          <div className="mt-20 w-4/5">
+            <div className="text-xs text-gray-500 flex justify-between">
+              About Help Press API Jobs Privacy Terms Locations Language Meta
+              Verified
+            </div>
+            <div className="mt-8 text-xs text-gray-500 flex justify-center">
+              &copy;{new Date().getFullYear()} {hsr.toUpperCase()}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

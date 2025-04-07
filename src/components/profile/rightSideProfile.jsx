@@ -14,7 +14,7 @@ import * as localStorageFunctions from "../../utils/localStorage.util.js";
 import loadingEffect from "../ui/jsx/loading-effect.jsx";
 
 export default function RightSideProfile() {
-  const userInfo = localStorageFunctions.getLocalStorage().user;
+  const userInfo = localStorageFunctions.getLocalStorage()?.user;
   const { id } = useParams();
   const { loading, error, data } = useQuery(GET_PROFILE, {
     variables: {
