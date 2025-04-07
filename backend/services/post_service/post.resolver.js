@@ -16,30 +16,30 @@ export const postResolver = {
       try {
         const limit = 5;
         const skip = (page - 1) * limit;
-        const cachedPosts = await redisService.get(
-          `${CACHE.CACHE_KEY}_${page}`
-        );
-        if (cachedPosts) {
-          return JSON.parse(cachedPosts);
-        }
+        // const cachedPosts = await redisService.get(
+        //   `${CACHE.CACHE_KEY}_${page}`
+        // );
+        // if (cachedPosts) {
+        //   return JSON.parse(cachedPosts);
+        // }
         const posts = await Post.find({ deleted: false })
           .sort({ created_at: -1 })
           .limit(limit)
           .skip(skip);
-        const formattedPosts = posts.map((post) => {
-          const objTempt = post.toObject();
-          objTempt.id = post._id;
-          delete objTempt._id;
-          return objTempt;
-        });
-        const cacheSuccess = await redisService.set(
-          `${CACHE.CACHE_KEY}_${page}`,
-          JSON.stringify(formattedPosts),
-          CACHE.CACHE_EXPIRATION
-        );
-        if (!cacheSuccess) {
-          console.warn("Failed to cache posts");
-        }
+        // const formattedPosts = posts.map((post) => {
+        //   const objTempt = post.toObject();
+        //   objTempt.id = post._id;
+        //   delete objTempt._id;
+        //   return objTempt;
+        // });
+        // const cacheSuccess = await redisService.set(
+        //   `${CACHE.CACHE_KEY}_${page}`,
+        //   JSON.stringify(formattedPosts),
+        //   CACHE.CACHE_EXPIRATION
+        // );
+        // if (!cacheSuccess) {
+        //   console.warn("Failed to cache posts");
+        // }
         return posts;
       } catch (error) {
         throw new GraphQLError(error.message, {
@@ -172,6 +172,7 @@ export const postResolver = {
           notificationAdded: newNotification,
         });
         startSyncLikeWorker();
+
         return true;
       } catch (error) {
         throw new Error(error.message);
