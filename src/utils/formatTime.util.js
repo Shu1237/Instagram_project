@@ -4,7 +4,7 @@ const formatTime = (time) => {
     if (!time) return "Invalid time";
 
     let postDate = time;
-    console.log(time);
+    // console.log(time);
     // Handle Date object
     // if (time instanceof Date) {
     //   postDate = time;
