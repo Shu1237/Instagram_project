@@ -3,25 +3,25 @@ const formatTime = (time) => {
     // Handle falsy values (null, undefined, empty string)
     if (!time) return "Invalid time";
 
-    let postDate;
-
+    let postDate = time;
+    console.log(time);
     // Handle Date object
-    if (time instanceof Date) {
-      postDate = time;
-    }
-    // Handle string and number inputs
-    else if (typeof time === "string" || typeof time === "number") {
-      postDate = new Date(time);
-    }
-    // Handle invalid types (objects, arrays, booleans, functions)
-    else {
-      return "Invalid time";
-    }
+    // if (time instanceof Date) {
+    //   postDate = time;
+    // }
+    // // Handle string and number inputs
+    // else if (typeof time === "string" || typeof time === "number") {
+    //   postDate = new Date(time);
+    // }
+    // // Handle invalid types (objects, arrays, booleans, functions)
+    // else {
+    //   return "Invalid time";
+    // }
 
-    // Check if postDate is valid
-    if (isNaN(postDate.getTime())) {
-      return "Invalid time";
-    }
+    // // Check if postDate is valid
+    // if (isNaN(postDate.getTime())) {
+    //   return "Invalid time";
+    // }
 
     const now = new Date();
 
