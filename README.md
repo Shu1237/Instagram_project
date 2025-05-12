@@ -43,7 +43,7 @@ git clone https://github.com/Shu1237/Instagram_project.git
 # Navigate into the project directory
 cd Instagram_project
 
-# Install dependencies (example for Node.js)
+# Install dependencies 
 npm install --legacy-peer-deps 
 ```
 
@@ -51,10 +51,10 @@ npm install --legacy-peer-deps
 ## 📦 Usage
 
 ```bash
-# Start the frontend (if located in root or a specific folder)
+# Start the frontend 
 npm run start
 
-# Start the backend (e.g. from /backend folder)
+# Start the backend 
 npm run dev
 ```
 
