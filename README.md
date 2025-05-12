@@ -89,6 +89,7 @@ Instagram_project/
 │   ├── image.json
 │   ├── story.json
 ├── README.md
+├── ...
 └── package.json
 ```
 
