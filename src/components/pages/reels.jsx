@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import LeftSideOptimized from "../home/LeftSideOptimized";
+import Layout from "../layout/Layout";
 import { Card } from "../ui/card";
 import {
   Heart,
@@ -72,153 +72,147 @@ export default function Reels() {
   };
 
   return (
-    <div className="min-h-screen bg-black">
-      <LeftSideOptimized />
+    <Layout className="bg-black p-0">
+      <div
+        className="h-screen overflow-y-auto snap-y snap-mandatory scrollbar-hide"
+        onScroll={handleScroll}
+      >
+        {reels.map((reel, index) => (
+          <div
+            key={reel.id}
+            className="h-screen snap-start relative flex items-center justify-center"
+          >
+            {/* Video */}
+            <video
+              ref={(el) => (videoRefs.current[index] = el)}
+              src={reel.video}
+              poster={reel.poster}
+              className="w-full h-full object-cover max-w-sm mx-auto"
+              loop
+              muted={isMuted}
+              playsInline
+              onClick={togglePlayPause}
+            />
 
-      <main className="ml-16 xl:ml-64 transition-all duration-300">
-        <div
-          className="h-screen overflow-y-auto snap-y snap-mandatory scrollbar-hide"
-          onScroll={handleScroll}
-        >
-          {reels.map((reel, index) => (
-            <div
-              key={reel.id}
-              className="h-screen snap-start relative flex items-center justify-center"
-            >
-              {/* Video */}
-              <video
-                ref={(el) => (videoRefs.current[index] = el)}
-                src={reel.video}
-                poster={reel.poster}
-                className="w-full h-full object-cover max-w-sm mx-auto"
-                loop
-                muted={isMuted}
-                playsInline
-                onClick={togglePlayPause}
-              />
+            {/* Play/Pause overlay */}
+            {!isPlaying && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  onClick={togglePlayPause}
+                  className="bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full w-16 h-16"
+                >
+                  <Play className="h-8 w-8" />
+                </Button>
+              </div>
+            )}
 
-              {/* Play/Pause overlay */}
-              {!isPlaying && (
-                <div className="absolute inset-0 flex items-center justify-center">
+            {/* User info and controls */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/50 to-transparent">
+              <div className="flex items-end justify-between max-w-sm mx-auto">
+                {/* Left side - User info and caption */}
+                <div className="flex-1 text-white">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <Avatar className="h-8 w-8 border-2 border-white">
+                      <AvatarImage
+                        src={reel.user.avatar}
+                        alt={reel.user.username}
+                      />
+                      <AvatarFallback>
+                        {reel.user.username[0]?.toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="font-semibold">{reel.user.username}</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="bg-transparent border-white text-white hover:bg-white hover:text-black h-6 text-xs px-2"
+                    >
+                      Follow
+                    </Button>
+                  </div>
+                  <p className="text-sm mb-2">{reel.caption}</p>
+                  <div className="flex items-center space-x-2 text-xs opacity-80">
+                    <span>♪</span>
+                    <span>{reel.audio}</span>
+                  </div>
+                </div>
+
+                {/* Right side - Action buttons */}
+                <div className="flex flex-col space-y-4 ml-4">
+                  <div className="flex flex-col items-center">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-white hover:bg-white/20 rounded-full w-12 h-12"
+                    >
+                      <Heart className="h-6 w-6" />
+                    </Button>
+                    <span className="text-white text-xs mt-1">
+                      {reel.likes}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col items-center">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-white hover:bg-white/20 rounded-full w-12 h-12"
+                    >
+                      <MessageCircle className="h-6 w-6" />
+                    </Button>
+                    <span className="text-white text-xs mt-1">
+                      {reel.comments}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col items-center">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-white hover:bg-white/20 rounded-full w-12 h-12"
+                    >
+                      <Send className="h-6 w-6" />
+                    </Button>
+                    <span className="text-white text-xs mt-1">
+                      {reel.shares}
+                    </span>
+                  </div>
+
                   <Button
                     variant="ghost"
-                    size="lg"
-                    onClick={togglePlayPause}
-                    className="bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full w-16 h-16"
+                    size="icon"
+                    className="text-white hover:bg-white/20 rounded-full w-12 h-12"
                   >
-                    <Play className="h-8 w-8" />
+                    <Bookmark className="h-6 w-6" />
                   </Button>
-                </div>
-              )}
 
-              {/* User info and controls */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/50 to-transparent">
-                <div className="flex items-end justify-between max-w-sm mx-auto">
-                  {/* Left side - User info and caption */}
-                  <div className="flex-1 text-white">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <Avatar className="h-8 w-8 border-2 border-white">
-                        <AvatarImage
-                          src={reel.user.avatar}
-                          alt={reel.user.username}
-                        />
-                        <AvatarFallback>
-                          {reel.user.username[0]?.toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="font-semibold">
-                        {reel.user.username}
-                      </span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="bg-transparent border-white text-white hover:bg-white hover:text-black h-6 text-xs px-2"
-                      >
-                        Follow
-                      </Button>
-                    </div>
-                    <p className="text-sm mb-2">{reel.caption}</p>
-                    <div className="flex items-center space-x-2 text-xs opacity-80">
-                      <span>♪</span>
-                      <span>{reel.audio}</span>
-                    </div>
-                  </div>
-
-                  {/* Right side - Action buttons */}
-                  <div className="flex flex-col space-y-4 ml-4">
-                    <div className="flex flex-col items-center">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-white hover:bg-white/20 rounded-full w-12 h-12"
-                      >
-                        <Heart className="h-6 w-6" />
-                      </Button>
-                      <span className="text-white text-xs mt-1">
-                        {reel.likes}
-                      </span>
-                    </div>
-
-                    <div className="flex flex-col items-center">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-white hover:bg-white/20 rounded-full w-12 h-12"
-                      >
-                        <MessageCircle className="h-6 w-6" />
-                      </Button>
-                      <span className="text-white text-xs mt-1">
-                        {reel.comments}
-                      </span>
-                    </div>
-
-                    <div className="flex flex-col items-center">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-white hover:bg-white/20 rounded-full w-12 h-12"
-                      >
-                        <Send className="h-6 w-6" />
-                      </Button>
-                      <span className="text-white text-xs mt-1">
-                        {reel.shares}
-                      </span>
-                    </div>
-
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-white hover:bg-white/20 rounded-full w-12 h-12"
-                    >
-                      <Bookmark className="h-6 w-6" />
-                    </Button>
-
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={toggleMute}
-                      className="text-white hover:bg-white/20 rounded-full w-12 h-12"
-                    >
-                      {isMuted ? (
-                        <VolumeX className="h-6 w-6" />
-                      ) : (
-                        <Volume2 className="h-6 w-6" />
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Progress indicator */}
-              <div className="absolute top-4 right-4">
-                <div className="text-white text-sm bg-black bg-opacity-50 px-2 py-1 rounded">
-                  {index + 1} / {reels.length}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleMute}
+                    className="text-white hover:bg-white/20 rounded-full w-12 h-12"
+                  >
+                    {isMuted ? (
+                      <VolumeX className="h-6 w-6" />
+                    ) : (
+                      <Volume2 className="h-6 w-6" />
+                    )}
+                  </Button>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      </main>
-    </div>
+
+            {/* Progress indicator */}
+            <div className="absolute top-4 right-4">
+              <div className="text-white text-sm bg-black bg-opacity-50 px-2 py-1 rounded">
+                {index + 1} / {reels.length}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Layout>
   );
 }

@@ -20,6 +20,7 @@ import Menu from "./menu";
 import SearchModal from "../ui/jsx/SearchModel.jsx";
 import NotificationsDropdown from "../notification/notification";
 import ModalCreate from "../create/modalCreate";
+import InstagramCreatePost from "../create/InstagramCreatePost";
 
 // Navigation item component
 const NavItem = memo(
@@ -165,7 +166,7 @@ export default function LeftSide() {
         {
           icon: PlusSquare,
           label: "Create",
-          component: <ModalCreate key="create-modal" />,
+          component: <InstagramCreatePost key="create-modal" />,
         },
       ]
     : [];
