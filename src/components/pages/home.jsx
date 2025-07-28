@@ -1,58 +1,39 @@
-import React, { useState, useEffect } from "react";
-import LeftSide from "../home/leftSide";
+import React from "react";
+import LeftSideOptimized from "../home/LeftSideOptimized";
 import MiddleSide from "../home/middleSide";
-import RightSide from "../home/rightSide";
-import Darkmode from "../Darkmode/darkmode";
+import RightSideOptimized from "../home/RightSideOptimized";
+import MobileNavigation from "../ui/MobileNavigation";
+
 function Home() {
-  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 867);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth <= 867);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   return (
-    <div
-      className={`${
-        isSmallScreen
-          ? "flex flex-col-reverse"
-          : "flex w-full h-full font-montserrat p-0 m-0 box-border"
-      }`}
-    >
-      {isSmallScreen ? (
-        // Khi màn hình nhỏ, LeftSide sẽ nằm dưới MiddleSide
-        <>
-          <div className="">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
+      <div className="flex">
+        {/* Left Sidebar - Hidden on mobile, Fixed on desktop */}
+        <div className="hidden md:block">
+          <LeftSideOptimized />
+        </div>
 
-            <LeftSide />
-          </div>
-          <div className="">
-            <MiddleSide />
-          </div>
-        </>
-      ) : (
-        // Khi màn hình lớn, giao diện bình thường
-        <div className="flex w-full h-full">
-        
-          {/* Left Side */}
-          <div className="p-6 flex-[0.2] max-xl:flex-[0.05] min-w-0">
-            <LeftSide />
-          </div>
+        {/* Main Content Area */}
+        <div className="flex-1 md:ml-16 xl:ml-64 transition-all duration-300">
+          <div className="flex max-w-5xl mx-auto">
+            {/* Middle Section - Posts and Stories */}
+            <div className="flex-1 max-w-lg mx-auto lg:mx-0">
+              <MiddleSide />
+            </div>
 
-          {/* Middle Side */}
-          <div className="flex flex-col flex-[0.6] max-xl:flex-[0.95] min-w-0">
-            <MiddleSide />
-          </div>
-
-          {/* Right Side */}
-          <div className="flex-[0.2] max-lg:hidden min-w-0">
-            <RightSide />
+            {/* Right Sidebar - Hidden on smaller screens */}
+            <div className="hidden lg:block lg:w-80 xl:w-80">
+              <RightSideOptimized />
+            </div>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Mobile Navigation - Only visible on mobile */}
+      <MobileNavigation />
+
+      {/* Mobile spacing to prevent content from being hidden behind navigation */}
+      <div className="h-16 md:hidden" />
     </div>
   );
 }

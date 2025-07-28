@@ -86,9 +86,18 @@ export const postResolver = {
     },
   },
   Mutation: {
-    createPost: async (_, { input }) => {
+    createPost: async (_, { input }, { pubsub }) => {
       try {
         const { user_id, caption, media_urls } = input;
+
+        // Emit upload started status
+        await pubsub.publish(`POST_UPLOAD_STATUS.${user_id}`, {
+          postUploadStatus: {
+            userId: user_id,
+            status: "processing",
+            message: "Creating your post...",
+          },
+        });
 
         const post = await Post.create({
           user_id,
@@ -97,8 +106,43 @@ export const postResolver = {
           created_by: user_id,
           created_at: new Date(),
         });
+
+        // Emit upload success status
+        await pubsub.publish(`POST_UPLOAD_STATUS.${user_id}`, {
+          postUploadStatus: {
+            userId: user_id,
+            status: "success",
+            postId: post._id.toString(),
+            message: "Post created successfully!",
+          },
+        });
+
+        // Create notification for successful post creation
+        const notification = await Notification.create({
+          type: "post_created",
+          sender_id: user_id,
+          receiver_id: user_id,
+          post_id: post._id.toString(),
+          message: "Your post has been published!",
+        });
+
+        await pubsub.publish(`NOTIFICATION_ADDED.${user_id}`, {
+          notificationAdded: notification,
+        });
+
         return post;
       } catch (error) {
+        // Emit upload error status
+        if (input && input.user_id) {
+          await pubsub.publish(`POST_UPLOAD_STATUS.${input.user_id}`, {
+            postUploadStatus: {
+              userId: input.user_id,
+              status: "error",
+              message: "Failed to create post. Please try again.",
+            },
+          });
+        }
+
         throw new GraphQLError(error.message, {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
