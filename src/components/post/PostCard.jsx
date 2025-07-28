@@ -19,11 +19,11 @@ const PostHeader = memo(({ user, onOptionsClick }) => (
     <div className="flex items-center space-x-3">
       <Avatar className="h-8 w-8">
         <AvatarImage src={user?.avatar} alt={user?.username} />
-        <AvatarFallback>{user?.username?.[0]?.toUpperCase()}</AvatarFallback>
+        <AvatarFallback>{user?.full_name?.[0]?.toUpperCase()}</AvatarFallback>
       </Avatar>
       <div className="flex flex-col">
         <span className="text-sm font-semibold text-gray-900">
-          {user?.username}
+          {user?.full_name}
         </span>
         <span className="text-xs text-gray-500">{user?.location}</span>
       </div>
