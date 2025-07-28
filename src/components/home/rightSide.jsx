@@ -234,9 +234,12 @@ export default function RightSide() {
             <span className="text-gray-500 font-semibold text-sm">
               Suggested for you
             </span>
-            <button className="text-xs font-semibold hover:text-gray-500">
+            <Link
+              to="/see-all"
+              className="text-xs font-semibold hover:text-gray-500"
+            >
               See All
-            </button>
+            </Link>
           </div>
 
           {/* Users List */}

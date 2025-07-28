@@ -296,9 +296,12 @@ export default function RightSide() {
               <span className="text-gray-500 font-semibold text-sm">
                 Suggested for you
               </span>
-              <Button variant="link" size="sm" className="text-xs p-0 h-auto">
+              <Link
+                to="/see-all"
+                className="text-xs font-semibold text-gray-700 hover:text-gray-500 p-0 h-auto"
+              >
                 See All
-              </Button>
+              </Link>
             </div>
 
             <div className="space-y-2">

@@ -23,6 +23,7 @@ import PassWordSecurity from "../pages/password-security";
 import NotFound from "../pages/404";
 import Verify2FA from "../auth/verify2fa";
 import VideoCallPage from "../webRTC/videoCallPage";
+import SeeAll from "../pages/seeAll";
 export default function App() {
   return (
     <Routes>
@@ -53,6 +54,14 @@ export default function App() {
         element={
           <ProtectedRoute>
             <Reels />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/see-all"
+        element={
+          <ProtectedRoute>
+            <SeeAll />
           </ProtectedRoute>
         }
       />
