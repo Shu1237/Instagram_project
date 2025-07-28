@@ -1,6 +1,6 @@
 import logoInstagram from "../../assets/logo.png";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import {
   LOGIN_MUTATION,
@@ -18,6 +18,8 @@ function Login() {
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION, {
     onError: () => {
       setShowError(true);
@@ -34,7 +36,7 @@ function Login() {
         // Đăng nhập thành công nếu không bật 2FA
         setShowSuccess(true);
         setTimeout(() => {
-          navigate("/");
+          navigate(from, { replace: true });
           setShowSuccess(false);
         }, 500);
       }

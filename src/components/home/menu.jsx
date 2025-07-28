@@ -53,7 +53,7 @@ const Menu = () => {
               label="Your activity"
             />
             <MenuItem icon={<BookmarkAddedOutlined />} label="Saved" />
-            <Darkmode />
+            {/* <Darkmode /> */}
             <MenuItem
               icon={<ReportGmailerrorredOutlined />}
               label="Report a problem"
