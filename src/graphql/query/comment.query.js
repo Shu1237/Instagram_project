@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const GET_COMMENTS_QUERY = gql`
   query GetComments($post_id: ID!) {
@@ -15,6 +15,14 @@ export const GET_COMMENTS_QUERY = gql`
       media_urls
       created_at
       updated_at
+    }
+  }
+`;
+
+export const GET_COMMENT_COUNT_QUERY = gql`
+  query GetCommentCount($post_id: ID!) {
+    getComments(post_id: $post_id) {
+      id
     }
   }
 `;

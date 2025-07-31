@@ -1,78 +1,150 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  Settings,
+  UserPlus,
+  UserCheck,
+  UserMinus,
+  MessageCircle,
+} from "lucide-react";
+import { Button } from "../ui/button";
+import FollowersModal from "./FollowersModal";
+import { useFollowStatus } from "../hooks/useFollowStatus";
+
 const HeaderProfile = ({ data, meData }) => {
+  const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
+  const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
+
+  const isOwnProfile =
+    parseInt(meData?.user_id) === parseInt(data?.user?.user_id);
+  const profileUserId = data?.user?.user_id;
+
+  const {
+    followStatus,
+    isLoading,
+    handleFollowAction,
+    getFollowButtonConfig,
+    isFollowing,
+  } = useFollowStatus(profileUserId, meData?.user_id);
+
+  const buttonConfig = getFollowButtonConfig();
+
+  const getIconComponent = () => {
+    switch (followStatus) {
+      case "Following":
+        return UserCheck;
+      case "Pending":
+        return UserMinus;
+      default:
+        return UserPlus;
+    }
+  };
+
+  const IconComponent = getIconComponent();
   return (
-    <div className="flex items-start py-8  gap-4">
-      {/* Avatar Section */}
-      <div className="flex-shrink-0 mr-8">
-        <div className="w-[150px] h-[150px] rounded-full border border-gray-200 overflow-hidden">
-          <img
-            className="w-full h-full object-cover"
-            src={data?.user?.avatar}
-            alt={data?.user?.username}
-          />
+    <>
+      <div className="flex items-start py-8 gap-4">
+        {/* Avatar Section */}
+        <div className="flex-shrink-0 mr-8">
+          <div className="w-[150px] h-[150px] rounded-full border border-gray-200 overflow-hidden">
+            <img
+              className="w-full h-full object-cover"
+              src={data?.user?.avatar}
+              alt={data?.user?.username}
+            />
+          </div>
         </div>
-      </div>
 
-      {/* Profile Info */}
-      <div className="flex-grow">
-        <div className="flex items-center mb-4 space-x-4">
-          <h2 className="text-xl font-light">{data?.user?.username}</h2>
-          <Link to={`/dashboardPage`}>
-            <div className="text-back cursor-pointer p-2  ">
-              <svg
-                aria-label="Options"
-                className="x1lliihq x1n2onr6 x5n08af"
-                fill="currentColor"
-                height="24"
-                role="img"
-                viewBox="0 0 24 24"
-                width="24"
-              >
-                <title>Options</title>
-                <circle
-                  cx="12"
-                  cy="12"
-                  fill="none"
-                  r="8.635"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M14.232 3.656a1.269 1.269 0 0 1-.796-.66L12.93 2h-1.86l-.505.996a1.269 1.269 0 0 1-.796.66m-.001 16.688a1.269 1.269 0 0 1 .796.66l.505.996h1.862l.505-.996a1.269 1.269 0 0 1 .796-.66M3.656 9.768a1.269 1.269 0 0 1-.66.796L2 11.07v1.862l.996.505a1.269 1.269 0 0 1 .66.796m16.688-.001a1.269 1.269 0 0 1 .66-.796L22 12.93v-1.86l-.996-.505a1.269 1.269 0 0 1-.66-.796M7.678 4.522a1.269 1.269 0 0 1-1.03.096l-1.06-.348L4.27 5.587l.348 1.062a1.269 1.269 0 0 1-.096 1.03m11.8 11.799a1.269 1.269 0 0 1 1.03-.096l1.06.348 1.318-1.317-.348-1.062a1.269 1.269 0 0 1 .096-1.03m-14.956.001a1.269 1.269 0 0 1 .096 1.03l-.348 1.06 1.317 1.318 1.062-.348a1.269 1.269 0 0 1 1.03.096m11.799-11.8a1.269 1.269 0 0 1-.096-1.03l.348-1.06-1.317-1.318-1.062.348a1.269 1.269 0 0 1-1.03-.096"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
-          </Link>
+        {/* Profile Info */}
+        <div className="flex-grow">
+          <div className="flex items-center mb-4 space-x-4">
+            <h2 className="text-xl font-light">{data?.user?.username}</h2>
 
-          {parseInt(meData?.user_id) !== parseInt(data?.user?.user_id) && (
-            <button className="px-4 py-1.5 bg-blue-500  font-semibold rounded">
-              Follow
+            {/* Action Buttons */}
+            {isOwnProfile ? (
+              <Link to="/dashboardPage">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center space-x-2"
+                >
+                  <Settings className="h-4 w-4" />
+                  <span>Edit Profile</span>
+                </Button>
+              </Link>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Button
+                  onClick={handleFollowAction}
+                  disabled={isLoading}
+                  variant={buttonConfig.variant}
+                  size="sm"
+                  className={`flex items-center space-x-2 ${buttonConfig.className}`}
+                >
+                  {isLoading ? (
+                    <div className="h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <IconComponent className="h-4 w-4" />
+                  )}
+                  <span>{buttonConfig.text}</span>
+                </Button>
+
+                {followStatus === "Following" && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center space-x-2"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    <span>Message</span>
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Stats */}
+          <div className="flex flex-row gap-10 font-sans text-gray-600 mb-4">
+            <span>
+              <strong>{data?.user?.posts?.length || 0}</strong> posts
+            </span>
+            <button
+              onClick={() => setIsFollowersModalOpen(true)}
+              className="hover:text-gray-900 cursor-pointer transition-colors"
+            >
+              <strong>{data?.user?.followers?.length || 0}</strong> followers
             </button>
-          )}
-        </div>
+            <button
+              onClick={() => setIsFollowingModalOpen(true)}
+              className="hover:text-gray-900 cursor-pointer transition-colors"
+            >
+              <strong>{data?.user?.following?.length || 0}</strong> following
+            </button>
+          </div>
 
-        {/* Stats */}
-        <div className="flex flex-row gap-10 font-sans text-gray-600">
-          <span>
-            <strong>{data?.user?.posts?.length}</strong> posts
-          </span>
-          <span>
-            <strong>{data?.user?.followers?.length}</strong> followers
-          </span>
-          <span>
-            <strong>{data?.user?.following?.length}</strong> following
-          </span>
+          {/* Bio */}
+          <div className="font-semibold">{data?.user?.full_name}</div>
         </div>
-
-        <div className="font-semibold  mt-7">{data?.user?.full_name}</div>
       </div>
-    </div>
+
+      {/* Followers Modal */}
+      <FollowersModal
+        isOpen={isFollowersModalOpen}
+        onClose={() => setIsFollowersModalOpen(false)}
+        type="followers"
+        userConnections={data?.user?.followers}
+        profileUserId={profileUserId}
+      />
+
+      {/* Following Modal */}
+      <FollowersModal
+        isOpen={isFollowingModalOpen}
+        onClose={() => setIsFollowingModalOpen(false)}
+        type="following"
+        userConnections={data?.user?.following}
+        profileUserId={profileUserId}
+      />
+    </>
   );
 };
 export default HeaderProfile;

@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { useState, memo, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   Home,
@@ -19,8 +19,8 @@ import { useAuth } from "../../hooks/useAuth";
 import Menu from "./menu";
 import SearchModal from "../ui/jsx/SearchModel.jsx";
 import NotificationsDropdown from "../notification/notification";
-import ModalCreate from "../create/modalCreate";
 import InstagramCreatePost from "../create/InstagramCreatePost";
+import "./instagram-create-sidebar.css";
 
 // Navigation item component
 const NavItem = memo(
@@ -79,6 +79,90 @@ const Logo = memo(({ isCompact, onClick }) => (
   </div>
 ));
 Logo.displayName = "Logo";
+
+// Custom Create Post Component that matches NavItem style
+const CreatePostNavItem = memo(({ showLabel }) => {
+  return (
+    <div className="relative">
+      {/* Our custom styled button */}
+      <Button
+        variant="ghost"
+        onClick={() => {
+          // Find and click the hidden InstagramCreatePost trigger
+          const hiddenTrigger = document.querySelector(
+            ".instagram-create-trigger"
+          );
+          if (hiddenTrigger) {
+            hiddenTrigger.click();
+          }
+        }}
+        className={cn(
+          "w-full justify-start h-12 px-3 rounded-xl transition-all duration-200",
+          !showLabel && "w-12 px-0 justify-center"
+        )}
+      >
+        <PlusSquare className={cn("h-6 w-6", showLabel && "mr-4")} />
+        {showLabel && <span className="text-base font-normal">Create</span>}
+      </Button>
+
+      {/* Hidden InstagramCreatePost with custom class for targeting */}
+      <div
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          top: "-9999px",
+          visibility: "hidden",
+        }}
+      >
+        <InstagramCreatePostWrapper />
+      </div>
+    </div>
+  );
+});
+CreatePostNavItem.displayName = "CreatePostNavItem";
+
+// Wrapper to add custom class to InstagramCreatePost trigger
+const InstagramCreatePostWrapper = memo(() => {
+  useEffect(() => {
+    // Add custom class to the InstagramCreatePost trigger for easy targeting
+    const addCustomClass = () => {
+      const triggers = document.querySelectorAll('[class*="cursor-pointer"]');
+      triggers.forEach((trigger) => {
+        if (trigger.textContent?.includes("Create")) {
+          trigger.classList.add("instagram-create-trigger");
+        }
+      });
+    };
+
+    // Run after component mounts
+    setTimeout(addCustomClass, 100);
+  }, []);
+
+  return <InstagramCreatePost />;
+});
+InstagramCreatePostWrapper.displayName = "InstagramCreatePostWrapper";
+
+// Simple Modal wrapper for Create Post
+const CreatePostModal = memo(({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] overflow-hidden">
+        <div className="flex items-center justify-between p-4 border-b">
+          <h2 className="text-lg font-semibold">Create new post</h2>
+          <Button variant="ghost" size="icon" onClick={onClose}>
+            <span className="text-2xl">&times;</span>
+          </Button>
+        </div>
+        <div className="p-4">
+          <InstagramCreatePost />
+        </div>
+      </div>
+    </div>
+  );
+});
+CreatePostModal.displayName = "CreatePostModal";
 
 export default function LeftSide() {
   const navigate = useNavigate();
@@ -150,6 +234,7 @@ export default function LeftSide() {
     },
   ];
 
+  // Improved Logo: Use only the Instagram icon, center it, and remove the text for a cleaner look
   const userSpecificItems = userInfo
     ? [
         {
@@ -166,7 +251,16 @@ export default function LeftSide() {
         {
           icon: PlusSquare,
           label: "Create",
-          component: <InstagramCreatePost key="create-modal" />,
+          component: (
+            <div
+              className={cn(
+                "instagram-create-sidebar",
+                !isCompact ? "w-full" : "w-12"
+              )}
+            >
+              <InstagramCreatePost />
+            </div>
+          ),
         },
       ]
     : [];

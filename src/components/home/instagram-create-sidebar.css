@@ -1,0 +1,56 @@
+/* Override styles for InstagramCreatePost in sidebar */
+.instagram-create-sidebar {
+  width: 100%;
+}
+
+.instagram-create-sidebar > div:first-child {
+  width: 100% !important;
+  height: 48px !important;
+  margin-bottom: 0 !important;
+  border-radius: 12px !important;
+  padding: 0 12px !important;
+  background: transparent !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+.instagram-create-sidebar > div:first-child:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Dark mode support */
+.dark .instagram-create-sidebar > div:first-child:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Style the icon and text */
+.instagram-create-sidebar .MuiSvgIcon-root {
+  width: 24px !important;
+  height: 24px !important;
+  margin-right: 16px !important;
+  color: currentColor !important;
+}
+
+.instagram-create-sidebar .font-normal {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  color: currentColor !important;
+}
+
+/* Hide text in compact mode */
+@media (max-width: 1280px) {
+  .instagram-create-sidebar .MuiSvgIcon-root {
+    margin-right: 0 !important;
+  }
+
+  .instagram-create-sidebar .font-normal {
+    display: none !important;
+  }
+
+  .instagram-create-sidebar > div:first-child {
+    width: 48px !important;
+    justify-content: center !important;
+  }
+}
