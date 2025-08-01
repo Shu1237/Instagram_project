@@ -1,4 +1,4 @@
-FROM node:18.16.0-alpine
+FROM node:18.16.0-slim
 
 
 RUN apk add --no-cache bash curl bind-tools
