@@ -32,6 +32,7 @@ export const postTypeDef = gql`
   }
 
   type Query {
+    testConnection: String
     getPosts(page: Int!): [Post]
     getAPost(id: ID!): Post
   }
