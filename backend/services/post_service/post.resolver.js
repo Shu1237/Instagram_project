@@ -5,6 +5,7 @@ import { redisService } from "../../config/redis.config.js";
 import { userLoader } from "../../utils/data_loader/user.data_loader.js";
 import _ from "lodash";
 import startSyncLikeWorker from "../../utils/syncLikeWorker.util.js";
+import mongoose from "mongoose";
 const CACHE = {
   CACHE_KEY: "posts",
   CACHE_EXPIRATION: 300,
@@ -12,20 +13,50 @@ const CACHE = {
 
 export const postResolver = {
   Query: {
+    testConnection: async () => {
+      try {
+        const state = mongoose.connection.readyState;
+        const states = {
+          0: "disconnected",
+          1: "connected",
+          2: "connecting",
+          3: "disconnecting",
+        };
+        return {
+          mongodb: states[state] || "unknown",
+          state: state,
+        };
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
     getPosts: async (_, { page }) => {
       try {
         const limit = 5;
         const skip = (page - 1) * limit;
+
+        // Check MongoDB connection status
+        if (mongoose.connection.readyState !== 1) {
+          throw new GraphQLError("Database connection not ready", {
+            extensions: {
+              code: "DATABASE_CONNECTION_ERROR",
+            },
+          });
+        }
+
         // const cachedPosts = await redisService.get(
         //   `${CACHE.CACHE_KEY}_${page}`
         // );
         // if (cachedPosts) {
         //   return JSON.parse(cachedPosts);
         // }
+
         const posts = await Post.find({ deleted: false })
           .sort({ created_at: -1 })
           .limit(limit)
-          .skip(skip);
+          .skip(skip)
+          .maxTimeMS(20000); // Set explicit timeout of 20 seconds
+
         // const formattedPosts = posts.map((post) => {
         //   const objTempt = post.toObject();
         //   objTempt.id = post._id;
@@ -42,6 +73,7 @@ export const postResolver = {
         // }
         return posts;
       } catch (error) {
+        console.error("Error in getPosts:", error);
         throw new GraphQLError(error.message, {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
