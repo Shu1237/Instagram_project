@@ -31,7 +31,14 @@ export const GET_USERS_QUERY = gql`
     users(pageQuery: $pageQuery, limitQuery: $limitQuery) {
       user_id
       username
+      full_name
       avatar
+      posts {
+        id
+      }
+      followers {
+        user_id
+      }
     }
   }
 `;
@@ -62,9 +69,11 @@ export const GET_USER_POST_PROFILE = gql`
         user_id
         full_name
         avatar
+        username
       }
       caption
       media_urls
+      interaction
       status
       created_at
       updated_at
