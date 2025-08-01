@@ -9,7 +9,7 @@ RUN npm install --force
 
 COPY ./backend ./backend
 
-COPY .env ./
+
 
 WORKDIR /app/backend
 
