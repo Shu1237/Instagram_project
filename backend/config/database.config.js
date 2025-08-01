@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import ENV_VARS from "./envVars.config.js";
 import process from "process";
 
+mongoose.set("strictQuery", true);
+
 const sequelize = new Sequelize(ENV_VARS.URI_MYSQL, {
   dialect: "mysql",
   dialectOptions: {
@@ -16,6 +18,8 @@ const connect = async () => {
   try {
     await sequelize.authenticate();
     console.log("MySql database connected successfully");
+
+    console.log("MONGODB_URI:", process.env.URI_MONGODB);
 
     // MongoDB connection with timeout and retry configuration
     await mongoose.connect(ENV_VARS.URI_MONGODB, {
