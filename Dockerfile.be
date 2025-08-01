@@ -1,5 +1,8 @@
 FROM node:18.16.0-alpine
 
+
+RUN apk add --no-cache bash curl bind-tools
+
 WORKDIR /app
 
 COPY package*.json ./
