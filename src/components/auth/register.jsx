@@ -1,4 +1,4 @@
-import logoInstagram from "../../assets/logo.png";
+import SocialWaveLogo from "../ui/SocialWaveLogo";
 import React, { useState } from "react";
 import "../ui/css/login.css";
 import { Link } from "react-router-dom";
@@ -54,8 +54,10 @@ function SignUp() {
       )}
       <form className="signup-form" onSubmit={signupHandler}>
         <div className="logo-container">
-          <img src={logoInstagram} alt="Instagram Logo" />
-          <h2>Welcome to My Instagram</h2>
+          <div className="flex justify-center mb-2">
+            <SocialWaveLogo width={150} />
+          </div>
+          <h2>Welcome to SocialWave</h2>
         </div>
         <div className="input-group">
           <label htmlFor="username">Username</label>

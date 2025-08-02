@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import logoInstagram from "../../assets/logo.png";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import ExploreIcon from "@mui/icons-material/Explore";
@@ -15,8 +14,6 @@ import ModalCreate from "../create/modalCreate";
 import NotificationsDropdown from "../notification/notification";
 import { useQuery } from "@apollo/client";
 import { ME_QUERY, GET_USERS_QUERY } from "../../graphql/query/user.query";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import SocialWaveLogo from "../ui/SocialWaveLogo";
 import * as localStorageFunctions from "../../utils/localStorage.util.js";
 import SearchModal from "../ui/jsx/SearchModel.jsx";

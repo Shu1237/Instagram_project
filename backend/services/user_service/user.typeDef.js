@@ -17,6 +17,8 @@ export const userTypeDef = gql`
     updated_at: String
     posts: [Post]
     isTwoFactorEnabled: Boolean
+    is_online: Boolean
+    last_seen: String
     # stories: [Story!]!
   }
   input UpdateUserInput {
@@ -29,7 +31,26 @@ export const userTypeDef = gql`
     users(pageQuery: Int, limitQuery: Int): [User!]!
     getUser2FAStatus: Boolean
     getUserPosts(user_id: ID!): [Post]
+    getOnlineUsers: [User!]!
+    getUserOnlineStatus(user_id: ID!): UserOnlineStatus!
   }
+
+  type UserOnlineStatus {
+    user_id: ID!
+    is_online: Boolean!
+    last_seen: String
+  }
+
+  type Subscription {
+    userStatusChanged: UserStatusUpdate!
+  }
+
+  type UserStatusUpdate {
+    user_id: ID!
+    is_online: Boolean!
+    last_seen: String
+  }
+
   type Mutation {
     updateProfile(input: UpdateUserInput): User!
   }

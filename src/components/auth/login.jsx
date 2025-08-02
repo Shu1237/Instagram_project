@@ -1,4 +1,4 @@
-import logoInstagram from "../../assets/logo.png";
+import SocialWaveLogo from "../ui/SocialWaveLogo";
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useMutation } from "@apollo/client";
@@ -104,11 +104,9 @@ function Login() {
         )}
 
         <div className="text-center">
-          <img
-            src={logoInstagram}
-            alt="Instagram Logo"
-            className="mx-auto h-14 mb-2"
-          />
+          <div className="mx-auto mb-2 flex justify-center">
+            <SocialWaveLogo width={150} />
+          </div>
           <h2 className="text-2xl font-semibold text-gray-700">Welcome Back</h2>
         </div>
 

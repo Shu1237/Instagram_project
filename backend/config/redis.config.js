@@ -101,5 +101,23 @@ class RedisService {
       return null;
     }
   }
+  async srem(key, value) {
+    try {
+      await this.client.sRem(key, value);
+      return true;
+    } catch (error) {
+      console.error("[Redis] SREM Error:", error);
+      return false;
+    }
+  }
+  async sismember(key, value) {
+    try {
+      const isMember = await this.client.sIsMember(key, value);
+      return isMember;
+    } catch (error) {
+      console.error("[Redis] SISMEMBER Error:", error);
+      return false;
+    }
+  }
 }
 export const redisService = new RedisService();

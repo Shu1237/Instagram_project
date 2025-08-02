@@ -16,7 +16,7 @@ export default function StorySlider() {
     <div className="relative w-full flex items-center py-4 overflow-hidden">
       <Swiper
         slidesPerView="auto"
-        spaceBetween={6} // Khoảng cách nhỏ hơn để gần giống Instagram
+        spaceBetween={6} // Khoảng cách nhỏ hơn để gần giống SocialWave
         navigation={true}
         modules={[Navigation]}
         className="w-full max-w-[800px] px-4"
@@ -35,7 +35,7 @@ export default function StorySlider() {
               className="relative w-[70px] h-[70px] flex items-center justify-center cursor-pointer transition-transform duration-200 hover:scale-105"
               onClick={() => openStory(story)}
             >
-              {/* Viền gradient Instagram */}
+              {/* Viền gradient SocialWave */}
               <div className="absolute inset-0 rounded-full p-[3px] bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-500">
                 <div className="w-full h-full bg-black rounded-full flex items-center justify-center">
                   <img
