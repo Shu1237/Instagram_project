@@ -10,7 +10,7 @@ import {
 import { io } from "socket.io-client";
 import * as localStorage from "../../utils/localStorage.util.js";
 
-const socket = io("http://localhost:3000");
+const socket = io("https://instagram-project-tbrg.onrender.com");
 
 socket.on("connect", () => {
   console.log("Connected to Socket.IO server");

@@ -23,11 +23,12 @@ connect();
 
 const app = express();
 const pubsub = new PubSub();
-
+// https://instagram-project-tbrg.onrender.com
+// https://instagramclone-tan.vercel.app/
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://instagramclone-tan.vercel.app/",
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })

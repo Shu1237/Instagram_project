@@ -5,7 +5,7 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import { getCookie } from "../utils/cookie.util";
 import { createClient } from "graphql-ws";
 const httpLink = new HttpLink({
-  uri: "http://localhost:3000/graphql",
+  uri: "https://instagram-project-tbrg.onrender.com/graphql",
   credentials: "include",
 });
 
@@ -21,7 +21,7 @@ const authLink = setContext((_, { headers }) => {
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: "ws://localhost:3000/graphql",
+    url: "ws://https://instagram-project-tbrg.onrender.com/graphql",
   })
 );
 
