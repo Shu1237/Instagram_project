@@ -20,6 +20,7 @@ import Menu from "./menu";
 import SearchModal from "../ui/jsx/SearchModel.jsx";
 import NotificationsDropdown from "../notification/notification";
 import InstagramCreatePost from "../create/InstagramCreatePost";
+import SocialWaveLogo from "../ui/SocialWaveLogo";
 import "./instagram-create-sidebar.css";
 
 // Navigation item component
@@ -68,14 +69,7 @@ ProfileSection.displayName = "ProfileSection";
 // Logo component
 const Logo = memo(({ isCompact, onClick }) => (
   <div className="flex items-center px-3 py-6 cursor-pointer" onClick={onClick}>
-    {isCompact ? (
-      <Instagram className="h-8 w-8" />
-    ) : (
-      <div className="flex items-center">
-        <Instagram className="h-8 w-8 mr-2" />
-        <span className="text-xl font-bold">Instagram</span>
-      </div>
-    )}
+    {isCompact ? <SocialWaveLogo width={32} /> : <SocialWaveLogo width={150} />}
   </div>
 ));
 Logo.displayName = "Logo";

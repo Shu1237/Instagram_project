@@ -6,7 +6,7 @@ const CreatePostDemo = () => {
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
-          Instagram-like Create Post Demo
+          SocialWave Create Post Demo
         </h1>
 
         <div className="bg-white rounded-lg shadow-lg p-6">
@@ -18,7 +18,7 @@ const CreatePostDemo = () => {
                 ✨ New Features
               </h3>
               <ul className="space-y-2 text-sm text-gray-600">
-                <li>✅ Instagram-like 3-step modal</li>
+                <li>✅ SocialWave-style 3-step modal</li>
                 <li>✅ Drag & drop file upload</li>
                 <li>✅ Real-time upload progress</li>
                 <li>✅ Advanced media preview</li>
@@ -35,7 +35,7 @@ const CreatePostDemo = () => {
               </h3>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li>📈 40% faster upload speed</li>
-                <li>🎨 Modern Instagram-inspired UI</li>
+                <li>🎨 Modern SocialWave-inspired UI</li>
                 <li>🔔 Real-time notifications</li>
                 <li>📱 Responsive design</li>
                 <li>🛡️ Enhanced error handling</li>
@@ -52,8 +52,8 @@ const CreatePostDemo = () => {
             </h3>
             <p className="text-gray-600 mb-4">
               Click the &quot;Create&quot; button below to experience the new
-              Instagram-like post creation flow with real-time upload progress
-              and notifications.
+              SocialWave post creation flow with real-time upload progress and
+              notifications.
             </p>
 
             {/* Demo Create Post Component */}
