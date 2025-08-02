@@ -350,7 +350,7 @@ export default function RightSide() {
         </div>
 
         <div className="text-xs text-gray-500">
-          © {new Date().getFullYear()} Instagram from Meta
+          © {new Date().getFullYear()} SocialWave from SocialCorp
         </div>
       </div>
     </div>

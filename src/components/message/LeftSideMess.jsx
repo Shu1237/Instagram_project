@@ -15,6 +15,7 @@ import ModalCreate from "../create/modalCreate";
 import NotificationsDropdown from "../notification/notification";
 import { useQuery } from "@apollo/client";
 import { ME_QUERY, GET_USERS_QUERY } from "../../graphql/query/user.query";
+import SocialWaveLogo from "../ui/SocialWaveLogo";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
@@ -47,15 +48,12 @@ export default function LeftSide() {
   const linkMess = `/message/${data?.me?.user_id}/0`;
   return (
     <div className="fixed left-0 top-0 h-full border-r border-gray-200 bg-white p-4 flex flex-col">
-      {/* Instagram Logo */}
+      {/* SocialWave Logo */}
       <div
         onClick={() => navigate("/")}
         className="h-[100px] flex items-center pl-3 cursor-pointer"
       >
-        <FontAwesomeIcon
-          icon={faInstagram}
-          className="text-4xl transition-transform hover:scale-105"
-        />
+        <SocialWaveLogo width={32} />
       </div>
 
       {/* Main Menu Items */}

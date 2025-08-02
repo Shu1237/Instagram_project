@@ -17,6 +17,7 @@ import { useQuery } from "@apollo/client";
 import { ME_QUERY, GET_USERS_QUERY } from "../../graphql/query/user.query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
+import SocialWaveLogo from "../ui/SocialWaveLogo";
 import * as localStorageFunctions from "../../utils/localStorage.util.js";
 import SearchModal from "../ui/jsx/SearchModel.jsx";
 export default function LeftSide() {
@@ -54,13 +55,9 @@ export default function LeftSide() {
         className="w-full h-auto flex items-center justify-center cursor-pointer max-lg:justify-start max-lg:w-8"
       >
         {isSmallScreen ? (
-          <FontAwesomeIcon icon={faInstagram} className="text-[38px]" /> //
+          <SocialWaveLogo width={38} />
         ) : (
-          <img
-            src={logoInstagram}
-            alt="Instagram"
-            className="w-[150px] h-auto max-xl:w-full"
-          />
+          <SocialWaveLogo width={150} />
         )}
       </div>
 

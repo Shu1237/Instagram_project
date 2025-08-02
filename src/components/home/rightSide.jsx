@@ -143,7 +143,7 @@ export default function RightSide() {
       setNotification(notification);
     },
   });
-  const hsr = "instagram from Meta";
+  const hsr = "SocialWave from SocialCorp";
 
   if (usersLoading || friendRequestsLoading) {
     return loadingEffect();

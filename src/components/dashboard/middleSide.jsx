@@ -8,7 +8,7 @@ export default function MiddileSide() {
       <h1 className="font-bold text-2xl mb-4">Setting</h1>
 
       <div className="flex flex-col">
-        <h1 className="mb-4">How you use Instagram</h1>
+        <h1 className="mb-4">How you use SocialWave</h1>
         <Link to="/dashboardPage">
           <div
             className={`flex flex-row gap-4 h-14 p-4 rounded-xl hover:bg-[#EFEFEF] transition-all duration-300  ${

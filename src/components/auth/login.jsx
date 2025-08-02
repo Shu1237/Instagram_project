@@ -21,7 +21,8 @@ function Login() {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
   const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION, {
-    onError: () => {
+    onError: (error) => {
+      console.error("Login Error:", error);
       setShowError(true);
       setTimeout(() => setShowError(false), 3000);
     },
@@ -91,7 +92,9 @@ function Login() {
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">
         {showError && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 animate-fade">
-            {error?.message || "Invalid credentials"}
+            {error?.networkError?.message === "Failed to fetch"
+              ? "Network error: Unable to connect to server. Please check your internet connection and try again."
+              : error?.message || "Invalid credentials"}
           </div>
         )}
         {showSuccess && (
