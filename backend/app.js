@@ -28,7 +28,12 @@ const pubsub = new PubSub();
 // Middleware
 app.use(
   cors({
-    origin: "https://instagramclone-tan.vercel.app/",
+    origin: [
+      "https://instagramclone-tan.vercel.app",
+      "https://instagramclone-tan.vercel.app/",
+      "http://localhost:3000",
+      "http://localhost:5173",
+    ],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
