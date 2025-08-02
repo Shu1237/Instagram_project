@@ -71,23 +71,27 @@ const IncomingMessage = ({ message }) => {
   };
 
   return (
-    <div className="flex items-start mb-4">
-      <div className="w-8 h-8 rounded-full overflow-hidden">
+    <div className="flex items-start mb-6 max-w-[70%]">
+      <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
         <img
           className="w-full h-full object-cover"
           src={message?.user?.avatar}
           alt="User"
         />
       </div>
-      <div className="ml-3">
-        <p className="text-xs text-gray-500 mb-1 font-semibold">
-          {message?.user?.username}
-        </p>
-        <div className="bg-gray-100 p-2 px-4 rounded-3xl rounded-tl-sm max-w-xs text-sm shadow-sm">
+      <div className="ml-3 flex-1">
+        <div className="bg-gray-200 p-3 rounded-2xl rounded-tl-md shadow-sm">
           {renderContent()}
-          <p>{message?.content}</p>
+          {message?.content && (
+            <p className="text-gray-800 leading-relaxed">{message?.content}</p>
+          )}
         </div>
-        <span className="text-xs text-gray-400 mt-1">{timeAgo}</span>
+        <div className="flex items-center mt-1 ml-1">
+          <span className="text-xs text-gray-500 font-medium">
+            {message?.user?.username}
+          </span>
+          <span className="text-xs text-gray-400 ml-2">{timeAgo}</span>
+        </div>
       </div>
     </div>
   );

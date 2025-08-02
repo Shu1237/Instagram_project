@@ -16,30 +16,34 @@ export default function BodySection({
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto px-6 py-4">
-      <div className="flex flex-col items-center">
-        <div className="w-24 h-24 mt-6">
+    <div className="flex-1 overflow-y-auto bg-white">
+      {/* Chat introduction */}
+      <div className="flex flex-col items-center py-6 px-6 border-b border-gray-100">
+        <div className="w-16 h-16">
           <img
-            className="w-full h-full rounded-[50%]"
+            className="w-full h-full rounded-full object-cover"
             src={myFriendInfo?.avatar}
             alt=""
           />
         </div>
-        <h1 className="mt-2 text-lg font-medium">{myFriendInfo?.full_name}</h1>
-        <p className="text-base text-gray-400">
+        <h1 className="mt-2 text-lg font-semibold text-gray-900">
+          {myFriendInfo?.full_name}
+        </h1>
+        <p className="text-sm text-gray-500">
           {myFriendInfo?.username} · SocialWave
         </p>
-        <div className="m-5">
+        <div className="mt-3">
           <button
-            className="bg-gray-200 p-[5px_12px] rounded-md text-sm font-medium"
+            className="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
             onClick={() => navigate(`/profile/${myFriendInfo?.user_id}`)}
           >
             View Profile
           </button>
         </div>
       </div>
+
       {/* Messages */}
-      <div className="w-full p-4 overflow-y-auto">
+      <div className="px-4 py-4">
         {messages?.map((message) =>
           message.user.user_id !== id ? (
             <IncomingMessage key={message.id} message={message} />
@@ -47,14 +51,35 @@ export default function BodySection({
             <OutgoingMessage key={message.id} message={message} />
           )
         )}
-        {/* Thẻ ẩn để cuộn xuống */}
+        {/* Auto scroll target */}
         <div ref={messagesEndRef} />
       </div>
 
       {/* Typing indicator */}
       {typingStatus && (
-        <div className="text-gray-500 text-sm mt-2">
-          {myFriendInfo?.username} is typing...
+        <div className="px-4 pb-4">
+          <div className="flex items-center space-x-2 text-gray-500 text-sm max-w-[70%]">
+            <div className="w-10 h-10 rounded-full overflow-hidden">
+              <img
+                className="w-full h-full object-cover"
+                src={myFriendInfo?.avatar}
+                alt=""
+              />
+            </div>
+            <div className="bg-gray-200 p-3 rounded-2xl rounded-tl-md">
+              <div className="flex space-x-1">
+                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                <div
+                  className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.1s" }}
+                ></div>
+                <div
+                  className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.2s" }}
+                ></div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -71,15 +71,19 @@ const OutgoingMessage = ({ message }) => {
   };
 
   return (
-    <div className="flex items-end justify-end mb-4">
-      <div className="flex flex-col items-end">
-        <div className="bg-blue-400 text-white p-2 px-4 rounded-3xl rounded-tr-sm max-w-xs text-sm shadow-sm">
+    <div className="flex items-start justify-end mb-6 max-w-[70%] ml-auto">
+      <div className="mr-3 flex-1 flex flex-col items-end">
+        <div className="bg-blue-500 text-white p-3 rounded-2xl rounded-tr-md shadow-sm">
           {renderContent()}
-          <p>{message?.content}</p>
+          {message?.content && (
+            <p className="leading-relaxed">{message?.content}</p>
+          )}
         </div>
-        <span className="text-xs text-gray-400 mt-1">{timeAgo}</span>
+        <div className="flex items-center mt-1 mr-1">
+          <span className="text-xs text-gray-400">{timeAgo}</span>
+        </div>
       </div>
-      <div className="w-8 h-8 rounded-full overflow-hidden ml-2">
+      <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
         <img
           className="w-full h-full object-cover"
           src={message?.user.avatar}
