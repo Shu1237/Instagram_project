@@ -3,7 +3,7 @@ const signaling = async (httpServer) => {
   // Create WebSocket server
   const io = new SocketIOServer(httpServer, {
     cors: {
-      origin: "http://localhost:5173", // Allow client-side connection
+      origin: "https://instagramclone-tan.vercel.app", // Allow client-side connection
       credentials: true,
     },
   });
