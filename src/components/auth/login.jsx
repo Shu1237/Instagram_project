@@ -1,4 +1,5 @@
 import SocialWaveLogo from "../ui/SocialWaveLogo";
+import LoadingScreen from "../ui/LoadingScreen";
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useMutation } from "@apollo/client";
@@ -17,6 +18,7 @@ function Login() {
   const [input, setInput] = useState({ username: "", password: "" });
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
@@ -36,10 +38,12 @@ function Login() {
       } else {
         // Đăng nhập thành công nếu không bật 2FA
         setShowSuccess(true);
+        setIsNavigating(true);
         setTimeout(() => {
           navigate(from, { replace: true });
           setShowSuccess(false);
-        }, 500);
+          setIsNavigating(false);
+        }, 1500);
       }
     },
   });
@@ -78,7 +82,11 @@ function Login() {
         const token = getCookie();
         const myInformation = getMyInformation(token);
         localStorageFunctions.setLocalStorage(myInformation);
-        navigate("/");
+        setIsNavigating(true);
+        setTimeout(() => {
+          navigate("/");
+          setIsNavigating(false);
+        }, 1500);
       }
     } catch (error) {
       console.error("Google Login Error:", error);
@@ -87,6 +95,12 @@ function Login() {
   const handleGoogleLoginFailure = (error) => {
     console.error("Google Login Error:", error);
   };
+
+  // Show loading screen when navigating
+  if (isNavigating) {
+    return <LoadingScreen message="Welcome back! Loading your dashboard..." />;
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">

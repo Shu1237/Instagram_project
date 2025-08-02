@@ -1,4 +1,5 @@
 import "../lib/App.css";
+import React from "react";
 
 import {
   BrowserRouter as Router,
@@ -24,7 +25,38 @@ import NotFound from "../pages/404";
 import Verify2FA from "../auth/verify2fa";
 import VideoCallPage from "../webRTC/videoCallPage";
 import SeeAll from "../pages/seeAll";
+import SplashScreen from "../ui/SplashScreen";
+import { useAppInitialization } from "../../hooks/useAppLoading";
 export default function App() {
+  const { isInitializing, initializationError } = useAppInitialization();
+
+  // Show splash screen during app initialization
+  if (isInitializing) {
+    return <SplashScreen />;
+  }
+
+  // Show error screen if initialization failed
+  if (initializationError) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-red-50">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-2">
+            Initialization Error
+          </h1>
+          <p className="text-red-500 mb-4">
+            Failed to initialize the application
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
