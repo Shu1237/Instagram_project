@@ -18,6 +18,7 @@ import { PubSub } from "graphql-subscriptions";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
 import { userLoader } from "./utils/data_loader/user.data_loader.js";
 import signaling from "./signaling.js";
+import { onlineStatusService } from "./services/onlineStatus.service.js";
 // Connect to the database
 connect();
 
@@ -61,19 +62,70 @@ const wsServer = new WebSocketServer({
 });
 
 // Track active connections
-const activeConnections = new Set();
+const activeConnections = new Map();
 const serverCleanup = setupWSConnection(
   {
     schema,
     context: async (ctx) => {
       const connectionId = Math.random().toString(36).slice(2);
-      activeConnections.add(connectionId);
+      activeConnections.set(connectionId, { ctx, userId: null });
       ctx.connectionId = connectionId;
+
       return {
         pubsub,
         connectionId,
         userLoader,
       };
+    },
+    onConnect: async (ctx) => {
+      console.log("WebSocket connected");
+      // Extract user info from connection params if available
+      const token = ctx.connectionParams?.authorization?.replace("Bearer ", "");
+      if (token) {
+        try {
+          const user = jwt.verify(token, ENV_VARS.JWT_SECRET_KEY);
+          const connectionData = activeConnections.get(ctx.connectionId);
+          if (connectionData) {
+            connectionData.userId = user.user.user_id;
+            activeConnections.set(ctx.connectionId, connectionData);
+
+            // Set user online
+            await onlineStatusService.setUserOnline(
+              user.user.user_id,
+              ctx.connectionId
+            );
+
+            // Publish status change
+            pubsub.publish("USER_STATUS_CHANGED", {
+              userStatusChanged: {
+                user_id: user.user.user_id,
+                is_online: true,
+                last_seen: new Date().toISOString(),
+              },
+            });
+          }
+        } catch (error) {
+          console.error("Token verification failed in WebSocket:", error);
+        }
+      }
+    },
+    onDisconnect: async (ctx, code, reason) => {
+      console.log("WebSocket disconnected");
+      const connectionData = activeConnections.get(ctx.connectionId);
+      if (connectionData && connectionData.userId) {
+        // Set user offline
+        await onlineStatusService.setUserOffline(connectionData.userId);
+
+        // Publish status change
+        pubsub.publish("USER_STATUS_CHANGED", {
+          userStatusChanged: {
+            user_id: connectionData.userId,
+            is_online: false,
+            last_seen: new Date().toISOString(),
+          },
+        });
+      }
+      activeConnections.delete(ctx.connectionId);
     },
     connectionInitWaitTimeout: 10000,
   },
@@ -117,6 +169,11 @@ const startServer = async () => {
   await redisService.connect();
   await server.start();
   app.use("/graphql", expressMiddleware(server, { context }));
+
+  // Start cleanup job for offline users
+  setInterval(async () => {
+    await onlineStatusService.cleanupOfflineUsers();
+  }, 60000); // Run every minute
 
   httpServer.listen(ENV_VARS.PORT, () => {
     console.log(

@@ -2,6 +2,8 @@ import User from "../../models/mysql/user.js";
 import FriendRequest from "../../models/mysql/friend_request.js";
 import Post from "../../models/mongodb/post.model.js";
 import { Op } from "sequelize";
+import { onlineStatusService } from "../onlineStatus.service.js";
+import { withFilter } from "graphql-subscriptions";
 const CACHE_KEYS = {
   USER: (id) => `USER_${id}`,
   USERS_PAGE: (page, limit) => `USERS_PAGE_${page}_LIMIT_${limit}`,
@@ -71,6 +73,43 @@ export const userResolver = {
           user_id: user_id,
         });
         return posts;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    async getOnlineUsers(_, __, { user }) {
+      try {
+        const onlineUserIds = await onlineStatusService.getOnlineUsers();
+        const onlineUsers = await User.findAll({
+          where: {
+            user_id: {
+              [Op.in]: onlineUserIds,
+            },
+          },
+          attributes: [
+            "user_id",
+            "username",
+            "full_name",
+            "avatar",
+            "is_online",
+            "last_seen",
+          ],
+        });
+        return onlineUsers;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    async getUserOnlineStatus(_, { user_id }) {
+      try {
+        const isOnline = await onlineStatusService.isUserOnline(user_id);
+        const userStatus = await onlineStatusService.getUserLastSeen(user_id);
+
+        return {
+          user_id,
+          is_online: isOnline,
+          last_seen: userStatus?.last_seen || null,
+        };
       } catch (error) {
         throw new Error(error.message);
       }
@@ -177,6 +216,17 @@ export const userResolver = {
       } catch (error) {
         throw new Error(error.message);
       }
+    },
+  },
+  Subscription: {
+    userStatusChanged: {
+      subscribe: withFilter(
+        (_, __, { pubsub }) => pubsub.asyncIterator(["USER_STATUS_CHANGED"]),
+        (payload, variables, context) => {
+          // Filter subscription based on user's friends/following
+          return true; // For now, send to all users. You can add filtering logic here
+        }
+      ),
     },
   },
 };

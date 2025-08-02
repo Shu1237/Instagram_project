@@ -80,3 +80,26 @@ export const GET_USER_POST_PROFILE = gql`
     }
   }
 `;
+
+export const GET_ONLINE_USERS = gql`
+  query getOnlineUsers {
+    getOnlineUsers {
+      user_id
+      username
+      full_name
+      avatar
+      is_online
+      last_seen
+    }
+  }
+`;
+
+export const GET_USER_ONLINE_STATUS = gql`
+  query getUserOnlineStatus($userId: ID!) {
+    getUserOnlineStatus(user_id: $userId) {
+      user_id
+      is_online
+      last_seen
+    }
+  }
+`;

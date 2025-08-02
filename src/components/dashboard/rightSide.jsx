@@ -11,56 +11,66 @@ import { uploadFile } from "../../utils/upload.util.js";
 import * as localStorage from "../../utils/localStorage.util";
 import loadingEffect from "../ui/jsx/loading-effect.jsx";
 import LinearProgress from "@mui/material/LinearProgress"; // Import LinearProgress
+import OnlineStatusIndicator from "../ui/OnlineStatusIndicator.jsx";
+import { useOnlineStatus } from "../../hooks/useOnlineStatus.js";
+import OnlineUsersList from "../user/OnlineUsersList.jsx";
 
-const ProfileHeader = ({ profile, avatar, handlePreviewAvatar, isEditing }) => (
-  <div className="bg-[#EFEFEF] p-6 rounded-2xl shadow-sm mb-8">
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-6">
-        <div className="relative">
-          <img
-            className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
-            src={avatar?.preview || profile?.avatar}
-            alt="User Profile Picture"
-          />
-          <div className="absolute w-4 h-4 rounded-2xl bg-green-400 right-1 bottom-1"></div>
-        </div>
-        <div>
-          <h2 className="text-xl font-bold text-gray-800">
-            {profile?.username}
-          </h2>
-          <div className="flex flex-row items-center gap-2">
-            <p className="text-gray-500">{profile?.name}</p>
-            <p
-              className={`${
-                profile.status === "Active"
-                  ? "text-green-500 font-semibold"
-                  : "text-gray-500"
-              } p-2`}
-            >
-              {profile.status === "Active" ? "Active" : "Inactive"}
-            </p>
+const ProfileHeader = ({ profile, avatar, handlePreviewAvatar, isEditing }) => {
+  const { isOnline, lastSeen } = useOnlineStatus(profile?.user_id);
+
+  return (
+    <div className="bg-[#EFEFEF] p-6 rounded-2xl shadow-sm mb-8">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-6">
+          <div className="relative">
+            <img
+              className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
+              src={avatar?.preview || profile?.avatar}
+              alt="User Profile Picture"
+            />
+            <div className="absolute right-1 bottom-1">
+              <OnlineStatusIndicator
+                isOnline={isOnline}
+                lastSeen={lastSeen}
+                size="large"
+              />
+            </div>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-gray-800">
+              {profile?.username}
+            </h2>
+            <div className="flex flex-row items-center gap-2">
+              <p className="text-gray-500">{profile?.name}</p>
+              <OnlineStatusIndicator
+                isOnline={isOnline}
+                lastSeen={lastSeen}
+                size="small"
+                showText={true}
+              />
+            </div>
           </div>
         </div>
+        {isEditing && (
+          <>
+            <button
+              onClick={() => document.getElementById("avatarInput").click()}
+              className="flex items-center gap-2 px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
+            >
+              Change Photo
+            </button>
+            <input
+              type="file"
+              id="avatarInput"
+              className="hidden"
+              onChange={handlePreviewAvatar}
+            />
+          </>
+        )}
       </div>
-      {isEditing && (
-        <>
-          <button
-            onClick={() => document.getElementById("avatarInput").click()}
-            className="flex items-center gap-2 px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
-          >
-            Change Photo
-          </button>
-          <input
-            type="file"
-            id="avatarInput"
-            className="hidden"
-            onChange={handlePreviewAvatar}
-          />
-        </>
-      )}
     </div>
-  </div>
-);
+  );
+};
 
 const ProfileForm = ({
   profile,
@@ -248,33 +258,40 @@ export default function RightSide() {
   );
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Edit Profile</h1>
-      </div>
-      <ProfileHeader
-        profile={profile}
-        avatar={avatar}
-        handlePreviewAvatar={handlePreviewAvatar}
-        isEditing={isEditing}
-      />
-      <div className="bg-white p-6 rounded-2xl shadow-sm">
+    <div className="flex gap-6">
+      <div className="flex-1 max-w-4xl mx-auto p-6">
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 border-b pb-2">
-            Basic Information
-          </h2>
+          <h1 className="text-3xl font-bold text-gray-800">Edit Profile</h1>
         </div>
-        {isEditing ? (
-          <ProfileForm
-            profile={profile}
-            handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit}
-            setIsEditing={setIsEditing}
-            loading={loading} // Pass loading prop
-          />
-        ) : (
-          <ProfileInfo profile={profile} setIsEditing={setIsEditing} />
-        )}
+        <ProfileHeader
+          profile={profile}
+          avatar={avatar}
+          handlePreviewAvatar={handlePreviewAvatar}
+          isEditing={isEditing}
+        />
+        <div className="bg-white p-6 rounded-2xl shadow-sm">
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 border-b pb-2">
+              Basic Information
+            </h2>
+          </div>
+          {isEditing ? (
+            <ProfileForm
+              profile={profile}
+              handleInputChange={handleInputChange}
+              handleSubmit={handleSubmit}
+              setIsEditing={setIsEditing}
+              loading={loading} // Pass loading prop
+            />
+          ) : (
+            <ProfileInfo profile={profile} setIsEditing={setIsEditing} />
+          )}
+        </div>
+      </div>
+
+      {/* Online Users Sidebar */}
+      <div className="w-80 bg-white rounded-2xl shadow-sm h-fit">
+        <OnlineUsersList />
       </div>
     </div>
   );
