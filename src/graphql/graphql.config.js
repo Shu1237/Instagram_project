@@ -7,7 +7,7 @@ import { createClient } from "graphql-ws";
 import { onError } from "@apollo/client/link/error";
 
 const httpLink = new HttpLink({
-  uri: "https://instagram-project-tbrg.onrender.com/graphql",
+  uri: "https://shoponline.id.vn/graphql",
   credentials: "include",
   fetchOptions: {
     mode: "cors",
