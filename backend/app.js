@@ -1,5 +1,7 @@
 import express from "express";
-import { connect } from "./config/database.config.js";
+import { connect, checkDatabaseHealth, sequelize } from "./config/database.config.js";
+import mongoose from "mongoose";
+import process from "process";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { typeDefs } from "./graphql/typeDef.graphql.js";
@@ -42,6 +44,26 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use(graphqlUploadExpress({ maxFileSize: 100000000, maxFiles: 10 }));
+
+// Health check endpoint
+app.get('/health', async (req, res) => {
+  try {
+    const health = await checkDatabaseHealth();
+    const overallHealth = health.mysql.connected && health.mongodb.connected;
+    
+    res.status(overallHealth ? 200 : 503).json({
+      status: overallHealth ? 'healthy' : 'unhealthy',
+      timestamp: new Date().toISOString(),
+      databases: health
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      error: error.message
+    });
+  }
+});
 
 // Create schema
 const schema = makeExecutableSchema({
@@ -187,3 +209,40 @@ const startServer = async () => {
 };
 
 startServer();
+
+// Graceful shutdown handler
+const gracefulShutdown = async (signal) => {
+  console.log(`\nReceived ${signal}. Starting graceful shutdown...`);
+  
+  try {
+    // Close database connections
+    if (mongoose.connection.readyState === 1) {
+      await mongoose.connection.close();
+      console.log('MongoDB connection closed.');
+    }
+    
+    if (sequelize) {
+      await sequelize.close();
+      console.log('MySQL connection closed.');
+    }
+    
+    // Close Redis connection
+    if (redisService) {
+      await redisService.disconnect();
+      console.log('Redis connection closed.');
+    }
+    
+    // Close HTTP server
+    httpServer.close(() => {
+      console.log('HTTP server closed.');
+      process.exit(0);
+    });
+  } catch (error) {
+    console.error('Error during graceful shutdown:', error);
+    process.exit(1);
+  }
+};
+
+// Listen for termination signals
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
